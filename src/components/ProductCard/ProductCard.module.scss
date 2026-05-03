@@ -1,0 +1,103 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background: $color-white;
+  border: 1px solid transparent;
+  border-radius: $radius;
+  overflow: hidden;
+  transition: transform $dur $ease, box-shadow $dur $ease, border-color $dur $ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+    border-color: $color-gold;
+  }
+}
+
+.imageWrap {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: $color-cream-dark;
+  overflow: hidden;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform $dur-slow $ease;
+
+  .card:hover & {
+    transform: scale(1.05);
+  }
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  color: $color-gold-light;
+}
+
+.badge {
+  position: absolute;
+  top: 12px;
+  inset-inline-end: 12px;
+  background: $color-error;
+  color: $color-white;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  letter-spacing: 0.05em;
+}
+
+.featuredBadge {
+  position: absolute;
+  top: 12px;
+  inset-inline-start: 12px;
+  background: $color-ink;
+  color: $color-gold;
+  padding: 4px 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 999px;
+  letter-spacing: 0.05em;
+}
+
+.body {
+  padding: 18px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.brand {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 0.7rem;
+  color: $color-gold-dark;
+  font-weight: 600;
+}
+
+.name {
+  font-family: $font-display;
+  font-size: 1.15rem;
+  margin: 0;
+  color: $color-ink;
+  @include truncate(2);
+  min-height: 2.6em;
+}
+
+.meta {
+  display: flex;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: $color-text-muted;
+  margin-bottom: 6px;
+}

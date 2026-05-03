@@ -1,0 +1,40 @@
+// Luxury palette — gold / cream / black
+$color-gold: #c9a96e;
+$color-gold-dark: #a88a4f;
+$color-gold-light: #e0c98e;
+$color-cream: #f5efe6;
+$color-cream-dark: #ece3d3;
+$color-ink: #0d0d0d;
+$color-ink-soft: #1a1a1a;
+$color-text: #2a2622;
+$color-text-muted: #6b6357;
+$color-border: #e6ddcc;
+$color-white: #ffffff;
+$color-error: #b3261e;
+$color-success: #1f7a44;
+$color-warning: #c98a1f;
+
+// Typography
+$font-body: var(--font-heebo), "Heebo", "Segoe UI", "Arial", sans-serif;
+$font-display: var(--font-display), "Frank Ruhl Libre", "Georgia", serif;
+
+// Layout
+$container-max: 1280px;
+$radius-sm: 4px;
+$radius: 8px;
+$radius-lg: 16px;
+$shadow-sm: 0 2px 8px rgba(13, 13, 13, 0.06);
+$shadow: 0 8px 24px rgba(13, 13, 13, 0.08);
+$shadow-lg: 0 18px 48px rgba(13, 13, 13, 0.12);
+
+// Breakpoints
+$bp-sm: 480px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+
+// Transitions
+$ease: cubic-bezier(0.22, 1, 0.36, 1);
+$dur-fast: 0.18s;
+$dur: 0.32s;
+$dur-slow: 0.6s;

@@ -1,0 +1,42 @@
+@use "../../styles/variables" as *;
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: $color-text;
+}
+
+.select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: $color-white;
+  color: $color-text;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color $dur-fast $ease, box-shadow $dur-fast $ease;
+
+  &:focus {
+    outline: none;
+    border-color: $color-gold-dark;
+    box-shadow: 0 0 0 3px rgba($color-gold, 0.25);
+  }
+}
+
+.error {
+  border-color: $color-error;
+}
+
+.errorText {
+  font-size: 0.8rem;
+  color: $color-error;
+  margin: 0;
+}

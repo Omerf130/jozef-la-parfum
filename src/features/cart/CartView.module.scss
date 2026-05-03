@@ -1,0 +1,214 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 32px;
+  align-items: start;
+
+  @include md {
+    grid-template-columns: 1fr;
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 80px 0;
+  color: $color-text-muted;
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.item {
+  @include card-surface;
+  background: $color-white;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 100px 1fr auto auto;
+  gap: 16px;
+  align-items: center;
+
+  @include sm {
+    grid-template-columns: 80px 1fr;
+    grid-template-areas:
+      "image body"
+      "image controls"
+      "total total";
+    gap: 10px;
+  }
+}
+
+.itemImage {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: $color-cream-dark;
+  border-radius: $radius-sm;
+  overflow: hidden;
+
+  @include sm {
+    grid-area: image;
+  }
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-gold-light;
+  font-size: 1.6rem;
+}
+
+.itemBody {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+
+  @include sm {
+    grid-area: body;
+  }
+}
+
+.itemBrand {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: $color-gold-dark;
+}
+
+.itemName {
+  font-family: $font-display;
+  font-size: 1.05rem;
+  color: $color-ink;
+
+  &:hover {
+    color: $color-gold-dark;
+  }
+}
+
+.itemMeta {
+  font-size: 0.85rem;
+  color: $color-text-muted;
+}
+
+.itemPrice {
+  font-size: 0.9rem;
+  color: $color-text;
+  margin-top: 4px;
+}
+
+.itemControls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  @include sm {
+    grid-area: controls;
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: $color-text-muted;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+
+  &:hover {
+    color: $color-error;
+  }
+}
+
+.itemTotal {
+  font-family: $font-display;
+  font-weight: 600;
+  color: $color-ink;
+  text-align: end;
+  min-width: 80px;
+
+  @include sm {
+    grid-area: total;
+    text-align: end;
+  }
+}
+
+.itemsActions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.clearBtn {
+  background: none;
+  border: none;
+  color: $color-text-muted;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 6px 10px;
+
+  &:hover {
+    color: $color-error;
+  }
+}
+
+.summary {
+  @include card-surface;
+  background: $color-white;
+  padding: 24px;
+  position: sticky;
+  top: 100px;
+
+  h2 {
+    font-family: $font-display;
+    font-size: 1.2rem;
+    margin: 0 0 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid $color-border;
+    color: $color-ink;
+  }
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 0.95rem;
+}
+
+.shippingNote {
+  font-size: 0.8rem;
+  color: $color-gold-dark;
+  margin: 0 0 6px;
+}
+
+.totalRow {
+  font-family: $font-display;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $color-ink;
+  margin: 12px 0 18px;
+  padding: 12px 0 0;
+  border-top: 1px solid $color-border;
+}
+
+.secure {
+  text-align: center;
+  font-size: 0.8rem;
+  color: $color-text-muted;
+  margin: 14px 0 0;
+}

@@ -1,0 +1,95 @@
+@use "sass:color";
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.btn {
+  @include button-base;
+  position: relative;
+  text-align: center;
+
+  &:focus-visible {
+    @include focus-ring;
+  }
+}
+
+.sm {
+  padding: 8px 14px;
+  font-size: 0.85rem;
+}
+
+.md {
+  padding: 12px 22px;
+  font-size: 0.95rem;
+}
+
+.lg {
+  padding: 16px 32px;
+  font-size: 1.05rem;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.primary {
+  background: $color-ink;
+  color: $color-cream;
+
+  &:hover:not(:disabled) {
+    background: $color-gold-dark;
+    color: $color-white;
+  }
+}
+
+.secondary {
+  background: $color-gold;
+  color: $color-ink;
+
+  &:hover:not(:disabled) {
+    background: $color-gold-light;
+  }
+}
+
+.ghost {
+  background: transparent;
+  color: $color-ink;
+  border: 1px solid $color-ink;
+
+  &:hover:not(:disabled) {
+    background: $color-ink;
+    color: $color-cream;
+  }
+}
+
+.danger {
+  background: $color-error;
+  color: $color-white;
+
+  &:hover:not(:disabled) {
+    background: color.adjust($color-error, $lightness: -8%);
+  }
+}
+
+.loading {
+  cursor: wait;
+}
+
+.invisible {
+  visibility: hidden;
+}
+
+.spinner {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

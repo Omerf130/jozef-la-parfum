@@ -1,0 +1,117 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.editorial {
+  background: $color-cream-dark;
+  padding-block: 100px;
+
+  @include md {
+    padding-block: 60px;
+  }
+}
+
+.inner {
+  @include container;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 64px;
+  align-items: center;
+
+  @include md {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}
+
+.text {
+  h2 {
+    font-family: $font-display;
+    font-size: clamp(2rem, 4vw, 3rem);
+    margin: 0 0 24px;
+    color: $color-ink;
+    line-height: 1.15;
+  }
+
+  p {
+    color: $color-text;
+    line-height: 1.85;
+    font-size: 1.02rem;
+    margin-bottom: 20px;
+  }
+}
+
+.kicker {
+  display: inline-block;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: $color-gold-dark;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 32px 0 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  border-top: 1px solid rgba($color-ink, 0.1);
+  padding-top: 28px;
+
+  li {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  strong {
+    color: $color-ink;
+    font-size: 1rem;
+  }
+
+  span {
+    color: $color-text-muted;
+    font-size: 0.9rem;
+  }
+}
+
+.imageCol {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  max-height: 560px;
+  margin-inline: auto;
+  width: 100%;
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba($color-gold, 0.3), transparent 50%),
+    linear-gradient(180deg, $color-ink-soft, $color-ink);
+  border-radius: $radius;
+  box-shadow: $shadow-lg;
+
+  &::after {
+    content: "✦";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba($color-gold, 0.25);
+    font-size: 8rem;
+  }
+}
+
+.imageAccent {
+  position: absolute;
+  inset-block-start: 24px;
+  inset-inline-start: -24px;
+  inset-block-end: 24px;
+  inset-inline-end: -24px;
+  border: 1px solid $color-gold;
+  border-radius: $radius;
+  z-index: -1;
+}

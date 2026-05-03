@@ -1,0 +1,62 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: $color-text;
+  letter-spacing: 0.02em;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: $color-white;
+  color: $color-text;
+  transition: border-color $dur-fast $ease, box-shadow $dur-fast $ease;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: $color-gold-dark;
+    box-shadow: 0 0 0 3px rgba($color-gold, 0.25);
+  }
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.error {
+  border-color: $color-error;
+
+  &:focus {
+    box-shadow: 0 0 0 3px rgba($color-error, 0.2);
+  }
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: $color-text-muted;
+  margin: 0;
+}
+
+.errorText {
+  font-size: 0.8rem;
+  color: $color-error;
+  margin: 0;
+}

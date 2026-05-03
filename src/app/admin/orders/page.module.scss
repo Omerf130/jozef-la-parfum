@@ -1,0 +1,139 @@
+@use "../../../styles/variables" as *;
+@use "../../../styles/mixins" as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.head {
+  h1 {
+    font-family: $font-display;
+    font-size: 1.8rem;
+    margin: 0 0 4px;
+    color: $color-ink;
+  }
+
+  p {
+    color: $color-text-muted;
+    margin: 0;
+  }
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid $color-border;
+  padding-bottom: 4px;
+}
+
+.tab {
+  padding: 8px 14px;
+  border-radius: $radius-sm;
+  font-size: 0.9rem;
+  color: $color-text-muted;
+  background: transparent;
+
+  &:hover {
+    color: $color-ink;
+  }
+}
+
+.active {
+  background: $color-ink;
+  color: $color-cream !important;
+}
+
+.tableWrap {
+  @include card-surface;
+  background: $color-white;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th,
+  td {
+    padding: 12px 14px;
+    text-align: start;
+    border-bottom: 1px solid $color-border;
+  }
+
+  th {
+    font-weight: 600;
+    color: $color-text-muted;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: $color-cream;
+  }
+
+  small {
+    display: block;
+    color: $color-text-muted;
+    font-size: 0.75rem;
+  }
+
+  a {
+    color: $color-gold-dark;
+    font-family: $font-display;
+
+    &:hover {
+      color: $color-ink;
+    }
+  }
+}
+
+.badge,
+.statusBadge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+}
+
+.paid {
+  background: rgba($color-success, 0.12);
+  color: $color-success;
+}
+
+.pending {
+  background: rgba($color-warning, 0.15);
+  color: $color-warning;
+}
+
+.failed,
+.refunded {
+  background: rgba($color-error, 0.12);
+  color: $color-error;
+}
+
+.os_new {
+  background: rgba($color-gold, 0.18);
+  color: $color-gold-dark;
+}
+
+.os_processing {
+  background: rgba(#3b82f6, 0.15);
+  color: #2563eb;
+}
+
+.os_shipped {
+  background: rgba(#a855f7, 0.15);
+  color: #7c3aed;
+}
+
+.os_delivered {
+  background: rgba($color-success, 0.15);
+  color: $color-success;
+}
+
+.os_cancelled {
+  background: rgba($color-error, 0.12);
+  color: $color-error;
+}

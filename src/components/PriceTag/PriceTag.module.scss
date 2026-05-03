@@ -1,0 +1,37 @@
+@use "../../styles/variables" as *;
+
+.price {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.sm {
+  font-size: 0.95rem;
+}
+
+.md {
+  font-size: 1.1rem;
+}
+
+.lg {
+  font-size: 1.6rem;
+}
+
+.regular,
+.sale {
+  font-weight: 600;
+  color: $color-ink;
+  font-family: $font-display;
+}
+
+.sale {
+  color: $color-error;
+}
+
+.original {
+  color: $color-text-muted;
+  text-decoration: line-through;
+  font-size: 0.85em;
+  font-weight: 400;
+}

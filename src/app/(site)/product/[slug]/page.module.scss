@@ -1,0 +1,64 @@
+@use "../../../../styles/variables" as *;
+@use "../../../../styles/mixins" as *;
+
+.page {
+  @include container;
+  padding-block: 40px 80px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 56px;
+
+  @include md {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+.gallery {
+  position: sticky;
+  top: 100px;
+  align-self: start;
+
+  @include md {
+    position: static;
+  }
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: $color-gold-dark;
+  margin-bottom: 8px;
+}
+
+.title {
+  font-family: $font-display;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  margin: 0 0 14px;
+  color: $color-ink;
+  line-height: 1.15;
+}
+
+.meta {
+  display: flex;
+  gap: 8px;
+  color: $color-text-muted;
+  font-size: 0.95rem;
+  margin-bottom: 28px;
+}
+
+.description {
+  color: $color-text;
+  line-height: 1.85;
+  font-size: 1.02rem;
+  margin-bottom: 32px;
+}

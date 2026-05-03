@@ -1,0 +1,133 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.loading {
+  text-align: center;
+  padding: 60px;
+  color: $color-text-muted;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  align-items: start;
+
+  @include md {
+    grid-template-columns: 1fr;
+  }
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section {
+  @include card-surface;
+  background: $color-white;
+  padding: 28px;
+
+  h2 {
+    font-family: $font-display;
+    font-size: 1.2rem;
+    margin: 0 0 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $color-border;
+    color: $color-ink;
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @include sm {
+    grid-template-columns: 1fr;
+  }
+}
+
+.serverError {
+  background: rgba($color-error, 0.08);
+  color: $color-error;
+  padding: 12px 16px;
+  border-radius: $radius-sm;
+  border: 1px solid rgba($color-error, 0.3);
+  font-size: 0.9rem;
+}
+
+.summary {
+  @include card-surface;
+  background: $color-white;
+  padding: 24px;
+  position: sticky;
+  top: 100px;
+
+  h2 {
+    font-family: $font-display;
+    font-size: 1.2rem;
+    margin: 0 0 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $color-border;
+    color: $color-ink;
+  }
+}
+
+.summaryItems {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 0.9rem;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $color-border;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  small {
+    display: block;
+    color: $color-text-muted;
+    font-size: 0.8rem;
+  }
+}
+
+.summaryName {
+  flex: 1;
+  min-width: 0;
+}
+
+.row2 {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 0.95rem;
+}
+
+.totalRow {
+  font-family: $font-display;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: $color-ink;
+  margin: 12px 0 18px;
+  padding: 12px 0 0;
+  border-top: 1px solid $color-border;
+}
+
+.secure {
+  text-align: center;
+  font-size: 0.8rem;
+  color: $color-text-muted;
+  margin: 14px 0 0;
+}

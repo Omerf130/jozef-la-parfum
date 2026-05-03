@@ -1,0 +1,92 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.hero {
+  position: relative;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  color: $color-cream;
+
+  @include md {
+    min-height: 70vh;
+  }
+}
+
+.bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 30%, rgba($color-gold, 0.45), transparent 60%),
+    linear-gradient(135deg, #1a1410 0%, #0d0d0d 50%, #1a1410 100%);
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba($color-gold-light, 0.15), transparent 40%),
+      radial-gradient(circle at 80% 70%, rgba($color-gold, 0.1), transparent 50%);
+  }
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba($color-ink, 0.7) 0%,
+    rgba($color-ink, 0.3) 50%,
+    rgba($color-ink, 0.6) 100%
+  );
+}
+
+.content {
+  @include container;
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  padding-block: 80px;
+}
+
+.kicker {
+  display: inline-block;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  color: $color-gold;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+
+  &::before {
+    content: "—  ";
+  }
+}
+
+.title {
+  font-family: $font-display;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  font-weight: 500;
+  line-height: 1.05;
+  margin: 0 0 24px;
+  color: $color-cream;
+
+  em {
+    font-style: italic;
+    color: $color-gold;
+  }
+}
+
+.subtitle {
+  font-size: clamp(1rem, 1.4vw, 1.15rem);
+  color: rgba($color-cream, 0.85);
+  max-width: 540px;
+  line-height: 1.7;
+  margin-bottom: 36px;
+}
+
+.actions {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}

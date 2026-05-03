@@ -1,0 +1,142 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.shell {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 100vh;
+  background: $color-cream-dark;
+
+  @include md {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sidebar {
+  background: $color-ink;
+  color: $color-cream;
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+
+  @include md {
+    position: static;
+    height: auto;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+    gap: 16px;
+    padding: 16px;
+  }
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: $color-gold;
+  font-family: $font-display;
+  font-size: 1.1rem;
+  letter-spacing: 0.06em;
+
+  &:hover {
+    color: $color-gold-light;
+  }
+}
+
+.brandMark {
+  width: 38px;
+  height: 38px;
+  background: $color-gold;
+  color: $color-ink;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: $font-display;
+  font-weight: 700;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+
+  @include md {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.navLink {
+  display: block;
+  padding: 10px 14px;
+  border-radius: $radius-sm;
+  color: rgba($color-cream, 0.85);
+  font-size: 0.95rem;
+  transition: background-color $dur-fast $ease, color $dur-fast $ease;
+
+  &:hover {
+    background: rgba($color-gold, 0.12);
+    color: $color-gold;
+  }
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: rgba($color-cream, 0.6);
+
+  @include md {
+    flex-direction: row;
+    align-items: center;
+    margin-inline-start: auto;
+  }
+}
+
+.viewSite {
+  color: $color-gold;
+  font-size: 0.85rem;
+
+  &:hover {
+    color: $color-gold-light;
+  }
+}
+
+.email {
+  word-break: break-all;
+  color: rgba($color-cream, 0.55);
+}
+
+.logout {
+  background: transparent;
+  border: 1px solid rgba($color-cream, 0.2);
+  color: rgba($color-cream, 0.85);
+  padding: 8px 14px;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+
+  &:hover {
+    border-color: $color-error;
+    color: $color-error;
+  }
+}
+
+.main {
+  padding: 32px;
+  max-width: 1200px;
+  width: 100%;
+
+  @include md {
+    padding: 20px 16px;
+  }
+}

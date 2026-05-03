@@ -1,0 +1,61 @@
+@use "../../../../styles/variables" as *;
+@use "../../../../styles/mixins" as *;
+
+.page {
+  @include container;
+  padding-block: 80px;
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  @include card-surface;
+  background: $color-white;
+  padding: 48px 32px;
+  text-align: center;
+  max-width: 540px;
+  width: 100%;
+
+  h1 {
+    font-family: $font-display;
+    font-size: 1.8rem;
+    margin: 0 0 16px;
+    color: $color-ink;
+  }
+
+  p {
+    color: $color-text;
+    margin-bottom: 12px;
+    line-height: 1.7;
+  }
+}
+
+.subtle {
+  color: $color-text-muted !important;
+  font-size: 0.9rem;
+}
+
+.iconWrap {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: rgba($color-success, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 24px;
+}
+
+.icon {
+  font-size: 2.5rem;
+  color: $color-success;
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}

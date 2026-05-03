@@ -1,0 +1,21 @@
+@use "../../../styles/variables" as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.head {
+  h1 {
+    font-family: $font-display;
+    font-size: 1.8rem;
+    margin: 0 0 4px;
+    color: $color-ink;
+  }
+
+  p {
+    color: $color-text-muted;
+    margin: 0;
+  }
+}

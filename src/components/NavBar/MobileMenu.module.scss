@@ -1,0 +1,90 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  cursor: pointer;
+  padding: 0;
+  align-items: center;
+
+  span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: $color-ink;
+    border-radius: 1px;
+  }
+
+  @include md {
+    display: inline-flex;
+  }
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba($color-ink, 0.5);
+  z-index: 100;
+  animation: fade $dur-fast ease;
+}
+
+.panel {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 80%;
+  max-width: 320px;
+  background: $color-cream;
+  z-index: 101;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn $dur ease;
+}
+
+.close {
+  align-self: flex-end;
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  color: $color-ink;
+}
+
+.links {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.link {
+  display: block;
+  padding: 14px 8px;
+  font-size: 1.05rem;
+  border-bottom: 1px solid $color-border;
+  color: $color-ink;
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}

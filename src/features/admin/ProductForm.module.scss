@@ -1,0 +1,153 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.section {
+  @include card-surface;
+  background: $color-white;
+  padding: 24px;
+
+  h2 {
+    font-family: $font-display;
+    font-size: 1.05rem;
+    margin: 0 0 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $color-border;
+    color: $color-ink;
+  }
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checks {
+  display: flex;
+  gap: 24px;
+  font-size: 0.95rem;
+  margin-top: 8px;
+
+  input {
+    margin-inline-end: 8px;
+    accent-color: $color-gold-dark;
+  }
+}
+
+.sizeRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 8px;
+
+  @media (max-width: $bp-sm) {
+    grid-template-columns: repeat(2, 1fr) auto;
+  }
+}
+
+.removeSize {
+  width: 36px;
+  height: 36px;
+  border: 1px solid $color-border;
+  background: $color-white;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: $color-error;
+  margin-bottom: 16px;
+}
+
+.fieldError {
+  color: $color-error;
+  font-size: 0.85rem;
+  margin: 6px 0 0;
+}
+
+.images {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.imageItem {
+  position: relative;
+  width: 120px;
+  height: 150px;
+  background: $color-cream-dark;
+  border-radius: $radius-sm;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.removeImg {
+  position: absolute;
+  top: 4px;
+  inset-inline-end: 4px;
+  width: 26px;
+  height: 26px;
+  background: rgba($color-ink, 0.85);
+  color: $color-white;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.uploadLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 22px;
+  border: 1px dashed $color-gold-dark;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  color: $color-gold-dark;
+  font-size: 0.9rem;
+  transition: all $dur-fast $ease;
+
+  &:hover {
+    background: rgba($color-gold, 0.1);
+  }
+}
+
+.serverError {
+  background: rgba($color-error, 0.08);
+  color: $color-error;
+  padding: 12px 16px;
+  border-radius: $radius-sm;
+  border: 1px solid rgba($color-error, 0.3);
+  font-size: 0.9rem;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  position: sticky;
+  bottom: 0;
+  background: $color-cream-dark;
+  padding: 16px 0;
+  border-top: 1px solid $color-border;
+}

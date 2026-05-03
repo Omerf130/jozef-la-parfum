@@ -1,0 +1,51 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-family: $font-display;
+  font-size: 1.4rem;
+  margin: 0 0 24px;
+  color: $color-ink;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @include sm {
+    grid-template-columns: 1fr;
+  }
+}
+
+.serverError {
+  background: rgba($color-error, 0.08);
+  color: $color-error;
+  padding: 10px 14px;
+  border-radius: $radius-sm;
+  font-size: 0.9rem;
+  margin: 0 0 16px;
+  border: 1px solid rgba($color-error, 0.3);
+}
+
+.thanks {
+  text-align: center;
+  padding: 32px 16px;
+
+  h2 {
+    font-family: $font-display;
+    font-size: 1.4rem;
+    color: $color-ink;
+    margin: 0 0 12px;
+  }
+
+  p {
+    color: $color-text-muted;
+    margin-bottom: 24px;
+  }
+}

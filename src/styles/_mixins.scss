@@ -1,0 +1,71 @@
+@use "./variables" as *;
+
+@mixin container {
+  width: 100%;
+  max-width: $container-max;
+  margin-inline: auto;
+  padding-inline: 24px;
+
+  @media (max-width: $bp-md) {
+    padding-inline: 16px;
+  }
+}
+
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  font-family: $font-body;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: background-color $dur-fast $ease, color $dur-fast $ease,
+    transform $dur-fast $ease, border-color $dur-fast $ease;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin focus-ring {
+  outline: 2px solid $color-gold;
+  outline-offset: 2px;
+}
+
+@mixin display-heading {
+  font-family: $font-display;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.15;
+}
+
+@mixin card-surface {
+  background: $color-white;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  box-shadow: $shadow-sm;
+}
+
+@mixin truncate($lines: 1) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin md {
+  @media (max-width: $bp-md) {
+    @content;
+  }
+}
+
+@mixin sm {
+  @media (max-width: $bp-sm) {
+    @content;
+  }
+}

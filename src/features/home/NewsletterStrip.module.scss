@@ -1,0 +1,61 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.newsletter {
+  background: $color-ink;
+  color: $color-cream;
+  padding-block: 60px;
+}
+
+.inner {
+  @include container;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+
+  @include md {
+    grid-template-columns: 1fr;
+  }
+}
+
+.text {
+  h2 {
+    font-family: $font-display;
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    margin: 0 0 8px;
+    color: $color-cream;
+  }
+
+  p {
+    color: rgba($color-cream, 0.7);
+    margin: 0;
+    font-size: 0.95rem;
+  }
+}
+
+.form {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+
+  > div {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  @include sm {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+}
+
+.done {
+  grid-column: 1 / -1;
+  margin: 12px 0 0;
+  color: $color-gold;
+  font-size: 0.9rem;
+}

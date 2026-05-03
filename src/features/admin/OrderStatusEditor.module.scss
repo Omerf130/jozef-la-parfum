@@ -1,0 +1,18 @@
+@use "../../styles/variables" as *;
+
+.editor {
+  display: flex;
+  flex-direction: column;
+}
+
+.success {
+  color: $color-success;
+  font-size: 0.85rem;
+  margin: 8px 0 0;
+}
+
+.error {
+  color: $color-error;
+  font-size: 0.85rem;
+  margin: 8px 0 0;
+}

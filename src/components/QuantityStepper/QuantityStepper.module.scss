@@ -1,0 +1,43 @@
+@use "../../styles/variables" as *;
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  overflow: hidden;
+  background: $color-white;
+}
+
+.btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: $color-ink;
+  transition: background-color $dur-fast $ease;
+
+  &:hover:not(:disabled) {
+    background: $color-cream;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.value {
+  min-width: 48px;
+  text-align: center;
+  font-weight: 600;
+  font-family: $font-display;
+  border-inline: 1px solid $color-border;
+  padding: 0 12px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}

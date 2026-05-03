@@ -1,0 +1,81 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.footer {
+  background: $color-ink;
+  color: rgba($color-cream, 0.85);
+  padding: 60px 0 24px;
+  margin-top: 80px;
+}
+
+.inner {
+  @include container;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
+  gap: 40px;
+
+  @include md {
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  @include sm {
+    grid-template-columns: 1fr;
+  }
+}
+
+.col {
+  h4 {
+    color: $color-gold;
+    font-family: $font-display;
+    font-size: 1.05rem;
+    margin: 0 0 14px;
+    letter-spacing: 0.06em;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 0.9rem;
+  }
+
+  a {
+    color: rgba($color-cream, 0.75);
+
+    &:hover {
+      color: $color-gold;
+    }
+  }
+}
+
+.tagline {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: rgba($color-cream, 0.7);
+  margin: 0;
+}
+
+.bottom {
+  @include container;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba($color-cream, 0.1);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: rgba($color-cream, 0.55);
+
+  @include sm {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+  }
+}
+
+.payments {
+  letter-spacing: 0.05em;
+}
