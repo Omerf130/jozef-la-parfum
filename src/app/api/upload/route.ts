@@ -21,7 +21,12 @@ export async function POST(request: Request) {
     if (file.size > MAX_SIZE) {
       return NextResponse.json({ error: "קובץ גדול מ-8MB" }, { status: 400 });
     }
-    const url = await uploadImage(file);
+    const rawPrefix = formData.get("prefix");
+    const prefix =
+      typeof rawPrefix === "string" && ["products", "categories"].includes(rawPrefix)
+        ? rawPrefix
+        : "products";
+    const url = await uploadImage(file, prefix);
     return NextResponse.json({ url });
   } catch (e) {
     console.error("[api/upload]", e);

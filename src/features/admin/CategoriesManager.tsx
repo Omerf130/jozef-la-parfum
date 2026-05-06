@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -76,9 +77,12 @@ interface CategoryFormProps {
 }
 
 function CategoryForm({ initial, onSaved, onError, onDeleted }: CategoryFormProps) {
+  const [uploading, setUploading] = useState(false);
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<CategoryInput>({
     resolver: zodResolver(categorySchema),
@@ -91,6 +95,35 @@ function CategoryForm({ initial, onSaved, onError, onDeleted }: CategoryFormProp
         }
       : { name: "", slug: "", description: "", image: "" },
   });
+
+  const imageUrl = watch("image");
+  const isBlobUrl =
+    typeof imageUrl === "string" &&
+    /^https:\/\/[^/]*\.public\.blob\.vercel-storage\.com\//.test(imageUrl);
+
+  async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("prefix", "categories");
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "העלאה נכשלה");
+      setValue("image", data.url, { shouldDirty: true });
+    } catch (err) {
+      onError(err instanceof Error ? err.message : "שגיאה בהעלאה");
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
+  }
+
+  function clearImage() {
+    setValue("image", "", { shouldDirty: true });
+  }
 
   async function onSubmit(values: CategoryInput) {
     try {
@@ -130,7 +163,41 @@ function CategoryForm({ initial, onSaved, onError, onDeleted }: CategoryFormProp
       <Input label="שם" {...register("name")} error={errors.name?.message} />
       <Input label="Slug" {...register("slug")} hint="ייווצר אוטומטית אם נשאר ריק" />
       <Textarea label="תיאור" rows={3} {...register("description")} />
-      <Input label="כתובת תמונה" {...register("image")} dir="ltr" />
+      <input type="hidden" {...register("image")} />
+      <div className={styles.imageField}>
+        <span className={styles.imageLabel}>תמונת קטגוריה</span>
+        {imageUrl ? (
+          <div className={styles.imagePreview}>
+            {isBlobUrl ? (
+              <Image src={imageUrl} alt="" fill sizes="160px" />
+            ) : (
+              <div className={styles.imageFallback}>
+                <span>תמונה לא תקינה</span>
+                <small dir="ltr">{imageUrl}</small>
+              </div>
+            )}
+            <button
+              type="button"
+              onClick={clearImage}
+              className={styles.removeImg}
+              aria-label="הסר תמונה"
+            >
+              ×
+            </button>
+          </div>
+        ) : (
+          <label className={styles.uploadLabel}>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleUpload}
+              disabled={uploading}
+              hidden
+            />
+            <span>{uploading ? "מעלה…" : "+ העלאת תמונה"}</span>
+          </label>
+        )}
+      </div>
       <div className={styles.actions}>
         <Button type="submit" loading={isSubmitting}>
           {initial ? "שמור" : "צור"}
