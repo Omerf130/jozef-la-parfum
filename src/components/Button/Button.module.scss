@@ -6,6 +6,7 @@
   @include button-base;
   position: relative;
   text-align: center;
+  white-space: nowrap;
 
   &:focus-visible {
     @include focus-ring;
@@ -13,18 +14,24 @@
 }
 
 .sm {
-  padding: 8px 14px;
-  font-size: 0.85rem;
+  padding: 10px 20px;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  min-height: 38px;
 }
 
 .md {
-  padding: 12px 22px;
-  font-size: 0.95rem;
+  padding: 14px 28px;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  min-height: 46px;
 }
 
 .lg {
-  padding: 16px 32px;
-  font-size: 1.05rem;
+  padding: 18px 36px;
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  min-height: 54px;
 }
 
 .fullWidth {
@@ -33,40 +40,62 @@
 
 .primary {
   background: $color-ink;
-  color: $color-cream;
+  color: $color-white;
+  border-color: $color-ink;
 
   &:hover:not(:disabled) {
-    background: $color-gold-dark;
-    color: $color-white;
+    background: $color-white;
+    color: $color-ink;
   }
 }
 
 .secondary {
-  background: $color-gold;
+  background: $color-white;
   color: $color-ink;
+  border-color: $color-ink;
 
   &:hover:not(:disabled) {
-    background: $color-gold-light;
+    background: $color-ink;
+    color: $color-white;
   }
 }
 
 .ghost {
   background: transparent;
   color: $color-ink;
-  border: 1px solid $color-ink;
+  border-color: transparent;
+  padding-inline: 0;
+  letter-spacing: 0.18em;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 8px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0.4);
+    transform-origin: center;
+    transition: transform $dur $ease;
+  }
 
   &:hover:not(:disabled) {
-    background: $color-ink;
-    color: $color-cream;
+    color: $color-ink;
+
+    &::after {
+      transform: scaleX(1);
+    }
   }
 }
 
 .danger {
   background: $color-error;
   color: $color-white;
+  border-color: $color-error;
 
   &:hover:not(:disabled) {
     background: color.adjust($color-error, $lightness: -8%);
+    border-color: color.adjust($color-error, $lightness: -8%);
   }
 }
 

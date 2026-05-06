@@ -11,7 +11,7 @@ html,
 body {
   padding: 0;
   margin: 0;
-  background: $color-cream;
+  background: $color-bg;
   color: $color-text;
   font-family: $font-body;
   font-size: 16px;
@@ -36,7 +36,7 @@ a {
 
   &:focus-visible {
     @include focus-ring;
-    border-radius: 2px;
+    border-radius: 0;
   }
 }
 
@@ -59,7 +59,7 @@ h4,
 h5,
 h6 {
   @include display-heading;
-  margin: 0 0 0.6em;
+  margin: 0 0 0.5em;
   color: $color-ink;
 }
 
@@ -75,8 +75,8 @@ select {
 }
 
 ::selection {
-  background: $color-gold;
-  color: $color-ink;
+  background: $color-ink;
+  color: $color-white;
 }
 
 .sr-only {

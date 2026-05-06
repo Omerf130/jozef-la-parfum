@@ -7,16 +7,21 @@
 }
 
 .title {
-  font-family: $font-display;
-  font-size: 1.4rem;
+  font-family: $font-body;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
   margin: 0 0 24px;
   color: $color-ink;
+  font-weight: 500;
+  padding-bottom: 16px;
+  border-bottom: 1px solid $color-border;
 }
 
 .row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 14px;
 
   @include sm {
     grid-template-columns: 1fr;
@@ -24,28 +29,31 @@
 }
 
 .serverError {
-  background: rgba($color-error, 0.08);
+  background: $color-bg-soft;
   color: $color-error;
-  padding: 10px 14px;
-  border-radius: $radius-sm;
-  font-size: 0.9rem;
+  padding: 12px 14px;
+  border: 1px solid $color-border;
+  border-inline-start: 2px solid $color-error;
+  border-radius: 0;
+  font-size: 0.88rem;
   margin: 0 0 16px;
-  border: 1px solid rgba($color-error, 0.3);
 }
 
 .thanks {
   text-align: center;
-  padding: 32px 16px;
+  padding: 48px 16px;
 
   h2 {
     font-family: $font-display;
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     color: $color-ink;
-    margin: 0 0 12px;
+    margin: 0 0 14px;
+    font-weight: 500;
   }
 
   p {
     color: $color-text-muted;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
+    font-size: 0.95rem;
   }
 }

@@ -3,8 +3,8 @@
 
 .toggle {
   display: none;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   background: none;
   border: none;
   flex-direction: column;
@@ -12,17 +12,20 @@
   gap: 5px;
   cursor: pointer;
   padding: 0;
-  align-items: center;
+  align-items: flex-start;
 
   span {
     display: block;
     width: 22px;
-    height: 2px;
+    height: 1px;
     background: $color-ink;
-    border-radius: 1px;
   }
 
-  @include md {
+  span:nth-child(2) {
+    width: 16px;
+  }
+
+  @include lg {
     display: inline-flex;
   }
 }
@@ -30,50 +33,71 @@
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba($color-ink, 0.5);
+  background: rgba($color-ink, 0.4);
   z-index: 100;
-  animation: fade $dur-fast ease;
+  animation: fade $dur ease;
 }
 
 .panel {
   position: fixed;
   inset-block: 0;
   inset-inline-start: 0;
-  width: 80%;
-  max-width: 320px;
-  background: $color-cream;
+  width: 88%;
+  max-width: 380px;
+  background: $color-white;
   z-index: 101;
-  padding: 24px;
+  padding: 24px 28px 32px;
   display: flex;
   flex-direction: column;
-  animation: slideIn $dur ease;
+  animation: slideIn $dur $ease;
+  border-inline-end: 1px solid $color-border;
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 24px;
+  border-bottom: 1px solid $color-border;
+  margin-bottom: 16px;
+}
+
+.headTitle {
+  @include eyebrow;
 }
 
 .close {
-  align-self: flex-end;
   width: 36px;
   height: 36px;
   background: none;
   border: none;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   line-height: 1;
   cursor: pointer;
   color: $color-ink;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .links {
-  margin-top: 12px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
 }
 
 .link {
   display: block;
-  padding: 14px 8px;
-  font-size: 1.05rem;
+  padding: 18px 4px;
+  font-size: 1rem;
   border-bottom: 1px solid $color-border;
   color: $color-ink;
+  letter-spacing: 0.04em;
+  font-weight: 400;
+  transition: color $dur-fast $ease;
+
+  &:hover {
+    color: $color-gold-dark;
+  }
 }
 
 @keyframes fade {
@@ -86,5 +110,14 @@
   from {
     transform: translateX(-100%);
     opacity: 0;
+  }
+}
+
+html[dir="rtl"] {
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
   }
 }

@@ -55,7 +55,9 @@ export async function CategoryTiles() {
             </div>
             <div className={styles.label}>
               <span>{c.name}</span>
-              <span className={styles.arrow} aria-hidden="true">→</span>
+              <span className={styles.arrow} aria-hidden="true">
+                גלו
+              </span>
             </div>
           </Link>
         ))}

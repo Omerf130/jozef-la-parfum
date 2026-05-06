@@ -2,44 +2,69 @@
 @use "../../../styles/mixins" as *;
 
 .page {
-  @include container;
-  padding-block: 48px 80px;
+  @include container-wide;
+  padding-block: 64px 96px;
+  max-width: 1200px;
+
+  @include md {
+    padding-block: 32px 64px;
+  }
 }
 
 .layout {
   display: grid;
   grid-template-columns: 1fr 1.2fr;
-  gap: 60px;
+  gap: 80px;
+
+  @include lg {
+    gap: 56px;
+  }
 
   @include md {
     grid-template-columns: 1fr;
-    gap: 32px;
+    gap: 40px;
   }
 }
 
 .info {
   h1 {
     font-family: $font-display;
-    font-size: clamp(2rem, 4vw, 2.6rem);
+    font-size: clamp(2rem, 4vw, 2.8rem);
     margin: 0 0 18px;
     color: $color-ink;
-    line-height: 1.15;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: 0.005em;
   }
 
   p {
     color: $color-text-muted;
     line-height: 1.8;
-    margin-bottom: 32px;
+    margin-bottom: 36px;
+    font-size: 0.98rem;
   }
 }
 
 .kicker {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.3em;
-  color: $color-gold-dark;
+  color: $color-text-muted;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
+  font-weight: 500;
+  position: relative;
+  padding-inline-start: 28px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    top: 50%;
+    width: 18px;
+    height: 1px;
+    background: $color-gold;
+  }
 }
 
 .contactList {
@@ -48,23 +73,20 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  border-top: 1px solid $color-border;
 
   li {
     display: flex;
     flex-direction: column;
-    gap: 4px;
-    padding-bottom: 16px;
+    gap: 6px;
+    padding: 18px 0;
     border-bottom: 1px solid $color-border;
-
-    &:last-child {
-      border-bottom: none;
-    }
   }
 
   a {
     color: $color-ink;
-    font-weight: 500;
+    font-weight: 400;
+    transition: color $dur-fast $ease;
 
     &:hover {
       color: $color-gold-dark;
@@ -73,15 +95,20 @@
 }
 
 .label {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.2em;
-  color: $color-gold-dark;
-  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: $color-text-muted;
+  font-weight: 500;
 }
 
 .formCol {
-  @include card-surface;
-  padding: 32px;
-  background: $color-white;
+  background: transparent;
+  border: 0;
+  padding: 0;
+
+  @include md {
+    padding-top: 16px;
+    border-top: 1px solid $color-border;
+  }
 }

@@ -44,13 +44,16 @@ export function MobileMenu({ links }: MobileMenuProps) {
         <>
           <div className={styles.backdrop} onClick={() => setOpen(false)} />
           <div className={styles.panel} role="dialog" aria-label="תפריט ניווט">
-            <button
-              className={styles.close}
-              onClick={() => setOpen(false)}
-              aria-label="סגירת תפריט"
-            >
-              ×
-            </button>
+            <div className={styles.head}>
+              <span className={styles.headTitle}>תפריט</span>
+              <button
+                className={styles.close}
+                onClick={() => setOpen(false)}
+                aria-label="סגירת תפריט"
+              >
+                ×
+              </button>
+            </div>
             <nav className={styles.links}>
               {links.map((link) => (
                 <Link

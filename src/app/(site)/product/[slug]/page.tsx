@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { connectDB } from "@/lib/db";
@@ -51,8 +52,29 @@ export default async function ProductPage({ params }: PageProps) {
 
   const product = serializeProduct(doc);
 
+  const categoryName =
+    typeof product.category === "object" && product.category
+      ? product.category.name
+      : null;
+  const categorySlug =
+    typeof product.category === "object" && product.category
+      ? product.category.slug
+      : null;
+
   return (
     <article className={styles.page}>
+      <nav className={styles.breadcrumb} aria-label="פירורי לחם">
+        <Link href="/">בית</Link>
+        <span aria-hidden="true">/</span>
+        {categoryName && categorySlug ? (
+          <>
+            <Link href={`/category/${categorySlug}`}>{categoryName}</Link>
+            <span aria-hidden="true">/</span>
+          </>
+        ) : null}
+        <span className={styles.crumbCurrent}>{product.name}</span>
+      </nav>
+
       <div className={styles.layout}>
         <div className={styles.gallery}>
           <ProductGallery images={product.images} alt={product.name} />

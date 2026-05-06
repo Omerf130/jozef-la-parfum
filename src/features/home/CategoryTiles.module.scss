@@ -2,57 +2,84 @@
 @use "../../styles/mixins" as *;
 
 .section {
-  @include container;
-  padding-block: 60px;
+  @include container-wide;
+  padding-block: 96px;
+
+  @include md {
+    padding-block: 64px;
+  }
 }
 
 .head {
   text-align: center;
-  margin-bottom: 36px;
+  margin-bottom: 56px;
+
+  @include md {
+    margin-bottom: 36px;
+  }
 }
 
 .kicker {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.3em;
-  color: $color-gold-dark;
+  color: $color-text-muted;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 18px;
+  font-weight: 500;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: $color-gold;
+    margin: 12px auto 0;
+  }
 }
 
 .title {
   font-family: $font-display;
-  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
   margin: 0;
   color: $color-ink;
+  font-weight: 500;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 16px;
+
+  @include lg {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
 
   @include md {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 }
 
 .tile {
   position: relative;
-  border-radius: $radius;
   overflow: hidden;
-  background: $color-ink;
-  color: $color-cream;
-  transition: transform $dur $ease;
+  background: $color-bg-soft;
+  color: $color-white;
+  display: block;
 
   &:hover {
-    transform: translateY(-4px);
-
     .image {
-      transform: scale(1.05);
+      transform: scale(1.04);
+    }
+
+    .label {
+      transform: translateY(-4px);
     }
 
     .arrow {
+      opacity: 1;
       transform: translateX(-4px);
 
       html[dir="rtl"] & {
@@ -64,13 +91,18 @@
 
 .imageWrap {
   position: relative;
-  aspect-ratio: 16 / 10;
-  background: linear-gradient(135deg, #1a1410, #0d0d0d);
+  aspect-ratio: 3 / 4;
+  background: $color-bg-soft;
+  overflow: hidden;
+
+  @include md {
+    aspect-ratio: 4 / 3;
+  }
 }
 
 .image {
   object-fit: cover;
-  transition: transform $dur-slow $ease;
+  transition: transform 700ms $ease;
 }
 
 .placeholder {
@@ -80,31 +112,60 @@
   align-items: center;
   justify-content: center;
   font-size: 5rem;
-  color: rgba($color-gold, 0.3);
+  color: $color-text-subtle;
+  font-family: $font-display;
 }
 
 .shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba($color-ink, 0.7), transparent 60%);
+  background: linear-gradient(
+    to top,
+    rgba($color-ink, 0.55) 0%,
+    rgba($color-ink, 0.05) 40%,
+    transparent 70%
+  );
 }
 
 .label {
   position: absolute;
-  bottom: 18px;
-  inset-inline-start: 22px;
-  inset-inline-end: 22px;
+  bottom: 32px;
+  inset-inline-start: 32px;
+  inset-inline-end: 32px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 14px;
   font-family: $font-display;
-  font-size: 1.4rem;
-  color: $color-cream;
-  letter-spacing: 0.04em;
+  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
+  color: $color-white;
+  letter-spacing: 0.02em;
+  font-weight: 500;
+  transition: transform $dur $ease;
+
+  span:first-child {
+    line-height: 1;
+  }
+
+  @include md {
+    bottom: 24px;
+    inset-inline-start: 24px;
+    inset-inline-end: 24px;
+  }
 }
 
 .arrow {
-  color: $color-gold;
-  font-size: 1.2rem;
-  transition: transform $dur-fast $ease;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  font-family: $font-body;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.85;
+  transition: opacity $dur-fast $ease, transform $dur-fast $ease;
+  padding-top: 6px;
+  border-top: 1px solid rgba($color-white, 0.5);
+  width: 80px;
 }

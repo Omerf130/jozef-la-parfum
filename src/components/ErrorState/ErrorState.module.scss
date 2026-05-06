@@ -2,14 +2,15 @@
 @use "../../styles/mixins" as *;
 
 .error {
-  @include card-surface;
+  background: $color-bg-soft;
+  border: 1px solid $color-border;
+  border-inline-start: 2px solid $color-error;
   text-align: center;
-  padding: 48px 24px;
+  padding: 48px 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  border-color: rgba($color-error, 0.3);
+  gap: 14px;
 }
 
 .icon {
@@ -18,11 +19,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 600;
-  background: rgba($color-error, 0.08);
+  font-size: 1.4rem;
+  font-weight: 400;
+  background: transparent;
   color: $color-error;
   border-radius: 50%;
+  border: 1px solid $color-error;
 }
 
 .title {
@@ -30,10 +32,12 @@
   font-size: 1.4rem;
   margin: 0;
   color: $color-ink;
+  font-weight: 500;
 }
 
 .description {
   color: $color-text-muted;
   margin: 0;
   max-width: 480px;
+  font-size: 0.95rem;
 }

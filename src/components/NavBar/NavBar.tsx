@@ -14,26 +14,46 @@ const NAV_LINKS = [
   { href: "/contact", label: "צור קשר" },
 ];
 
+const ANNOUNCEMENTS = [
+  "משלוח חינם בהזמנה מעל ₪350",
+  "החזרות והחלפות עד 14 יום",
+  "תשלומים ללא ריבית",
+];
+
 export function NavBar() {
   return (
-    <header className={styles.nav}>
-      <div className={styles.inner}>
-        <MobileMenu links={NAV_LINKS} />
-        <Link href="/" className={styles.brand} aria-label={SITE_NAME}>
-          <span className={styles.brandMark}>J</span>
-          <span className={styles.brandName}>{SITE_NAME}</span>
-        </Link>
+    <>
+      <div className={styles.announce} aria-label="הודעות מהמותג">
+        <div className={styles.announceTrack}>
+          {ANNOUNCEMENTS.map((msg, i) => (
+            <span key={i} className={styles.announceItem}>
+              {msg}
+            </span>
+          ))}
+        </div>
+      </div>
+      <header className={styles.nav}>
+        <div className={styles.brandRow}>
+          <div className={styles.inner}>
+            <div className={styles.left}>
+              <MobileMenu links={NAV_LINKS} />
+            </div>
+            <Link href="/" className={styles.brand} aria-label={SITE_NAME}>
+              <span className={styles.brandName}>{SITE_NAME}</span>
+            </Link>
+            <div className={styles.actions}>
+              <CartIndicator />
+            </div>
+          </div>
+        </div>
         <nav className={styles.links} aria-label="ניווט ראשי">
-          {NAV_LINKS.map((link) => (
+          {NAV_LINKS.slice(1).map((link) => (
             <Link key={link.href} href={link.href} className={styles.link}>
               {link.label}
             </Link>
           ))}
         </nav>
-        <div className={styles.actions}>
-          <CartIndicator />
-        </div>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }

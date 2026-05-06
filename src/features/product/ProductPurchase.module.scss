@@ -4,130 +4,142 @@
 .purchase {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 28px;
 }
 
 .priceBlock {
   display: flex;
-  align-items: center;
-  gap: 14px;
-  padding-bottom: 18px;
+  align-items: baseline;
+  gap: 16px;
+  padding-bottom: 24px;
   border-bottom: 1px solid $color-border;
   flex-wrap: wrap;
 }
 
 .sizePrice {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: $color-text-muted;
+  letter-spacing: 0.04em;
 }
 
 .sizes {
   h3 {
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: $color-text-muted;
-    margin: 0 0 10px;
-    font-weight: 600;
+    letter-spacing: 0.22em;
+    color: $color-ink;
+    margin: 0 0 14px;
+    font-weight: 500;
   }
 }
 
 .sizeOptions {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 8px;
 }
 
 .sizeBtn {
   position: relative;
-  padding: 12px 18px;
+  padding: 14px 18px;
   background: $color-white;
   border: 1px solid $color-border;
-  border-radius: $radius-sm;
+  border-radius: 0;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   align-items: flex-start;
-  transition: all $dur-fast $ease;
+  transition: border-color $dur-fast $ease, background-color $dur-fast $ease,
+    color $dur-fast $ease;
   min-width: 110px;
+  font-family: inherit;
 
   &:hover:not(:disabled) {
-    border-color: $color-gold-dark;
+    border-color: $color-ink;
   }
 }
 
 .active {
   border-color: $color-ink;
   background: $color-ink;
-  color: $color-cream;
+  color: $color-white;
 
   .sizePriceLabel {
-    color: $color-gold;
+    color: rgba($color-white, 0.7);
   }
 }
 
 .out {
-  opacity: 0.55;
+  opacity: 0.45;
   cursor: not-allowed;
+  background: $color-bg-soft;
 }
 
 .sizeMl {
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
 }
 
 .sizePriceLabel {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: $color-text-muted;
+  letter-spacing: 0.02em;
 }
 
 .outBadge {
   position: absolute;
   top: 4px;
   inset-inline-end: 4px;
-  font-size: 0.65rem;
-  background: $color-error;
-  color: $color-white;
-  padding: 2px 6px;
-  border-radius: 999px;
+  font-size: 0.6rem;
+  background: transparent;
+  color: $color-error;
+  padding: 0;
+  border: 0;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 500;
 }
 
 .qtyRow {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
+  padding-block: 18px;
+  border-top: 1px solid $color-border;
+  border-bottom: 1px solid $color-border;
 }
 
 .qtyLabel {
-  font-size: 0.9rem;
+  font-size: 0.7rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: $color-text-muted;
-  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: $color-ink;
+  font-weight: 500;
 }
 
 .stock {
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   color: $color-text-muted;
+  letter-spacing: 0.04em;
+  margin-inline-start: auto;
 }
 
 .actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
-
-  @include sm {
-    grid-template-columns: 1fr;
-  }
 }
 
 .confirm {
-  padding: 12px 14px;
-  background: rgba($color-success, 0.08);
-  color: $color-success;
-  border: 1px solid rgba($color-success, 0.3);
-  border-radius: $radius-sm;
-  font-size: 0.9rem;
+  padding: 14px 16px;
+  background: $color-bg-soft;
+  color: $color-ink;
+  border: 1px solid $color-border;
+  border-inline-start: 2px solid $color-success;
+  border-radius: 0;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
 }

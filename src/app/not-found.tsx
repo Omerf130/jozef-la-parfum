@@ -11,10 +11,14 @@ export default function NotFound() {
           <Link
             href="/"
             style={{
-              padding: "12px 22px",
+              padding: "14px 28px",
               background: "#0d0d0d",
-              color: "#f5efe6",
-              borderRadius: 4,
+              color: "#ffffff",
+              fontSize: "0.78rem",
+              letterSpacing: "0.2em",
+              textTransform: "uppercase",
+              fontWeight: 500,
+              border: "1px solid #0d0d0d",
             }}
           >
             חזרה לבית

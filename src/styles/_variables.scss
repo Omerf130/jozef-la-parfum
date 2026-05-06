@@ -1,14 +1,24 @@
-// Luxury palette — gold / cream / black
-$color-gold: #c9a96e;
-$color-gold-dark: #a88a4f;
-$color-gold-light: #e0c98e;
-$color-cream: #f5efe6;
-$color-cream-dark: #ece3d3;
+// Editorial palette — white-dominant, black ink, gold as rare accent
+$color-bg: #ffffff;
+$color-bg-soft: #f7f5f1;
+$color-bg-tint: #fafaf8;
+
 $color-ink: #0d0d0d;
 $color-ink-soft: #1a1a1a;
 $color-text: #2a2622;
 $color-text-muted: #6b6357;
-$color-border: #e6ddcc;
+$color-text-subtle: #8a8478;
+
+$color-border: #ececec;
+$color-border-strong: #0d0d0d;
+
+$color-gold: #c9a96e;
+$color-gold-dark: #a88a4f;
+$color-gold-light: #e0c98e;
+
+$color-cream: #f5efe6;
+$color-cream-dark: #ece3d3;
+
 $color-white: #ffffff;
 $color-error: #b3261e;
 $color-success: #1f7a44;
@@ -20,12 +30,13 @@ $font-display: var(--font-display), "Frank Ruhl Libre", "Georgia", serif;
 
 // Layout
 $container-max: 1280px;
-$radius-sm: 4px;
-$radius: 8px;
-$radius-lg: 16px;
-$shadow-sm: 0 2px 8px rgba(13, 13, 13, 0.06);
-$shadow: 0 8px 24px rgba(13, 13, 13, 0.08);
-$shadow-lg: 0 18px 48px rgba(13, 13, 13, 0.12);
+$container-wide: 1440px;
+$radius-sm: 2px;
+$radius: 4px;
+$radius-lg: 8px;
+$shadow-sm: 0 2px 8px rgba(13, 13, 13, 0.04);
+$shadow: 0 8px 24px rgba(13, 13, 13, 0.06);
+$shadow-lg: 0 18px 48px rgba(13, 13, 13, 0.1);
 
 // Breakpoints
 $bp-sm: 480px;

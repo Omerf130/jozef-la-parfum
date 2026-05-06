@@ -4,7 +4,18 @@
   width: 100%;
   max-width: $container-max;
   margin-inline: auto;
-  padding-inline: 24px;
+  padding-inline: 32px;
+
+  @media (max-width: $bp-md) {
+    padding-inline: 16px;
+  }
+}
+
+@mixin container-wide {
+  width: 100%;
+  max-width: $container-wide;
+  margin-inline: auto;
+  padding-inline: 32px;
 
   @media (max-width: $bp-md) {
     padding-inline: 16px;
@@ -15,39 +26,55 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  border: none;
-  border-radius: $radius-sm;
+  gap: 10px;
+  border: 1px solid transparent;
+  border-radius: 0;
   cursor: pointer;
   font-family: $font-body;
   font-weight: 500;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   transition: background-color $dur-fast $ease, color $dur-fast $ease,
     transform $dur-fast $ease, border-color $dur-fast $ease;
 
   &:disabled {
-    opacity: 0.5;
+    opacity: 0.4;
     cursor: not-allowed;
   }
 }
 
 @mixin focus-ring {
-  outline: 2px solid $color-gold;
+  outline: 2px solid $color-ink;
   outline-offset: 2px;
 }
 
 @mixin display-heading {
   font-family: $font-display;
   font-weight: 500;
-  letter-spacing: 0.01em;
-  line-height: 1.15;
+  letter-spacing: 0.005em;
+  line-height: 1.12;
+}
+
+@mixin eyebrow {
+  display: inline-block;
+  font-family: $font-body;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: $color-text-muted;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+@mixin hairline {
+  border: 0;
+  border-top: 1px solid $color-border;
 }
 
 @mixin card-surface {
   background: $color-white;
   border: 1px solid $color-border;
-  border-radius: $radius;
-  box-shadow: $shadow-sm;
+  border-radius: 0;
 }
 
 @mixin truncate($lines: 1) {
@@ -58,6 +85,29 @@
   text-overflow: ellipsis;
 }
 
+@mixin scroll-rail {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 4px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  > * {
+    scroll-snap-align: start;
+    flex: 0 0 70%;
+
+    @media (min-width: $bp-sm) {
+      flex-basis: 45%;
+    }
+  }
+}
+
 @mixin md {
   @media (max-width: $bp-md) {
     @content;
@@ -66,6 +116,12 @@
 
 @mixin sm {
   @media (max-width: $bp-sm) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (max-width: $bp-lg) {
     @content;
   }
 }

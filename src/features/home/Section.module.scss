@@ -2,59 +2,89 @@
 @use "../../styles/mixins" as *;
 
 .section {
-  @include container;
-  padding-block: 80px;
+  @include container-wide;
+  padding-block: 96px;
 
   @include md {
-    padding-block: 56px;
+    padding-block: 64px;
   }
 }
 
 .head {
   text-align: center;
-  margin-bottom: 48px;
+  margin-bottom: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  @include md {
+    margin-bottom: 36px;
+  }
 }
 
 .kicker {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.3em;
-  color: $color-gold-dark;
+  color: $color-text-muted;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
+  font-weight: 500;
+  position: relative;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: $color-gold;
+    margin: 12px auto 0;
+  }
 }
 
 .title {
   font-family: $font-display;
-  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
   margin: 0 0 14px;
   color: $color-ink;
+  font-weight: 500;
+  letter-spacing: 0.005em;
 }
 
 .subtitle {
   color: $color-text-muted;
-  max-width: 560px;
+  max-width: 540px;
   margin: 0 auto;
-  font-size: 1rem;
+  font-size: 0.95rem;
   line-height: 1.7;
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 28px;
+  gap: 32px 24px;
 
   @media (max-width: $bp-lg) {
     grid-template-columns: repeat(3, 1fr);
+    gap: 28px 16px;
   }
 
   @include md {
     grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
+    gap: 28px 14px;
   }
 
   @include sm {
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 24px 10px;
+  }
+}
+
+.gridSoft {
+  background: $color-bg-soft;
+  padding: 64px 32px;
+
+  @include md {
+    padding: 40px 16px;
   }
 }

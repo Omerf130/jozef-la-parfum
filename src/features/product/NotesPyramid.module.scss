@@ -2,15 +2,21 @@
 @use "../../styles/mixins" as *;
 
 .section {
-  margin-top: 80px;
-  padding-block: 56px;
-  background: $color-cream-dark;
-  border-radius: $radius-lg;
+  margin-top: 96px;
+  padding-block: 72px;
+  background: $color-bg-soft;
+  border-top: 1px solid $color-border;
+  border-bottom: 1px solid $color-border;
+
+  @include md {
+    margin-top: 56px;
+    padding-block: 48px;
+  }
 }
 
 .head {
   text-align: center;
-  margin-bottom: 36px;
+  margin-bottom: 48px;
   padding-inline: 24px;
 
   h2 {
@@ -18,65 +24,89 @@
     font-size: clamp(1.6rem, 3vw, 2.2rem);
     margin: 0;
     color: $color-ink;
+    font-weight: 500;
+    letter-spacing: 0.005em;
   }
 }
 
 .kicker {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.3em;
-  color: $color-gold-dark;
+  color: $color-text-muted;
   text-transform: uppercase;
-  margin-bottom: 8px;
+  margin-bottom: 18px;
+  font-weight: 500;
+
+  &::after {
+    content: "";
+    display: block;
+    width: 24px;
+    height: 1px;
+    background: $color-gold;
+    margin: 12px auto 0;
+  }
 }
 
 .pyramid {
-  max-width: 720px;
+  max-width: 760px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 0;
   padding-inline: 24px;
 }
 
 .tier {
-  background: $color-white;
-  border-radius: $radius;
-  padding: 20px 24px;
-  box-shadow: $shadow-sm;
-  border-inline-start: 4px solid $color-gold;
+  background: transparent;
+  border-radius: 0;
+  padding: 24px 0;
+  border-top: 1px solid $color-border;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 32px;
+  align-items: start;
+
+  &:last-child {
+    border-bottom: 1px solid $color-border;
+  }
 
   h3 {
-    font-family: $font-display;
-    font-size: 1.05rem;
-    margin: 0 0 12px;
+    font-family: $font-body;
+    font-size: 0.7rem;
+    margin: 0;
     color: $color-ink;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-weight: 500;
+    padding-top: 6px;
+  }
+
+  @include md {
+    grid-template-columns: 1fr;
+    gap: 14px;
   }
 }
 
-.top {
-  border-inline-start-color: $color-gold-light;
-}
-
-.middle {
-  border-inline-start-color: $color-gold;
-}
-
+.top,
+.middle,
 .base {
-  border-inline-start-color: $color-gold-dark;
+  border-inline-start: 0;
 }
 
 .notes {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 10px;
 }
 
 .note {
-  background: $color-cream;
+  background: transparent;
   border: 1px solid $color-border;
-  padding: 6px 12px;
-  border-radius: 999px;
+  padding: 8px 16px;
+  border-radius: 0;
   font-size: 0.85rem;
   color: $color-text;
+  letter-spacing: 0.02em;
+  background: $color-white;
 }

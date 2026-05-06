@@ -2,20 +2,24 @@
 @use "../../styles/mixins" as *;
 
 .editorial {
-  background: $color-cream-dark;
-  padding-block: 100px;
+  background: $color-bg-soft;
+  padding-block: 120px;
 
   @include md {
-    padding-block: 60px;
+    padding-block: 64px;
   }
 }
 
 .inner {
-  @include container;
+  @include container-wide;
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 64px;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
   align-items: center;
+
+  @include lg {
+    gap: 56px;
+  }
 
   @include md {
     grid-template-columns: 1fr;
@@ -24,74 +28,94 @@
 }
 
 .text {
+  max-width: 480px;
+
   h2 {
     font-family: $font-display;
     font-size: clamp(2rem, 4vw, 3rem);
     margin: 0 0 24px;
     color: $color-ink;
-    line-height: 1.15;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: 0.005em;
   }
 
   p {
     color: $color-text;
-    line-height: 1.85;
-    font-size: 1.02rem;
-    margin-bottom: 20px;
+    line-height: 1.8;
+    font-size: 0.98rem;
+    margin-bottom: 18px;
   }
 }
 
 .kicker {
   display: inline-block;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   letter-spacing: 0.3em;
-  color: $color-gold-dark;
+  color: $color-text-muted;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
+  font-weight: 500;
+  position: relative;
+  padding-inline-start: 28px;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 0;
+    top: 50%;
+    width: 18px;
+    height: 1px;
+    background: $color-gold;
+  }
 }
 
 .list {
   list-style: none;
   padding: 0;
-  margin: 32px 0 0;
+  margin: 36px 0 0;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 14px;
-  border-top: 1px solid rgba($color-ink, 0.1);
-  padding-top: 28px;
+  border-top: 1px solid $color-border;
 
   li {
     display: flex;
-    flex-direction: column;
-    gap: 2px;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    padding-block: 18px;
+    border-bottom: 1px solid $color-border;
   }
 
   strong {
     color: $color-ink;
-    font-size: 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   span {
     color: $color-text-muted;
     font-size: 0.9rem;
+    text-align: end;
   }
 }
 
 .imageCol {
   position: relative;
   aspect-ratio: 4 / 5;
-  max-height: 560px;
-  margin-inline: auto;
   width: 100%;
+  margin-inline: auto;
 }
 
 .image {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(135deg, rgba($color-gold, 0.3), transparent 50%),
+    linear-gradient(135deg, rgba($color-gold, 0.18), transparent 55%),
     linear-gradient(180deg, $color-ink-soft, $color-ink);
-  border-radius: $radius;
-  box-shadow: $shadow-lg;
+  overflow: hidden;
 
   &::after {
     content: "✦";
@@ -100,18 +124,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba($color-gold, 0.25);
-    font-size: 8rem;
+    color: rgba($color-gold, 0.18);
+    font-size: 9rem;
+    font-family: $font-display;
   }
 }
 
 .imageAccent {
-  position: absolute;
-  inset-block-start: 24px;
-  inset-inline-start: -24px;
-  inset-block-end: 24px;
-  inset-inline-end: -24px;
-  border: 1px solid $color-gold;
-  border-radius: $radius;
-  z-index: -1;
+  display: none;
 }

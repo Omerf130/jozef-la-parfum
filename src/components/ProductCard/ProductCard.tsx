@@ -42,7 +42,9 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
         )}
         {onSale ? <span className={styles.badge}>מבצע</span> : null}
-        {product.isFeatured ? <span className={styles.featuredBadge}>נבחר</span> : null}
+        {!onSale && product.isFeatured ? (
+          <span className={styles.featuredBadge}>נבחר</span>
+        ) : null}
       </div>
       <div className={styles.body}>
         <span className={styles.brand}>{product.brand}</span>
