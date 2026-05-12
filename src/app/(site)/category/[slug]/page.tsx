@@ -11,6 +11,14 @@ import styles from "./page.module.scss";
 
 const PAGE_SIZE = 12;
 
+const VIRTUAL_CATEGORIES = new Map<
+  string,
+  { name: string; description: string; baseFilter: Record<string, unknown> }
+>([
+  ["all", { name: "כל הבשמים", description: "כל הבשמים באתר במקום אחד", baseFilter: {} }],
+  ["budget", { name: 'בשמים עד 150 ש"ח', description: "ניחוחות יוקרתיים במחירים נגישים", baseFilter: { price: { $lte: 150 } } }],
+]);
+
 interface PageProps {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{
@@ -25,6 +33,12 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+
+  const virtual = VIRTUAL_CATEGORIES.get(slug);
+  if (virtual) {
+    return { title: virtual.name, description: virtual.description };
+  }
+
   try {
     await connectDB();
     const cat = await CategoryModel.findOne({ slug }).lean();
@@ -43,13 +57,25 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   const sp = await searchParams;
 
   await connectDB();
-  const category = await CategoryModel.findOne({ slug }).lean();
-  if (!category) notFound();
 
-  const filter: Record<string, unknown> = {
-    category: category._id,
-    isActive: true,
-  };
+  const virtual = VIRTUAL_CATEGORIES.get(slug);
+  let categoryName: string;
+  let categoryDescription: string | undefined;
+  let aggBaseFilter: Record<string, unknown>;
+
+  if (virtual) {
+    categoryName = virtual.name;
+    categoryDescription = virtual.description;
+    aggBaseFilter = { isActive: true, ...virtual.baseFilter };
+  } else {
+    const category = await CategoryModel.findOne({ slug }).lean();
+    if (!category) notFound();
+    categoryName = category.name;
+    categoryDescription = category.description;
+    aggBaseFilter = { category: category._id, isActive: true };
+  }
+
+  const filter: Record<string, unknown> = { ...aggBaseFilter };
   if (sp.brand) filter.brand = sp.brand;
   if (sp.gender && ["male", "female", "unisex"].includes(sp.gender)) {
     filter.gender = sp.gender;
@@ -63,6 +89,9 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
     const priceFilter: Record<string, number> = {};
     if (min !== undefined && !Number.isNaN(min)) priceFilter.$gte = min;
     if (max !== undefined && !Number.isNaN(max)) priceFilter.$lte = max;
+    if (filter.price && typeof filter.price === "object") {
+      Object.assign(priceFilter, filter.price);
+    }
     filter.price = priceFilter;
   }
 
@@ -77,9 +106,9 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
       .limit(PAGE_SIZE)
       .lean(),
     ProductModel.countDocuments(filter),
-    ProductModel.distinct("brand", { category: category._id, isActive: true }),
+    ProductModel.distinct("brand", aggBaseFilter),
     ProductModel.aggregate([
-      { $match: { category: category._id, isActive: true } },
+      { $match: aggBaseFilter },
       {
         $group: {
           _id: null,
@@ -98,8 +127,8 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
     <div className={styles.page}>
       <header className={styles.header}>
         <span className={styles.kicker}>קטגוריה</span>
-        <h1>{category.name}</h1>
-        {category.description ? <p>{category.description}</p> : null}
+        <h1>{categoryName}</h1>
+        {categoryDescription ? <p>{categoryDescription}</p> : null}
       </header>
 
       <div className={styles.layout}>

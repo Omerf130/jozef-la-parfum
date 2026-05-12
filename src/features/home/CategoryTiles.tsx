@@ -10,6 +10,11 @@ const FALLBACK = [
   { name: "יוניסקס", slug: "unisex" },
 ];
 
+const VIRTUAL_TILES = [
+  { name: "כל הבשמים", slug: "all" },
+  { name: 'בשמים עד 150 ש"ח', slug: "budget" },
+];
+
 export async function CategoryTiles() {
   let categories: { name: string; slug: string; image?: string }[] = [];
   try {
@@ -26,6 +31,11 @@ export async function CategoryTiles() {
 
   if (categories.length === 0) categories = FALLBACK;
 
+  const allTiles: { name: string; slug: string; image?: string }[] = [
+    ...categories,
+    ...VIRTUAL_TILES,
+  ];
+
   return (
     <section className={styles.section} aria-labelledby="categories-heading">
       <div className={styles.head}>
@@ -35,7 +45,7 @@ export async function CategoryTiles() {
         </h2>
       </div>
       <div className={styles.grid}>
-        {categories.slice(0, 4).map((c) => (
+        {allTiles.map((c) => (
           <Link key={c.slug} href={`/category/${c.slug}`} className={styles.tile}>
             <div className={styles.imageWrap}>
               {c.image ? (

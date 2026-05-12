@@ -7,9 +7,11 @@ const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Jozef La Parfum";
 
 const NAV_LINKS = [
   { href: "/", label: "בית" },
+  { href: "/category/all", label: "כל הבשמים" },
   { href: "/category/men", label: "לגבר" },
   { href: "/category/women", label: "לאישה" },
   { href: "/category/unisex", label: "יוניסקס" },
+  { href: "/category/budget", label: 'בשמים עד 150 ש"ח' },
   { href: "/about", label: "אודות" },
   { href: "/contact", label: "צור קשר" },
 ];

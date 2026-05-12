@@ -81,6 +81,9 @@ export function Footer() {
             <h4>חנות</h4>
             <ul>
               <li>
+                <Link href="/category/all">כל הבשמים</Link>
+              </li>
+              <li>
                 <Link href="/category/men">לגבר</Link>
               </li>
               <li>
@@ -88,6 +91,9 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/category/unisex">יוניסקס</Link>
+              </li>
+              <li>
+                <Link href="/category/budget">בשמים עד 150 ש&quot;ח</Link>
               </li>
             </ul>
           </div>
