@@ -149,3 +149,17 @@
 .payments {
   letter-spacing: 0.12em;
 }
+
+.bottomLinks {
+  letter-spacing: 0.08em;
+
+  a {
+    color: rgba($color-white, 0.65);
+    text-decoration: none;
+    transition: color $dur-fast $ease;
+
+    &:hover {
+      color: $color-gold;
+    }
+  }
+}

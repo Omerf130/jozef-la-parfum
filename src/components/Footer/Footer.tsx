@@ -108,6 +108,12 @@ export function Footer() {
                 <Link href="/contact">צור קשר</Link>
               </li>
               <li>
+                <Link href="/terms">תנאי שימוש</Link>
+              </li>
+              <li>
+                <Link href="/privacy">מדיניות פרטיות</Link>
+              </li>
+              <li>
                 <Link href="/admin/login">כניסת מנהל</Link>
               </li>
             </ul>
@@ -126,6 +132,11 @@ export function Footer() {
         <div className={styles.bottom}>
           <span>
             © {year} {SITE_NAME}. כל הזכויות שמורות.
+          </span>
+          <span className={styles.bottomLinks}>
+            <Link href="/terms">תנאי שימוש</Link>
+            <span aria-hidden="true"> · </span>
+            <Link href="/privacy">מדיניות פרטיות</Link>
           </span>
           <span className={styles.payments}>
             תשלום מאובטח בכרטיס אשראי דרך PayPlus
