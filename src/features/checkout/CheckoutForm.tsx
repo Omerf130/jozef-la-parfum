@@ -14,7 +14,7 @@ import { checkoutSchema, type CheckoutInput } from "@/lib/validation/checkout";
 import styles from "./CheckoutForm.module.scss";
 
 const SHIPPING_PRICE = Number(process.env.NEXT_PUBLIC_SHIPPING_PRICE_ILS || 35);
-const FREE_SHIPPING_THRESHOLD = 350;
+const FREE_SHIPPING_THRESHOLD = 499;
 
 export function CheckoutForm() {
   const router = useRouter();

@@ -23,7 +23,7 @@ export function EditorialSection() {
             </li>
             <li>
               <strong>משלוח עד הבית</strong>
-              <span>חינם בהזמנות מעל 350 ₪</span>
+              <span>חינם בהזמנות מעל ₪499 · עד 7 ימי עסקים</span>
             </li>
             <li>
               <strong>תשלום מאובטח</strong>

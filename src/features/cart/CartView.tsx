@@ -11,7 +11,7 @@ import { formatILS } from "@/lib/format";
 import styles from "./CartView.module.scss";
 
 const SHIPPING_PRICE = Number(process.env.NEXT_PUBLIC_SHIPPING_PRICE_ILS || 35);
-const FREE_SHIPPING_THRESHOLD = 350;
+const FREE_SHIPPING_THRESHOLD = 499;
 
 export function CartView() {
   const [hydrated, setHydrated] = useState(false);

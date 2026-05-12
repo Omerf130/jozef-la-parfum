@@ -6,7 +6,7 @@ const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Jozef La Parfum";
 const VALUE_PROPS = [
   {
     title: "משלוח חינם",
-    desc: "בהזמנה מעל ₪350",
+    desc: "בהזמנה מעל ₪499 · עד 7 ימי עסקים",
     icon: (
       <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.4">
         <path d="M3 9h17v13H3z" />
