@@ -1,11 +1,16 @@
 import Link from "next/link";
 import { Button } from "@/components/Button";
+import { getHeroBackgroundImages } from "@/lib/siteSettings";
+import { HeroBackground } from "./HeroBackground";
 import styles from "./Hero.module.scss";
 
-export function Hero() {
+export async function Hero() {
+  const { desktop, mobile } = await getHeroBackgroundImages();
+  const mobileForDeck = mobile.length ? mobile : desktop;
+
   return (
     <section className={styles.hero} aria-label="ברוכים הבאים">
-      <div className={styles.bg} aria-hidden="true" />
+      <HeroBackground desktopImages={desktop} mobileImages={mobileForDeck} />
       <div className={styles.overlay} aria-hidden="true" />
       <div className={styles.content}>
         <div className={styles.contentInner}>

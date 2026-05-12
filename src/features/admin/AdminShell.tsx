@@ -9,6 +9,7 @@ interface AdminShellProps {
 
 const NAV = [
   { href: "/admin", label: "סקירה" },
+  { href: "/admin/hero", label: "באנר ראשי" },
   { href: "/admin/orders", label: "הזמנות" },
   { href: "/admin/products", label: "מוצרים" },
   { href: "/admin/categories", label: "קטגוריות" },

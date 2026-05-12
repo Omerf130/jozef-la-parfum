@@ -11,7 +11,9 @@ import { WelcomeModal } from "@/features/home/WelcomeModal";
 export default function HomePage() {
   return (
     <>
-      <Hero />
+      <Suspense fallback={<Spinner />}>
+        <Hero />
+      </Suspense>
       <Suspense fallback={<Spinner />}>
         <CategoryTiles />
       </Suspense>

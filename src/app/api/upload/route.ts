@@ -23,7 +23,8 @@ export async function POST(request: Request) {
     }
     const rawPrefix = formData.get("prefix");
     const prefix =
-      typeof rawPrefix === "string" && ["products", "categories"].includes(rawPrefix)
+      typeof rawPrefix === "string" &&
+      ["products", "categories", "hero"].includes(rawPrefix)
         ? rawPrefix
         : "products";
     const url = await uploadImage(file, prefix);
