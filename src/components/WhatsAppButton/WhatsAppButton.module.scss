@@ -1,0 +1,45 @@
+@use "../../styles/variables" as *;
+
+.fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+
+  background-color: #17803ee6;
+  color: #fff;
+  box-shadow: $shadow;
+  cursor: pointer;
+
+  transition: transform $dur-fast $ease, background-color $dur-fast $ease,
+    box-shadow $dur-fast $ease;
+  text-decoration: none;
+
+  &:hover {
+    transform: scale(1.08);
+    color: #fff;
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+
+  @media (max-width: $bp-md) {
+    width: 48px;
+    height: 48px;
+    bottom: 16px;
+    right: 16px;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+  }
+}

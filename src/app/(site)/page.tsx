@@ -6,6 +6,7 @@ import { CategoryTiles } from "@/features/home/CategoryTiles";
 import { BestSellers } from "@/features/home/BestSellers";
 import { EditorialSection } from "@/features/home/EditorialSection";
 import { NewsletterStrip } from "@/features/home/NewsletterStrip";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 
 export default function HomePage() {
   return (
@@ -22,6 +23,7 @@ export default function HomePage() {
         <BestSellers />
       </Suspense>
       <NewsletterStrip />
+      <WhatsAppButton />
     </>
   );
 }
