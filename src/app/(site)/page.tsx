@@ -7,6 +7,7 @@ import { BestSellers } from "@/features/home/BestSellers";
 import { EditorialSection } from "@/features/home/EditorialSection";
 import { NewsletterStrip } from "@/features/home/NewsletterStrip";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { WelcomeModal } from "@/features/home/WelcomeModal";
 
 export default function HomePage() {
   return (
@@ -24,6 +25,7 @@ export default function HomePage() {
       </Suspense>
       <NewsletterStrip />
       <WhatsAppButton />
+      <WelcomeModal />
     </>
   );
 }
