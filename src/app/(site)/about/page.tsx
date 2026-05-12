@@ -21,7 +21,7 @@ export default function AboutPage() {
   return (
     <article className={styles.page}>
       <header className={styles.hero}>
-        <span className={styles.kicker}>Jozef La Parfum</span>
+        <span className={styles.kicker}>אודות</span>
         <h1>Jozef La Parfum</h1>
         <p>מותגים ומחירים של פעם בחיים. מקורי בלבד.</p>
         <p>
@@ -103,15 +103,6 @@ export default function AboutPage() {
             </p>
           }
         />
-      </section>
-
-      <section className={`${styles.section} ${styles.noteSection}`}>
-        <h2>עמוד מוצר</h2>
-        <p>
-          דגש על צילום המוצר, מחיר ברור, ופירוט &apos;תווי ניחוח&apos; בצורה
-          ויזואלית נקייה. המטרה: שהלקוח יבין בשנייה אחת שהוא הגיע למקום הנכון,
-          ושעשינו הכל כדי שהוא יקבל מקורי ובזול.
-        </p>
       </section>
     </article>
   );
