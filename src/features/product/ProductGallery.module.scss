@@ -10,12 +10,13 @@
 .mainWrap {
   position: relative;
   aspect-ratio: 1 / 1;
+  max-height: 480px;
   background: $color-bg-soft;
   overflow: hidden;
 }
 
 .mainImg {
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .placeholder {

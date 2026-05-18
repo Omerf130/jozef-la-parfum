@@ -48,8 +48,8 @@
 
 .layout {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
-  gap: 80px;
+  grid-template-columns: 0.9fr 1fr;
+  gap: 64px;
 
   @include lg {
     gap: 48px;
