@@ -3,7 +3,7 @@ import { z } from "zod";
 const ilPhoneRegex = /^0(5\d|7\d|2|3|4|8|9)-?\d{7}$/;
 const ilZipRegex = /^\d{5,7}$/;
 
-export const checkoutSchema = z.object({
+export const checkoutFormSchema = z.object({
   customerName: z
     .string()
     .trim()
@@ -19,6 +19,11 @@ export const checkoutSchema = z.object({
     zip: z.string().trim().regex(ilZipRegex, "מיקוד ישראלי לא תקין"),
     country: z.string().default("IL"),
   }),
+});
+
+export type CheckoutFormInput = z.infer<typeof checkoutFormSchema>;
+
+export const checkoutSchema = checkoutFormSchema.extend({
   items: z
     .array(
       z.object({

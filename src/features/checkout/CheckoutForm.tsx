@@ -10,7 +10,7 @@ import { Input } from "@/components/Input";
 import { EmptyState } from "@/components/EmptyState";
 import { useCart } from "@/store/cart";
 import { formatILS } from "@/lib/format";
-import { checkoutSchema, type CheckoutInput } from "@/lib/validation/checkout";
+import { checkoutFormSchema, type CheckoutFormInput } from "@/lib/validation/checkout";
 import styles from "./CheckoutForm.module.scss";
 
 const SHIPPING_PRICE = Number(process.env.SHIPPING_PRICE_ILS || 0);
@@ -34,11 +34,10 @@ export function CheckoutForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CheckoutInput>({
-    resolver: zodResolver(checkoutSchema),
+  } = useForm<CheckoutFormInput>({
+    resolver: zodResolver(checkoutFormSchema),
     defaultValues: {
       shippingAddress: { country: "IL" },
-      items: [],
     },
   });
 
@@ -64,7 +63,7 @@ export function CheckoutForm() {
     );
   }
 
-  async function onSubmit(values: CheckoutInput) {
+  async function onSubmit(values: CheckoutFormInput) {
     setServerError(null);
     setSubmitting(true);
     try {
