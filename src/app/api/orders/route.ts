@@ -7,7 +7,7 @@ import { auth } from "@/lib/auth";
 import { checkoutSchema } from "@/lib/validation/checkout";
 import { serializeOrder } from "@/lib/serializers";
 
-const SHIPPING_PRICE_ILS = Number(process.env.SHIPPING_PRICE_ILS || 35);
+const SHIPPING_PRICE_ILS = Number(process.env.SHIPPING_PRICE_ILS || 0);
 const FREE_SHIPPING_THRESHOLD = 499;
 
 export async function GET(request: Request) {
