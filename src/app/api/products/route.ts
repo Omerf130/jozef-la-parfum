@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { ProductModel } from "@/models/Product";
+import "@/models/Category";
 import { auth } from "@/lib/auth";
 import { productSchema } from "@/lib/validation/product";
 import { serializeProduct } from "@/lib/serializers";
