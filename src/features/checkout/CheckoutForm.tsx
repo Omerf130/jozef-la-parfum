@@ -13,7 +13,7 @@ import { formatILS } from "@/lib/format";
 import { checkoutSchema, type CheckoutInput } from "@/lib/validation/checkout";
 import styles from "./CheckoutForm.module.scss";
 
-const SHIPPING_PRICE = Number(process.env.NEXT_PUBLIC_SHIPPING_PRICE_ILS || 0);
+const SHIPPING_PRICE = Number(process.env.SHIPPING_PRICE_ILS || 0);
 const FREE_SHIPPING_THRESHOLD = 499;
 
 export function CheckoutForm() {
