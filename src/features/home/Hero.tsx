@@ -15,9 +15,9 @@ export async function Hero() {
       <div className={styles.content}>
         <div className={styles.contentInner}>
           <span className={styles.kicker}>קולקציה חדשה</span>
-          <h1 className={styles.title}>ניחוחות נדירים שמספרים את סיפורך</h1>
+          <h1 className={styles.title}>הנוכחות שלך מתחילה עוד לפני שאמרת מילה</h1>
           <p className={styles.subtitle}>
-            אוסף מעודן של בשמים נדירים, מבושם בקפידה אחר הנדירים ביותר.
+            המותגים הגדולים, המחירים הקטנים. רק בשמים מקוריים באחריות
           </p>
           <div className={styles.actions}>
             <Link href="/category/women">
