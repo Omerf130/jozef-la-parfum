@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Heebo, Frank_Ruhl_Libre } from "next/font/google";
 import { CookieConsent } from "@/components/CookieConsent/CookieConsent";
+import { UserWayWidget } from "@/components/UserWayWidget";
 import "@/styles/globals.scss";
 
 const heebo = Heebo({
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {children}
         <CookieConsent />
+        <UserWayWidget />
       </body>
     </html>
   );
