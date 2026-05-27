@@ -1,4 +1,4 @@
-# Jozef La Parfum — Luxury Perfume E-Commerce
+# jozef la perfume — Luxury Perfume E-Commerce
 
 Production-quality Hebrew (RTL) luxury perfume storefront built with Next.js 15
 App Router, MongoDB Atlas / Mongoose, NextAuth (Auth.js v5), PayPlus hosted
@@ -84,7 +84,7 @@ either; middleware reads `AUTH_SECRET` first then falls back).
 2. Verify your sending domain (DNS records).
 3. Create an API Key → `RESEND_API_KEY`.
 4. Set `EMAIL_FROM` to a verified sender, e.g.
-   `"Jozef La Parfum <orders@yourdomain.com>"`.
+   `"jozef la perfume <orders@yourdomain.com>"`.
 
 ### 4. Seed initial data
 
@@ -180,4 +180,4 @@ Admin: <http://localhost:3000/admin/login>
 
 ## License
 
-Proprietary — Jozef La Parfum.
+Proprietary — jozef la perfume.

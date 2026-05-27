@@ -18,7 +18,7 @@ const display = Frank_Ruhl_Libre({
   weight: ["400", "500", "700"],
 });
 
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Jozef La Parfum";
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "jozef la perfume";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const metadata: Metadata = {

@@ -4,7 +4,7 @@ import { MobileMenu } from "./MobileMenu";
 import { getShippingConfig } from "@/lib/siteSettings";
 import styles from "./NavBar.module.scss";
 
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Jozef La Parfum";
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "jozef la perfume";
 
 const NAV_LINKS = [
   { href: "/", label: "בית" },
