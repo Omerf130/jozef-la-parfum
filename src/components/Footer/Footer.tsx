@@ -1,12 +1,14 @@
 import Link from "next/link";
+import { getShippingConfig } from "@/lib/siteSettings";
 import styles from "./Footer.module.scss";
 
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Jozef La Parfum";
 
-const VALUE_PROPS = [
+function getValueProps(freeShippingThreshold: number) {
+  return [
   {
     title: "משלוח חינם",
-    desc: "בהזמנה מעל ₪499 · עד 7 ימי עסקים",
+    desc: `בהזמנה מעל ₪${freeShippingThreshold} · עד 7 ימי עסקים`,
     icon: (
       <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="1.4">
         <path d="M3 9h17v13H3z" />
@@ -47,9 +49,12 @@ const VALUE_PROPS = [
       </svg>
     ),
   },
-];
+  ];
+}
 
-export function Footer() {
+export async function Footer() {
+  const { freeShippingThreshold } = await getShippingConfig();
+  const VALUE_PROPS = getValueProps(freeShippingThreshold);
   const year = new Date().getFullYear();
   return (
     <footer className={styles.footer}>

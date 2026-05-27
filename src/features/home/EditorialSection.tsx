@@ -1,6 +1,8 @@
+import { getShippingConfig } from "@/lib/siteSettings";
 import styles from "./EditorialSection.module.scss";
 
-export function EditorialSection() {
+export async function EditorialSection() {
+  const { freeShippingThreshold } = await getShippingConfig();
   return (
     <section className={styles.editorial}>
       <div className={styles.inner}>
@@ -23,7 +25,7 @@ export function EditorialSection() {
             </li>
             <li>
               <strong>משלוח עד הבית</strong>
-              <span>חינם בהזמנות מעל ₪499 · עד 7 ימי עסקים</span>
+              <span>חינם בהזמנות מעל ₪{freeShippingThreshold} · עד 7 ימי עסקים</span>
             </li>
             <li>
               <strong>תשלום מאובטח</strong>

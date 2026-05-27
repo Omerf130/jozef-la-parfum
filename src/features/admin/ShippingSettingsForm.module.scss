@@ -1,0 +1,67 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.card {
+  @include card-surface;
+  background: $color-white;
+  padding: 28px;
+  max-width: 480px;
+
+  h2 {
+    font-family: $font-display;
+    font-size: 1.2rem;
+    color: $color-ink;
+    margin: 0 0 20px;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 18px;
+
+  span {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $color-ink;
+  }
+}
+
+.input {
+  padding: 10px 14px;
+  border: 1px solid $color-border;
+  border-radius: 8px;
+  font-size: 1rem;
+  direction: ltr;
+  text-align: left;
+  width: 100%;
+  transition: border-color 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: $color-gold-dark;
+  }
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: $color-text-muted;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 6px;
+}
+
+.ok {
+  font-size: 0.85rem;
+  color: $color-success;
+}
+
+.err {
+  font-size: 0.85rem;
+  color: $color-error;
+}

@@ -11,10 +11,8 @@ import { EmptyState } from "@/components/EmptyState";
 import { useCart } from "@/store/cart";
 import { formatILS } from "@/lib/format";
 import { checkoutFormSchema, type CheckoutFormInput } from "@/lib/validation/checkout";
+import { useShippingConfig } from "@/hooks/useShippingConfig";
 import styles from "./CheckoutForm.module.scss";
-
-const SHIPPING_PRICE = Number(process.env.SHIPPING_PRICE_ILS || 0);
-const FREE_SHIPPING_THRESHOLD = 499;
 
 export function CheckoutForm() {
   const router = useRouter();
@@ -25,6 +23,7 @@ export function CheckoutForm() {
   const [hydrated, setHydrated] = useState(false);
   const [serverError, setServerError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const { shippingPriceILS, freeShippingThreshold } = useShippingConfig();
 
   useEffect(() => {
     setHydrated(true);
@@ -42,7 +41,7 @@ export function CheckoutForm() {
   });
 
   const shippingPrice =
-    subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_PRICE;
+    subtotal >= freeShippingThreshold ? 0 : shippingPriceILS;
   const total = subtotal + shippingPrice;
 
   if (!hydrated) {

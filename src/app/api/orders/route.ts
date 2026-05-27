@@ -7,11 +7,9 @@ import { auth } from "@/lib/auth";
 import { checkoutSchema } from "@/lib/validation/checkout";
 import { serializeOrder } from "@/lib/serializers";
 import { createRateLimiter } from "@/lib/rateLimit";
+import { getShippingConfig } from "@/lib/siteSettings";
 
 const orderLimiter = createRateLimiter({ name: "orders", max: 10, windowSec: 60 });
-
-const SHIPPING_PRICE_ILS = Number(process.env.SHIPPING_PRICE_ILS || 0);
-const FREE_SHIPPING_THRESHOLD = 499;
 
 export async function GET(request: Request) {
   const session = await auth();
@@ -124,7 +122,8 @@ export async function POST(request: Request) {
       reserved.push({ productId: item.productId, ml: item.ml, quantity: item.quantity });
     }
 
-    const shippingPrice = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_PRICE_ILS;
+    const shippingCfg = await getShippingConfig();
+    const shippingPrice = subtotal >= shippingCfg.freeShippingThreshold ? 0 : shippingCfg.shippingPriceILS;
     const total = subtotal + shippingPrice;
 
     let order;

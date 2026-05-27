@@ -12,8 +12,10 @@ const urlList = z
   .max(MAX_HERO_IMAGES, `ניתן לשמור עד ${MAX_HERO_IMAGES} תמונות`);
 
 export const siteSettingsUpdateSchema = z.object({
-  heroImagesDesktop: urlList,
-  heroImagesMobile: urlList,
+  heroImagesDesktop: urlList.optional(),
+  heroImagesMobile: urlList.optional(),
+  shippingPriceILS: z.number().min(0, "ערך חייב להיות 0 ומעלה").optional(),
+  freeShippingThreshold: z.number().min(0, "ערך חייב להיות 0 ומעלה").optional(),
 });
 
 export type SiteSettingsUpdateInput = z.infer<typeof siteSettingsUpdateSchema>;

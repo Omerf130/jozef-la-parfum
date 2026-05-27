@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { getShippingConfig } from "@/lib/siteSettings";
 import styles from "./page.module.scss";
 
 export const metadata: Metadata = {
@@ -17,7 +18,8 @@ function FaqItem({ question, answer }: { question: string; answer: ReactNode }) 
   );
 }
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const { shippingPriceILS, freeShippingThreshold } = await getShippingConfig();
   return (
     <article className={styles.page}>
       <header className={styles.hero}>
@@ -70,7 +72,7 @@ export default function AboutPage() {
         />
         <FaqItem
           question="מה עלויות המשלוח ?"
-          answer={<p>תשובה : 35 שקלים למשלוח, משלוח חינם בקנייה מעל 499.</p>}
+          answer={<p>תשובה : {shippingPriceILS} שקלים למשלוח, משלוח חינם בקנייה מעל {freeShippingThreshold}.</p>}
         />
         <FaqItem
           question="האם בטוח לשלם אצלכם ?"

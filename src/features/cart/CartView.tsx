@@ -8,10 +8,8 @@ import { EmptyState } from "@/components/EmptyState";
 import { QuantityStepper } from "@/components/QuantityStepper";
 import { useCart } from "@/store/cart";
 import { formatILS } from "@/lib/format";
+import { useShippingConfig } from "@/hooks/useShippingConfig";
 import styles from "./CartView.module.scss";
-
-const SHIPPING_PRICE = Number(process.env.SHIPPING_PRICE_ILS || 0);
-const FREE_SHIPPING_THRESHOLD = 499;
 
 export function CartView() {
   const [hydrated, setHydrated] = useState(false);
@@ -20,6 +18,7 @@ export function CartView() {
   const remove = useCart((s) => s.remove);
   const clear = useCart((s) => s.clear);
   const subtotal = useCart((s) => s.subtotal());
+  const { shippingPriceILS, freeShippingThreshold } = useShippingConfig();
 
   useEffect(() => {
     setHydrated(true);
@@ -43,7 +42,7 @@ export function CartView() {
     );
   }
 
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_PRICE;
+  const shipping = subtotal >= freeShippingThreshold ? 0 : shippingPriceILS;
   const total = subtotal + shipping;
 
   return (
@@ -104,7 +103,7 @@ export function CartView() {
         </div>
         {shipping > 0 ? (
           <p className={styles.shippingNote}>
-            מעל {formatILS(FREE_SHIPPING_THRESHOLD)} משלוח חינם
+            מעל {formatILS(freeShippingThreshold)} משלוח חינם
           </p>
         ) : null}
         <div className={`${styles.row} ${styles.totalRow}`}>

@@ -13,6 +13,7 @@ const NAV = [
   { href: "/admin/orders", label: "הזמנות" },
   { href: "/admin/products", label: "מוצרים" },
   { href: "/admin/categories", label: "קטגוריות" },
+  { href: "/admin/settings", label: "הגדרות" },
 ];
 
 export function AdminShell({ email, children, logoutAction }: AdminShellProps) {

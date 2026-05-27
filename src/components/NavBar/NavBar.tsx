@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CartIndicator } from "./CartIndicator";
 import { MobileMenu } from "./MobileMenu";
+import { getShippingConfig } from "@/lib/siteSettings";
 import styles from "./NavBar.module.scss";
 
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "Jozef La Parfum";
@@ -16,14 +17,15 @@ const NAV_LINKS = [
   { href: "/contact", label: "צור קשר" },
 ];
 
-const ANNOUNCEMENTS = [
-  "משלוח חינם מעל ₪499",
-  "משלוח מגיע עד 7 ימי עסקים",
-  "החזרות והחלפות עד 14 יום",
-  "תשלומים ללא ריבית",
-];
+export async function NavBar() {
+  const { freeShippingThreshold } = await getShippingConfig();
 
-export function NavBar() {
+  const ANNOUNCEMENTS = [
+    `משלוח חינם מעל ₪${freeShippingThreshold}`,
+    "משלוח מגיע עד 7 ימי עסקים",
+    "החזרות והחלפות עד 14 יום",
+    "תשלומים ללא ריבית",
+  ];
   return (
     <>
       <div className={styles.announce} aria-label="הודעות מהמותג">
