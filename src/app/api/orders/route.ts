@@ -6,6 +6,9 @@ import { ProductModel } from "@/models/Product";
 import { auth } from "@/lib/auth";
 import { checkoutSchema } from "@/lib/validation/checkout";
 import { serializeOrder } from "@/lib/serializers";
+import { createRateLimiter } from "@/lib/rateLimit";
+
+const orderLimiter = createRateLimiter({ name: "orders", max: 10, windowSec: 60 });
 
 const SHIPPING_PRICE_ILS = Number(process.env.SHIPPING_PRICE_ILS || 0);
 const FREE_SHIPPING_THRESHOLD = 499;
@@ -32,6 +35,8 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const rl = orderLimiter.check(request);
+  if (rl.limited) return rl.response!;
   try {
     const body = await request.json();
     const parsed = checkoutSchema.safeParse(body);
@@ -76,12 +81,6 @@ export async function POST(request: Request) {
           { status: 400 },
         );
       }
-      if (size.stock < it.quantity) {
-        return NextResponse.json(
-          { error: `אזל המלאי עבור ${p.name} (${it.ml} מ"ל)` },
-          { status: 400 },
-        );
-      }
       const unitPrice =
         p.salePrice && p.salePrice < p.price
           ? Math.round((p.salePrice / p.price) * size.price)
@@ -96,22 +95,65 @@ export async function POST(request: Request) {
       });
     }
 
+    // Atomic stock reservation: decrement only if sufficient stock exists
+    const reserved: Array<{ productId: mongoose.Types.ObjectId; ml: number; quantity: number }> = [];
+    for (const item of orderItems) {
+      const result = await ProductModel.updateOne(
+        {
+          _id: item.productId,
+          "sizes.ml": item.ml,
+          "sizes.stock": { $gte: item.quantity },
+        },
+        { $inc: { "sizes.$.stock": -item.quantity } },
+      );
+      if (result.modifiedCount === 0) {
+        // Rollback previously reserved items
+        await Promise.all(
+          reserved.map((r) =>
+            ProductModel.updateOne(
+              { _id: r.productId, "sizes.ml": r.ml },
+              { $inc: { "sizes.$.stock": r.quantity } },
+            ),
+          ),
+        );
+        return NextResponse.json(
+          { error: `אזל המלאי עבור ${item.name} (${item.ml} מ"ל)` },
+          { status: 400 },
+        );
+      }
+      reserved.push({ productId: item.productId, ml: item.ml, quantity: item.quantity });
+    }
+
     const shippingPrice = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_PRICE_ILS;
     const total = subtotal + shippingPrice;
 
-    const order = await OrderModel.create({
-      customerName: parsed.data.customerName,
-      customerEmail: parsed.data.customerEmail,
-      customerPhone: parsed.data.customerPhone,
-      shippingAddress: parsed.data.shippingAddress,
-      items: orderItems,
-      subtotal,
-      shippingPrice,
-      total,
-      paymentStatus: "pending",
-      paymentProvider: "payplus",
-      orderStatus: "new",
-    });
+    let order;
+    try {
+      order = await OrderModel.create({
+        customerName: parsed.data.customerName,
+        customerEmail: parsed.data.customerEmail,
+        customerPhone: parsed.data.customerPhone,
+        shippingAddress: parsed.data.shippingAddress,
+        items: orderItems,
+        subtotal,
+        shippingPrice,
+        total,
+        paymentStatus: "pending",
+        paymentProvider: "payplus",
+        orderStatus: "new",
+      });
+    } catch (createErr) {
+      // Order creation failed — release all reserved stock
+      await Promise.all(
+        reserved.map((r) =>
+          ProductModel.updateOne(
+            { _id: r.productId, "sizes.ml": r.ml },
+            { $inc: { "sizes.$.stock": r.quantity } },
+          ),
+        ),
+      );
+      throw createErr;
+    }
 
     return NextResponse.json(
       { order: serializeOrder(order.toObject()) },

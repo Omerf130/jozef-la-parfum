@@ -122,8 +122,8 @@ export async function createPaymentPage({
  */
 export function verifyWebhookSignature(rawBody: string, header: string | null): boolean {
   if (!WEBHOOK_SECRET) {
-    console.warn("[payplus] PAYPLUS_WEBHOOK_SECRET not set — skipping verification");
-    return true;
+    console.error("[payplus] PAYPLUS_WEBHOOK_SECRET not set — rejecting webhook");
+    return false;
   }
   if (!header) return false;
 
@@ -153,6 +153,8 @@ export interface PayPlusWebhookEvent {
   pageRequestUid?: string;
   transactionUid?: string;
   more_info?: string;
+  amount?: number;
+  currency?: string;
   raw: unknown;
 }
 
@@ -176,6 +178,13 @@ export function parseWebhookPayload(payload: unknown): PayPlusWebhookEvent {
     status = "failed";
   }
 
+  const rawAmount = data.amount ?? data.total ?? data.approved_amount;
+  const amount = typeof rawAmount === "number"
+    ? rawAmount
+    : typeof rawAmount === "string"
+      ? parseFloat(rawAmount)
+      : undefined;
+
   return {
     status,
     pageRequestUid: (data.page_request_uid as string) ?? (data.payment_request_uid as string),
@@ -184,6 +193,8 @@ export function parseWebhookPayload(payload: unknown): PayPlusWebhookEvent {
       (data.transaction_uuid as string) ??
       (data.transaction_id as string),
     more_info: (data.more_info as string) ?? undefined,
+    amount: amount && !isNaN(amount) ? amount : undefined,
+    currency: (data.currency_code as string) ?? (data.currency as string) ?? undefined,
     raw: payload,
   };
 }

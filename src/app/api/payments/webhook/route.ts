@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { verifyWebhookSignature } from "@/services/payplus";
 import { processPayPlusPaymentNotification } from "@/lib/payplusWebhookProcessor";
+import { createRateLimiter } from "@/lib/rateLimit";
+
+const limiter = createRateLimiter({ name: "webhook", max: 30, windowSec: 60 });
 
 export async function POST(request: Request) {
+  const rl = limiter.check(request);
+  if (rl.limited) return rl.response!;
   try {
     const rawBody = await request.text();
 

@@ -1,7 +1,10 @@
 import { NextResponse } from "next/server";
 import { processPayPlusPaymentNotification } from "@/lib/payplusWebhookProcessor";
+import { createRateLimiter } from "@/lib/rateLimit";
 
 export const runtime = "nodejs";
+
+const limiter = createRateLimiter({ name: "callback", max: 30, windowSec: 60 });
 
 const BODY_LOG_MAX = 2000;
 
@@ -12,6 +15,9 @@ function isManualTestPayload(payload: unknown): boolean {
 }
 
 export async function POST(request: Request) {
+  const rl = limiter.check(request);
+  if (rl.limited) return rl.response!;
+
   const token = new URL(request.url).searchParams.get("token");
   const expected = process.env.PAYPLUS_WEBHOOK_SECRET;
 

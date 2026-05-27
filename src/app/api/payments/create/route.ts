@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import { OrderModel } from "@/models/Order";
 import { createPaymentPage } from "@/services/payplus";
+import { createRateLimiter } from "@/lib/rateLimit";
+
+const limiter = createRateLimiter({ name: "payments-create", max: 5, windowSec: 60 });
 
 function isProductionDeploy(): boolean {
   return (
@@ -12,6 +15,8 @@ function isProductionDeploy(): boolean {
 }
 
 export async function POST(request: Request) {
+  const rl = limiter.check(request);
+  if (rl.limited) return rl.response!;
   try {
     const body = (await request.json()) as { orderId?: string };
     if (!body?.orderId || !mongoose.isValidObjectId(body.orderId)) {

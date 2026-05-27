@@ -6,6 +6,17 @@ import { parseWebhookPayload } from "@/services/payplus";
 import { sendOrderConfirmation } from "@/services/email";
 import { serializeOrder } from "@/lib/serializers";
 
+async function releaseStock(order: HydratedDocument<OrderDoc>) {
+  await Promise.all(
+    order.items.map((it) =>
+      ProductModel.updateOne(
+        { _id: it.productId, "sizes.ml": it.ml },
+        { $inc: { "sizes.$.stock": it.quantity } },
+      ),
+    ),
+  );
+}
+
 /**
  * Shared PayPlus IPN body handler (used by /webhook and /payplus/callback).
  * Does not verify auth — caller must verify signature or query token first.
@@ -39,19 +50,25 @@ export async function processPayPlusPaymentNotification(rawBody: string): Promis
   }
 
   if (event.status === "approved" && order.paymentStatus !== "paid") {
+    if (event.amount !== undefined) {
+      const diff = Math.abs(event.amount - order.total);
+      if (diff > 1) {
+        console.error("[payplus] PAYPLUS ORDER NOT MARKED PAID — amount mismatch", {
+          orderId: String(order._id),
+          expected: order.total,
+          received: event.amount,
+          currency: event.currency,
+        });
+        return;
+      }
+    }
+
     order.paymentStatus = "paid";
     order.orderStatus = "processing";
     if (event.transactionUid) order.paymentTransactionId = event.transactionUid;
     await order.save();
 
-    await Promise.all(
-      order.items.map((it) =>
-        ProductModel.updateOne(
-          { _id: it.productId, "sizes.ml": it.ml },
-          { $inc: { "sizes.$.stock": -it.quantity } },
-        ),
-      ),
-    );
+    // Stock was already reserved atomically at order creation — no decrement here
 
     console.log("[payplus] PAYPLUS ORDER MARKED PAID", {
       orderId: String(order._id),
@@ -76,7 +93,10 @@ export async function processPayPlusPaymentNotification(rawBody: string): Promis
   if (event.status === "failed") {
     order.paymentStatus = "failed";
     await order.save();
-    console.log("[payplus] PAYPLUS ORDER NOT MARKED PAID — payment failed", {
+
+    await releaseStock(order);
+
+    console.log("[payplus] PAYPLUS ORDER NOT MARKED PAID — payment failed, stock released", {
       orderId: String(order._id),
     });
     return;
@@ -86,7 +106,10 @@ export async function processPayPlusPaymentNotification(rawBody: string): Promis
     order.paymentStatus = "failed";
     order.orderStatus = "cancelled";
     await order.save();
-    console.log("[payplus] PAYPLUS ORDER NOT MARKED PAID — cancelled", {
+
+    await releaseStock(order);
+
+    console.log("[payplus] PAYPLUS ORDER NOT MARKED PAID — cancelled, stock released", {
       orderId: String(order._id),
     });
     return;
