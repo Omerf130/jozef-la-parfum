@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CartIndicator } from "./CartIndicator";
 import { MobileMenu } from "./MobileMenu";
+import { SearchBar } from "./SearchBar";
 import { getShippingConfig } from "@/lib/siteSettings";
 import styles from "./NavBar.module.scss";
 
@@ -57,6 +58,7 @@ export async function NavBar() {
               {link.label}
             </Link>
           ))}
+          <SearchBar />
         </nav>
       </header>
     </>

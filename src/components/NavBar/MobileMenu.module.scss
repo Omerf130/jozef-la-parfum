@@ -80,6 +80,12 @@
   justify-content: center;
 }
 
+.search {
+  padding-bottom: 16px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid $color-border;
+}
+
 .links {
   display: flex;
   flex-direction: column;

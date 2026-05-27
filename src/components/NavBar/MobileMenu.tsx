@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { SearchBar } from "./SearchBar";
 import styles from "./MobileMenu.module.scss";
 
 interface NavLink {
@@ -53,6 +54,9 @@ export function MobileMenu({ links }: MobileMenuProps) {
               >
                 ×
               </button>
+            </div>
+            <div className={styles.search}>
+              <SearchBar />
             </div>
             <nav className={styles.links}>
               {links.map((link) => (
