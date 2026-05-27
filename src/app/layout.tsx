@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Heebo, Frank_Ruhl_Libre } from "next/font/google";
+import { CookieConsent } from "@/components/CookieConsent/CookieConsent";
 import "@/styles/globals.scss";
 
 const heebo = Heebo({
@@ -50,7 +51,10 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="he" dir="rtl" className={`${heebo.variable} ${display.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <CookieConsent />
+      </body>
     </html>
   );
 }

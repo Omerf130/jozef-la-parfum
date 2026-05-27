@@ -1,0 +1,71 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+.banner {
+  position: fixed;
+  bottom: 0;
+  inset-inline: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 18px 28px;
+  background: rgba($color-ink, 0.92);
+  backdrop-filter: blur(8px);
+  animation: slideUp $dur $ease both;
+
+  @include md {
+    flex-direction: column;
+    gap: 14px;
+    text-align: center;
+    padding: 20px 20px;
+  }
+}
+
+.text {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba($color-white, 0.9);
+  line-height: 1.6;
+}
+
+.link {
+  color: $color-gold-light;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+
+  &:hover {
+    color: $color-gold;
+  }
+}
+
+.accept {
+  flex-shrink: 0;
+  padding: 10px 28px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  color: $color-ink;
+  background: $color-white;
+  border: none;
+  cursor: pointer;
+  transition: background $dur-fast $ease, color $dur-fast $ease;
+
+  &:hover {
+    background: $color-gold-light;
+    color: $color-ink;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
