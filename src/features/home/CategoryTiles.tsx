@@ -11,8 +11,8 @@ const FALLBACK = [
 ];
 
 const VIRTUAL_TILES = [
-  { name: "כל הבשמים", slug: "all" },
-  { name: 'בשמים עד 150 ש"ח', slug: "budget" },
+  { name: "כל הבשמים", slug: "all", image: "/categories/all-perfumes.jpg" },
+  { name: 'בשמים עד 150 ש"ח', slug: "budget", image: "/categories/budget-perfumes.jpg" },
 ];
 
 export async function CategoryTiles() {

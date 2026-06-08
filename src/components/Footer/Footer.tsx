@@ -118,9 +118,6 @@ export async function Footer() {
               <li>
                 <Link href="/privacy">מדיניות פרטיות</Link>
               </li>
-              <li>
-                <Link href="/admin/login">כניסת מנהל</Link>
-              </li>
             </ul>
           </div>
 

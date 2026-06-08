@@ -91,11 +91,6 @@ export function ProductPurchase({ product }: ProductPurchaseProps) {
       <div className={styles.qtyRow}>
         <span className={styles.qtyLabel}>כמות</span>
         <QuantityStepper value={qty} onChange={setQty} max={selected?.stock ?? 99} />
-        {selected ? (
-          <span className={styles.stock}>
-            {selected.stock > 0 ? `במלאי: ${selected.stock}` : "אזל מהמלאי"}
-          </span>
-        ) : null}
       </div>
 
       <div className={styles.actions}>
