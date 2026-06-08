@@ -110,26 +110,5 @@
 }
 
 .image {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(135deg, rgba($color-gold, 0.18), transparent 55%),
-    linear-gradient(180deg, $color-ink-soft, $color-ink);
-  overflow: hidden;
-
-  &::after {
-    content: "✦";
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: rgba($color-gold, 0.18);
-    font-size: 9rem;
-    font-family: $font-display;
-  }
-}
-
-.imageAccent {
-  display: none;
+  object-fit: cover;
 }

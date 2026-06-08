@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getShippingConfig } from "@/lib/siteSettings";
 import styles from "./EditorialSection.module.scss";
 
@@ -7,16 +8,12 @@ export async function EditorialSection() {
     <section className={styles.editorial}>
       <div className={styles.inner}>
         <div className={styles.text}>
-          <span className={styles.kicker}>מסורת ויוקרה</span>
-          <h2>אמנות הניחוח</h2>
+          <h2>חתימת הריח שלכם</h2>
           <p>
-            כל בקבוק שאנו מציעים נבחר בקפידה רבה. אנו עובדים עם בתי הבושם
-            המובילים בעולם — מצרפת, מאיטליה ומהמזרח התיכון — כדי להביא לישראל את
-            הניחוחות הנדירים והמעודנים ביותר.
-          </p>
-          <p>
-            הצוות שלנו, בראשות פרפיומרים מנוסים, יסייע לכם לגלות את הניחוח שמספר
-            את הסיפור שלכם — בהתאמה אישית, באהבה ובסבלנות.
+            הניחוח הנכון משאיר רושם שאי אפשר לשכוח. ב-Jozef La Parfum אנו
+            מביאים אליכם קולקציה מעודנת של בשמי בוטיק מכל רחבי העולם, שנבחרו
+            אחד-אחד בקפידה יתרה. המומחים שלנו ילוו אתכם באופן אישי, כדי להתאים
+            לכם ניחוח בלעדי שמרגיש כאילו נרקח במיוחד עבורכם.
           </p>
           <ul className={styles.list}>
             <li>
@@ -33,9 +30,14 @@ export async function EditorialSection() {
             </li>
           </ul>
         </div>
-        <div className={styles.imageCol} aria-hidden="true">
-          <div className={styles.image} />
-          <div className={styles.imageAccent} />
+        <div className={styles.imageCol}>
+          <Image
+            src="/editorial-perfume.jpg"
+            alt="בשמי בוטיק יוקרתיים"
+            fill
+            sizes="(max-width:768px) 100vw, 50vw"
+            className={styles.image}
+          />
         </div>
       </div>
     </section>
