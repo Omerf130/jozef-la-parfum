@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/db";
 import { ProductModel } from "@/models/Product";
 import "@/models/Category";
@@ -45,6 +46,7 @@ export async function POST(request: Request) {
     const populated = await ProductModel.findById(created._id)
       .populate("category", "name slug")
       .lean();
+    revalidatePath("/", "layout");
     return NextResponse.json(
       { product: populated ? serializeProduct(populated) : null },
       { status: 201 },

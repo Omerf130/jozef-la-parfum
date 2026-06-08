@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import { ProductModel } from "@/models/Product";
@@ -45,6 +46,7 @@ export async function PATCH(request: Request, { params }: Params) {
       .populate("category", "name slug")
       .lean();
     if (!updated) return NextResponse.json({ error: "לא נמצא" }, { status: 404 });
+    revalidatePath("/", "layout");
     return NextResponse.json({ product: serializeProduct(updated) });
   } catch (e) {
     console.error("[api/products PATCH]", e);
@@ -69,5 +71,6 @@ export async function DELETE(_request: Request, { params }: Params) {
     { new: true },
   ).lean();
   if (!updated) return NextResponse.json({ error: "לא נמצא" }, { status: 404 });
+  revalidatePath("/", "layout");
   return NextResponse.json({ ok: true });
 }

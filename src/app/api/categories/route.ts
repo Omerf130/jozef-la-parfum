@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { connectDB } from "@/lib/db";
 import { CategoryModel } from "@/models/Category";
 import { auth } from "@/lib/auth";
@@ -27,6 +28,7 @@ export async function POST(request: Request) {
     }
     await connectDB();
     const created = await CategoryModel.create(parsed.data);
+    revalidatePath("/", "layout");
     return NextResponse.json(
       { category: serializeCategory(created.toObject()) },
       { status: 201 },

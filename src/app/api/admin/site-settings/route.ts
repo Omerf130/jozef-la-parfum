@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { connectDB } from "@/lib/db";
 import { deleteBlob } from "@/services/blob";
@@ -95,6 +96,7 @@ export async function PATCH(request: Request) {
       void deleteBlob(url);
     }
 
+    revalidatePath("/", "layout");
     return NextResponse.json({
       heroImagesDesktop: updated.heroImagesDesktop ?? [],
       heroImagesMobile: updated.heroImagesMobile ?? [],

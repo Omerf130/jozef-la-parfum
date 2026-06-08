@@ -6,7 +6,7 @@ import styles from "./page.module.scss";
 export const metadata: Metadata = {
   title: "אודות",
   description:
-    "jozef la perfume — מותגים ומחירים של פעם בחיים, מקורי בלבד. כל מותגי הבישום תחת קורת גג אחת.",
+    "JOZEF LA PERFUME — מותגים ומחירים של פעם בחיים, מקורי בלבד. כל מותגי הבישום תחת קורת גג אחת.",
 };
 
 function FaqItem({ question, answer }: { question: string; answer: ReactNode }) {
@@ -24,7 +24,7 @@ export default async function AboutPage() {
     <article className={styles.page}>
       <header className={styles.hero}>
         <span className={styles.kicker}>אודות</span>
-        <h1>jozef la perfume</h1>
+        <h1>JOZEF LA PERFUME</h1>
         <p>מותגים ומחירים של פעם בחיים. מקורי בלבד.</p>
         <p>
           כל מותגי הבישום תחת קורת גג אחת , מהיוקרה ועד היום יום , מקוריים בלבד ,
@@ -34,7 +34,7 @@ export default async function AboutPage() {
 
       <section className={styles.section}>
         <p>
-          ב-jozef la perfume, המטרה שלנו היא פשוטה: להנגיש את עולם הבישום לכולם.
+          ב-JOZEF LA PERFUME, המטרה שלנו היא פשוטה: להנגיש את עולם הבישום לכולם.
           בנינו עבורכם נבחרת בשמים ענקית שכוללת את מותגי העל היוקרתיים לצד
           הבשמים האהובים והמוכרים, כך שכל אחד יכול למצוא את הניחוח המדויק עבורו.
         </p>
@@ -42,7 +42,7 @@ export default async function AboutPage() {
           אנחנו לא מתפשרים על האיכות: כל בקבוק באתר הוא 100% מקורי ובאחריות מלאה.
           בזכות שיטת עבודה חכמה, אנחנו מצליחים להציע לכם את המחירים ההוגנים ביותר
           בשוק, בלי אותיות קטנות ובלי פערי תיווך מיותרים. יוקרתי או יומיומי, קלאסי
-          או נועז – ב-jozef la perfume אתם תמיד מקבלים את המקסימום במחיר המינימלי.
+          או נועז – ב-JOZEF LA PERFUME אתם תמיד מקבלים את המקסימום במחיר המינימלי.
         </p>
       </section>
 

@@ -5,7 +5,7 @@ import { SearchBar } from "./SearchBar";
 import { getShippingConfig } from "@/lib/siteSettings";
 import styles from "./NavBar.module.scss";
 
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "jozef la perfume";
+const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "JOZEF LA PERFUME";
 
 const NAV_LINKS = [
   { href: "/", label: "בית" },

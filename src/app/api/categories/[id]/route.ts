@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import { CategoryModel } from "@/models/Category";
@@ -41,6 +42,7 @@ export async function PATCH(request: Request, { params }: Params) {
     await connectDB();
     const updated = await CategoryModel.findByIdAndUpdate(id, parsed.data, { new: true }).lean();
     if (!updated) return NextResponse.json({ error: "לא נמצא" }, { status: 404 });
+    revalidatePath("/", "layout");
     return NextResponse.json({ category: serializeCategory(updated) });
   } catch (e) {
     console.error("[api/categories PATCH]", e);
@@ -68,5 +70,6 @@ export async function DELETE(_request: Request, { params }: Params) {
   }
   const removed = await CategoryModel.findByIdAndDelete(id).lean();
   if (!removed) return NextResponse.json({ error: "לא נמצא" }, { status: 404 });
+  revalidatePath("/", "layout");
   return NextResponse.json({ ok: true });
 }

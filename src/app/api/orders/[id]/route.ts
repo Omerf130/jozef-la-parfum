@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidatePath } from "next/cache";
 import mongoose from "mongoose";
 import { z } from "zod";
 import { connectDB } from "@/lib/db";
@@ -55,6 +56,7 @@ export async function PATCH(request: Request, { params }: Params) {
       new: true,
     }).lean();
     if (!updated) return NextResponse.json({ error: "לא נמצא" }, { status: 404 });
+    revalidatePath("/", "layout");
     return NextResponse.json({ order: serializeOrder(updated) });
   } catch (e) {
     console.error("[api/orders PATCH]", e);
