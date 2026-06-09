@@ -163,3 +163,15 @@
     }
   }
 }
+
+.credit {
+  a {
+    color: rgba($color-white, 0.65);
+    text-decoration: none;
+    transition: color $dur-fast $ease;
+
+    &:hover {
+      color: $color-gold;
+    }
+  }
+}

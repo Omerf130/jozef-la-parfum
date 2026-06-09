@@ -143,6 +143,12 @@ export async function Footer() {
           <span className={styles.payments}>
             תשלום מאובטח בכרטיס אשראי דרך PayPlus
           </span>
+          <span className={styles.credit}>
+            האתר נבנה ועוצב ע&quot;י{" "}
+            <a href="https://weblio.co.il" target="_blank" rel="noopener noreferrer">
+              weblio
+            </a>
+          </span>
         </div>
       </div>
     </footer>
