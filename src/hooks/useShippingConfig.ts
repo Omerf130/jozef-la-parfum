@@ -5,7 +5,7 @@ interface ShippingConfig {
   freeShippingThreshold: number;
 }
 
-const DEFAULTS: ShippingConfig = { shippingPriceILS: 30, freeShippingThreshold: 499 };
+const DEFAULTS: ShippingConfig = { shippingPriceILS: 30, freeShippingThreshold: 999 };
 
 let cached: ShippingConfig | null = null;
 let pending: Promise<ShippingConfig> | null = null;

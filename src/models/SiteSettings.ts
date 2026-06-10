@@ -3,7 +3,7 @@ import mongoose, { Schema, model, models, type Model } from "mongoose";
 export const SITE_SETTINGS_SINGLETON_KEY = "default";
 
 export const DEFAULT_SHIPPING_PRICE_ILS = 30;
-export const DEFAULT_FREE_SHIPPING_THRESHOLD = 499;
+export const DEFAULT_FREE_SHIPPING_THRESHOLD = 999;
 
 export interface SiteSettingsDoc {
   _id: mongoose.Types.ObjectId;
