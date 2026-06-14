@@ -16,7 +16,10 @@ export async function GET(request: Request) {
 
   const docs = await ProductModel.find({
     isActive: true,
-    name: { $regex: escaped, $options: "i" },
+    $or: [
+      { name: { $regex: escaped, $options: "i" } },
+      { brand: { $regex: escaped, $options: "i" } },
+    ],
   })
     .select("name brand slug images price salePrice")
     .limit(6)
