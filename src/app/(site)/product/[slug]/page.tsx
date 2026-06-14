@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { connectDB } from "@/lib/db";
 import { ProductModel } from "@/models/Product";
+import "@/models/Category";
 import { serializeProduct } from "@/lib/serializers";
 import { ProductGallery } from "@/features/product/ProductGallery";
 import { ProductPurchase } from "@/features/product/ProductPurchase";

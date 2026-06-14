@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/db";
 import { ProductModel } from "@/models/Product";
+import "@/models/Category";
 import { ProductCard } from "@/components/ProductCard";
 import { EmptyState } from "@/components/EmptyState";
 import { serializeProduct } from "@/lib/serializers";
