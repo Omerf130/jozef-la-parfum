@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { connectDB } from "@/lib/db";
 import { ProductModel } from "@/models/Product";
+import "@/models/Category";
 import { Button } from "@/components/Button";
 import { EmptyState } from "@/components/EmptyState";
 import { formatILS } from "@/lib/format";
