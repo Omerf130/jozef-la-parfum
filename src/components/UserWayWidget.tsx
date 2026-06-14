@@ -5,6 +5,7 @@ export function UserWayWidget() {
     <Script
       src="https://cdn.userway.org/widget.js"
       data-account={process.env.NEXT_PUBLIC_USERWAY_ACCOUNT_ID}
+      data-position="bottom-left"
       strategy="afterInteractive"
     />
   );

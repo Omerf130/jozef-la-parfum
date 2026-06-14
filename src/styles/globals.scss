@@ -79,6 +79,13 @@ select {
   color: $color-white;
 }
 
+.userway_buttons_wrapper {
+  top: auto !important;
+  bottom: 20px !important;
+  right: auto !important;
+  left: 20px !important;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

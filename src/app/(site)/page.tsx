@@ -14,7 +14,6 @@ export default function HomePage() {
       <Suspense fallback={<Spinner />}>
         <Hero />
       </Suspense>
-      <NewsletterStrip />
       <Suspense fallback={<Spinner />}>
         <CategoryTiles />
       </Suspense>
@@ -22,6 +21,7 @@ export default function HomePage() {
       <Suspense fallback={<Spinner />}>
         <BestSellers />
       </Suspense>
+      <NewsletterStrip />
       <WhatsAppButton />
       <WelcomeModal />
     </>
