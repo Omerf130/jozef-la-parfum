@@ -17,6 +17,22 @@ interface FiltersProps {
   };
 }
 
+function FilterToggleIcon({ open }: { open: boolean }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      {open ? (
+        <path d="M18 6L6 18M6 6l12 12" />
+      ) : (
+        <>
+          <line x1="4" y1="6" x2="20" y2="6" />
+          <line x1="4" y1="12" x2="16" y2="12" />
+          <line x1="4" y1="18" x2="12" y2="18" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 const GENDERS = [
   { value: "male", label: "לגבר" },
   { value: "female", label: "לאישה" },
@@ -35,6 +51,7 @@ export function CategoryFilters({ brands, priceBounds, currentParams }: FiltersP
   const pathname = usePathname();
   const params = useSearchParams();
   const [pending, startTransition] = useTransition();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const [brand, setBrand] = useState(currentParams.brand || "");
   const [gender, setGender] = useState(currentParams.gender || "");
@@ -72,6 +89,19 @@ export function CategoryFilters({ brands, priceBounds, currentParams }: FiltersP
 
   return (
     <div className={styles.filters}>
+      <button
+        className={styles.mobileToggle}
+        onClick={() => setMobileOpen((v) => !v)}
+        aria-expanded={mobileOpen}
+        aria-controls="category-filters-body"
+      >
+        <FilterToggleIcon open={mobileOpen} />
+        <span>{mobileOpen ? "סגור סינון" : "סינון"}</span>
+      </button>
+      <div
+        id="category-filters-body"
+        className={`${styles.body} ${mobileOpen ? styles.open : ""}`}
+      >
       <h3 className={styles.title}>סינון</h3>
 
       {brands.length > 0 ? (
@@ -186,6 +216,7 @@ export function CategoryFilters({ brands, priceBounds, currentParams }: FiltersP
         <Button onClick={reset} variant="ghost" fullWidth>
           איפוס
         </Button>
+      </div>
       </div>
     </div>
   );

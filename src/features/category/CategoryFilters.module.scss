@@ -7,6 +7,44 @@
   padding: 0;
 }
 
+.mobileToggle {
+  display: none;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: 1px solid $color-ink;
+  background: transparent;
+  color: $color-ink;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color $dur-fast $ease, color $dur-fast $ease;
+
+  &:hover {
+    background: $color-ink;
+    color: $color-white;
+  }
+
+  @include md {
+    display: flex;
+  }
+}
+
+.body {
+  @include md {
+    display: none;
+    padding-top: 24px;
+
+    &.open {
+      display: block;
+    }
+  }
+}
+
 .title {
   font-family: $font-body;
   font-size: 0.72rem;
