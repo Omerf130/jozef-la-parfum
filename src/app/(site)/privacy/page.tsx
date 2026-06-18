@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { SITE_NAME } from "@/lib/siteName";
 import styles from "@/styles/legal-page.module.scss";
-
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "JOZEF LA PERFUME";
 
 export const metadata: Metadata = {
   title: "מדיניות פרטיות",

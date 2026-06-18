@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Heebo, Frank_Ruhl_Libre } from "next/font/google";
 import { CookieConsent } from "@/components/CookieConsent/CookieConsent";
 import { UserWayWidget } from "@/components/UserWayWidget";
+import { SITE_NAME } from "@/lib/siteName";
 import "@/styles/globals.scss";
 
 const heebo = Heebo({
@@ -18,7 +19,6 @@ const display = Frank_Ruhl_Libre({
   weight: ["400", "500", "700"],
 });
 
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "JOZEF LA PERFUME";
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
 export const metadata: Metadata = {

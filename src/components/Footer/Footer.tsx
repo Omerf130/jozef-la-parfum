@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { getShippingConfig } from "@/lib/siteSettings";
+import { SITE_NAME } from "@/lib/siteName";
 import styles from "./Footer.module.scss";
-
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "JOZEF LA PERFUME";
 
 function getValueProps(freeShippingThreshold: number) {
   return [

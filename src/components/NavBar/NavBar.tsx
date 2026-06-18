@@ -3,9 +3,8 @@ import { CartIndicator } from "./CartIndicator";
 import { MobileMenu } from "./MobileMenu";
 import { SearchBar } from "./SearchBar";
 import { getShippingConfig } from "@/lib/siteSettings";
+import { SITE_NAME } from "@/lib/siteName";
 import styles from "./NavBar.module.scss";
-
-const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME || "JOZEF LA PERFUME";
 
 const NAV_LINKS = [
   { href: "/", label: "בית" },
