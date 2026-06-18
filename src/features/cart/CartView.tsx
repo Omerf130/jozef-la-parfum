@@ -9,6 +9,7 @@ import { QuantityStepper } from "@/components/QuantityStepper";
 import { useCart } from "@/store/cart";
 import { formatILS } from "@/lib/format";
 import { useShippingConfig } from "@/hooks/useShippingConfig";
+import { CouponField } from "@/features/checkout/CouponField";
 import styles from "./CartView.module.scss";
 
 export function CartView() {
@@ -18,6 +19,7 @@ export function CartView() {
   const remove = useCart((s) => s.remove);
   const clear = useCart((s) => s.clear);
   const subtotal = useCart((s) => s.subtotal());
+  const appliedCoupon = useCart((s) => s.appliedCoupon);
   const { shippingPriceILS, freeShippingThreshold } = useShippingConfig();
 
   useEffect(() => {
@@ -42,8 +44,20 @@ export function CartView() {
     );
   }
 
-  const shipping = subtotal >= freeShippingThreshold ? 0 : shippingPriceILS;
-  const total = subtotal + shipping;
+  const cartItems = items.map((i) => ({
+    productId: i.productId,
+    ml: i.ml,
+    quantity: i.quantity,
+  }));
+
+  const baseShipping = subtotal >= freeShippingThreshold ? 0 : shippingPriceILS;
+  const discountAmount = appliedCoupon?.discountAmount ?? 0;
+  const shipping =
+    appliedCoupon?.shippingPrice != null ? appliedCoupon.shippingPrice : baseShipping;
+  const total =
+    appliedCoupon?.total != null
+      ? appliedCoupon.total
+      : subtotal + shipping - discountAmount;
 
   return (
     <div className={styles.layout}>
@@ -93,10 +107,19 @@ export function CartView() {
 
       <aside className={styles.summary}>
         <h2>סיכום הזמנה</h2>
+        <CouponField items={cartItems} />
         <div className={styles.row}>
           <span>סכום ביניים</span>
           <span>{formatILS(subtotal)}</span>
         </div>
+        {discountAmount > 0 ? (
+          <div className={styles.row}>
+            <span>
+              {appliedCoupon?.appliesTo === "shipping" ? "הנחה על משלוח" : "הנחה על מוצרים"}
+            </span>
+            <span>-{formatILS(discountAmount)}</span>
+          </div>
+        ) : null}
         <div className={styles.row}>
           <span>משלוח</span>
           <span>{shipping === 0 ? "חינם" : formatILS(shipping)}</span>

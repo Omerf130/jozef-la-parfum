@@ -1,4 +1,5 @@
 import mongoose, { Schema, model, models, type Model } from "mongoose";
+import type { CouponAppliesTo } from "@/models/Coupon";
 
 export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
 export type OrderStatus = "new" | "processing" | "shipped" | "delivered" | "cancelled";
@@ -25,6 +26,10 @@ export interface OrderDoc {
   items: OrderItemDoc[];
   subtotal: number;
   shippingPrice: number;
+  discountAmount: number;
+  couponId?: mongoose.Types.ObjectId;
+  couponCode?: string;
+  couponAppliesTo?: CouponAppliesTo;
   total: number;
   paymentStatus: PaymentStatus;
   paymentProvider: "payplus";
@@ -65,6 +70,10 @@ const OrderSchema = new Schema<OrderDoc>(
     items: { type: [OrderItemSchema], required: true },
     subtotal: { type: Number, required: true, min: 0 },
     shippingPrice: { type: Number, required: true, min: 0, default: 0 },
+    discountAmount: { type: Number, required: true, min: 0, default: 0 },
+    couponId: { type: Schema.Types.ObjectId, ref: "Coupon" },
+    couponCode: { type: String },
+    couponAppliesTo: { type: String, enum: ["products", "shipping"] },
     total: { type: Number, required: true, min: 0 },
     paymentStatus: {
       type: String,

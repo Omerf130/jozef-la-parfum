@@ -5,6 +5,7 @@ import { ProductModel } from "@/models/Product";
 import { parseWebhookPayload } from "@/services/payplus";
 import { sendOrderConfirmation } from "@/services/email";
 import { serializeOrder } from "@/lib/serializers";
+import { releaseCouponUsage } from "@/lib/coupons";
 
 async function releaseStock(order: HydratedDocument<OrderDoc>) {
   await Promise.all(
@@ -95,6 +96,9 @@ export async function processPayPlusPaymentNotification(rawBody: string): Promis
     await order.save();
 
     await releaseStock(order);
+    if (order.couponId) {
+      await releaseCouponUsage(order.couponId);
+    }
 
     console.log("[payplus] PAYPLUS ORDER NOT MARKED PAID — payment failed, stock released", {
       orderId: String(order._id),
@@ -108,6 +112,9 @@ export async function processPayPlusPaymentNotification(rawBody: string): Promis
     await order.save();
 
     await releaseStock(order);
+    if (order.couponId) {
+      await releaseCouponUsage(order.couponId);
+    }
 
     console.log("[payplus] PAYPLUS ORDER NOT MARKED PAID — cancelled, stock released", {
       orderId: String(order._id),

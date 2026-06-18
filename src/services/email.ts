@@ -89,6 +89,13 @@ export async function sendOrderConfirmation(order: OrderDTO) {
           <div style="display:flex; justify-content:space-between; padding:4px 0;">
             <span>סכום ביניים</span><span>${formatILS(order.subtotal)}</span>
           </div>
+          ${
+            order.discountAmount > 0
+              ? `<div style="display:flex; justify-content:space-between; padding:4px 0; color:#2d6a4f;">
+            <span>הנחה${order.couponCode ? ` (${escape(order.couponCode)})` : ""}</span><span>-${formatILS(order.discountAmount)}</span>
+          </div>`
+              : ""
+          }
           <div style="display:flex; justify-content:space-between; padding:4px 0;">
             <span>משלוח</span><span>${formatILS(order.shippingPrice)}</span>
           </div>

@@ -5,6 +5,7 @@ import { CategoryTiles } from "@/features/home/CategoryTiles";
 import { BestSellers } from "@/features/home/BestSellers";
 import { EditorialSection } from "@/features/home/EditorialSection";
 import { NewsletterStrip } from "@/features/home/NewsletterStrip";
+import { PublicCoupons } from "@/features/home/PublicCoupons";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { WelcomeModal } from "@/features/home/WelcomeModal";
 
@@ -21,6 +22,7 @@ export default function HomePage() {
       <Suspense fallback={<Spinner />}>
         <BestSellers />
       </Suspense>
+      <PublicCoupons />
       <NewsletterStrip />
       <WhatsAppButton />
       <WelcomeModal />

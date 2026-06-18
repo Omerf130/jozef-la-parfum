@@ -2,6 +2,8 @@ export type Gender = "male" | "female" | "unisex";
 export type Concentration = "EDT" | "EDP" | "Parfum" | "Cologne";
 export type PaymentStatus = "pending" | "paid" | "failed" | "refunded";
 export type OrderStatus = "new" | "processing" | "shipped" | "delivered" | "cancelled";
+export type CouponDiscountType = "percent" | "fixed";
+export type CouponAppliesTo = "products" | "shipping";
 
 export interface ProductSize {
   ml: number;
@@ -71,6 +73,24 @@ export interface OrderItemDTO {
   unitPrice: number;
 }
 
+export interface CouponDTO {
+  _id: string;
+  code: string;
+  appliesTo: CouponAppliesTo;
+  discountType: CouponDiscountType;
+  discountValue: number;
+  minOrderAmount?: number;
+  maxUses?: number;
+  maxUsesPerCustomer?: number;
+  usedCount: number;
+  expiresAt?: string;
+  isActive: boolean;
+  isPublic: boolean;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface OrderDTO {
   _id: string;
   customerName: string;
@@ -80,6 +100,10 @@ export interface OrderDTO {
   items: OrderItemDTO[];
   subtotal: number;
   shippingPrice: number;
+  discountAmount: number;
+  couponId?: string;
+  couponCode?: string;
+  couponAppliesTo?: CouponAppliesTo;
   total: number;
   paymentStatus: PaymentStatus;
   paymentProvider: "payplus";

@@ -101,6 +101,16 @@ export default async function AdminOrderDetailPage({ params }: PageProps) {
             <span>סכום ביניים</span>
             <span>{formatILS(order.subtotal)}</span>
           </div>
+          {order.discountAmount > 0 ? (
+            <div>
+              <span>
+                הנחה
+                {order.couponCode ? ` (${order.couponCode})` : ""}
+                {order.couponAppliesTo === "shipping" ? " על משלוח" : " על מוצרים"}
+              </span>
+              <span>-{formatILS(order.discountAmount)}</span>
+            </div>
+          ) : null}
           <div>
             <span>משלוח</span>
             <span>{formatILS(order.shippingPrice)}</span>

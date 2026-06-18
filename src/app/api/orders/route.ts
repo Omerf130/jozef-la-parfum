@@ -8,6 +8,12 @@ import { checkoutSchema } from "@/lib/validation/checkout";
 import { serializeOrder } from "@/lib/serializers";
 import { createRateLimiter } from "@/lib/rateLimit";
 import { getShippingConfig } from "@/lib/siteSettings";
+import {
+  couponErrorMessage,
+  computeOrderTotals,
+  releaseCouponUsage,
+  reserveCouponUsage,
+} from "@/lib/coupons";
 
 const orderLimiter = createRateLimiter({ name: "orders", max: 10, windowSec: 60 });
 
@@ -95,6 +101,8 @@ export async function POST(request: Request) {
 
     // Atomic stock reservation: decrement only if sufficient stock exists
     const reserved: Array<{ productId: mongoose.Types.ObjectId; ml: number; quantity: number }> = [];
+    let reservedCouponId: mongoose.Types.ObjectId | null = null;
+
     for (const item of orderItems) {
       const result = await ProductModel.updateOne(
         {
@@ -123,8 +131,56 @@ export async function POST(request: Request) {
     }
 
     const shippingCfg = await getShippingConfig();
-    const shippingPrice = subtotal >= shippingCfg.freeShippingThreshold ? 0 : shippingCfg.shippingPriceILS;
-    const total = subtotal + shippingPrice;
+    const baseShippingPrice =
+      subtotal >= shippingCfg.freeShippingThreshold ? 0 : shippingCfg.shippingPriceILS;
+
+    let couponId: mongoose.Types.ObjectId | undefined;
+    let couponCode: string | undefined;
+    let couponAppliesTo: "products" | "shipping" | undefined;
+    let discountAmount = 0;
+    let shippingPrice = baseShippingPrice;
+    let total = subtotal + shippingPrice;
+
+    if (parsed.data.couponCode?.trim()) {
+      const reservation = await reserveCouponUsage({
+        code: parsed.data.couponCode,
+        subtotal,
+        shippingPrice: baseShippingPrice,
+        customerEmail: parsed.data.customerEmail,
+      });
+
+      if (!reservation.ok) {
+        await Promise.all(
+          reserved.map((r) =>
+            ProductModel.updateOne(
+              { _id: r.productId, "sizes.ml": r.ml },
+              { $inc: { "sizes.$.stock": r.quantity } },
+            ),
+          ),
+        );
+        return NextResponse.json(
+          { error: couponErrorMessage(reservation.error) },
+          { status: 400 },
+        );
+      }
+
+      reservedCouponId = reservation.coupon._id;
+      couponId = reservation.coupon._id;
+      couponCode = reservation.coupon.code;
+      couponAppliesTo = reservation.coupon.appliesTo;
+      discountAmount = reservation.pricing.discountAmount;
+      shippingPrice = reservation.pricing.shippingPrice;
+      total = reservation.pricing.total;
+    } else {
+      const pricing = computeOrderTotals({
+        subtotal,
+        shippingPriceILS: shippingCfg.shippingPriceILS,
+        freeShippingThreshold: shippingCfg.freeShippingThreshold,
+        coupon: null,
+      });
+      shippingPrice = pricing.shippingPrice;
+      total = pricing.total;
+    }
 
     let order;
     try {
@@ -136,13 +192,17 @@ export async function POST(request: Request) {
         items: orderItems,
         subtotal,
         shippingPrice,
+        discountAmount,
+        couponId,
+        couponCode,
+        couponAppliesTo,
         total,
         paymentStatus: "pending",
         paymentProvider: "payplus",
         orderStatus: "new",
       });
     } catch (createErr) {
-      // Order creation failed — release all reserved stock
+      // Order creation failed — release all reserved stock and coupon
       await Promise.all(
         reserved.map((r) =>
           ProductModel.updateOne(
@@ -151,6 +211,9 @@ export async function POST(request: Request) {
           ),
         ),
       );
+      if (reservedCouponId) {
+        await releaseCouponUsage(reservedCouponId);
+      }
       throw createErr;
     }
 

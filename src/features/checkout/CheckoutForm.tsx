@@ -12,12 +12,14 @@ import { useCart } from "@/store/cart";
 import { formatILS } from "@/lib/format";
 import { checkoutFormSchema, type CheckoutFormInput } from "@/lib/validation/checkout";
 import { useShippingConfig } from "@/hooks/useShippingConfig";
+import { CouponField } from "@/features/checkout/CouponField";
 import styles from "./CheckoutForm.module.scss";
 
 export function CheckoutForm() {
   const router = useRouter();
   const items = useCart((s) => s.items);
   const subtotal = useCart((s) => s.subtotal());
+  const appliedCoupon = useCart((s) => s.appliedCoupon);
   const clear = useCart((s) => s.clear);
 
   const [hydrated, setHydrated] = useState(false);
@@ -32,6 +34,7 @@ export function CheckoutForm() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<CheckoutFormInput>({
     resolver: zodResolver(checkoutFormSchema),
@@ -40,9 +43,22 @@ export function CheckoutForm() {
     },
   });
 
+  const customerEmail = watch("customerEmail");
+
+  const cartItems = items.map((i) => ({
+    productId: i.productId,
+    ml: i.ml,
+    quantity: i.quantity,
+  }));
+
+  const baseShipping = subtotal >= freeShippingThreshold ? 0 : shippingPriceILS;
+  const discountAmount = appliedCoupon?.discountAmount ?? 0;
   const shippingPrice =
-    subtotal >= freeShippingThreshold ? 0 : shippingPriceILS;
-  const total = subtotal + shippingPrice;
+    appliedCoupon?.shippingPrice != null ? appliedCoupon.shippingPrice : baseShipping;
+  const total =
+    appliedCoupon?.total != null
+      ? appliedCoupon.total
+      : subtotal + shippingPrice - discountAmount;
 
   if (!hydrated) {
     return <div className={styles.loading}>טוען…</div>;
@@ -76,6 +92,7 @@ export function CheckoutForm() {
             ml: i.ml,
             quantity: i.quantity,
           })),
+          couponCode: appliedCoupon?.code,
         }),
       });
 
@@ -173,6 +190,7 @@ export function CheckoutForm() {
 
       <aside className={styles.summary}>
         <h2>סיכום</h2>
+        <CouponField items={cartItems} customerEmail={customerEmail} />
         <ul className={styles.summaryItems}>
           {items.map((it) => (
             <li key={`${it.productId}-${it.ml}`}>
@@ -190,6 +208,14 @@ export function CheckoutForm() {
           <span>סכום ביניים</span>
           <span>{formatILS(subtotal)}</span>
         </div>
+        {discountAmount > 0 ? (
+          <div className={styles.row2}>
+            <span>
+              {appliedCoupon?.appliesTo === "shipping" ? "הנחה על משלוח" : "הנחה על מוצרים"}
+            </span>
+            <span>-{formatILS(discountAmount)}</span>
+          </div>
+        ) : null}
         <div className={styles.row2}>
           <span>משלוח</span>
           <span>{shippingPrice === 0 ? "חינם" : formatILS(shippingPrice)}</span>

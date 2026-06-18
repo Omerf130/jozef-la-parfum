@@ -1,0 +1,39 @@
+@use "../../styles/variables" as *;
+
+.wrap {
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid $color-border;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.applyBtn {
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.success {
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+  color: #2d6a4f;
+}
+
+.error {
+  margin: 8px 0 0;
+  font-size: 0.82rem;
+  color: $color-error;
+}
+
+.discountRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0 0;
+  font-size: 0.9rem;
+  color: #2d6a4f;
+}

@@ -33,6 +33,7 @@ export const checkoutSchema = checkoutFormSchema.extend({
       }),
     )
     .min(1, "העגלה ריקה"),
+  couponCode: z.string().trim().optional(),
 });
 
 export type CheckoutInput = z.infer<typeof checkoutSchema>;

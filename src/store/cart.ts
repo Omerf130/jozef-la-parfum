@@ -2,14 +2,25 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import type { CartItem } from "@/types";
+import type { CartItem, CouponAppliesTo } from "@/types";
+
+export interface AppliedCoupon {
+  code: string;
+  appliesTo: CouponAppliesTo;
+  discountAmount: number;
+  shippingPrice?: number;
+  total?: number;
+}
 
 interface CartState {
   items: CartItem[];
+  appliedCoupon: AppliedCoupon | null;
   add: (item: CartItem) => void;
   updateQuantity: (productId: string, ml: number, quantity: number) => void;
   remove: (productId: string, ml: number) => void;
   clear: () => void;
+  setCoupon: (coupon: AppliedCoupon | null) => void;
+  clearCoupon: () => void;
   subtotal: () => number;
 }
 
@@ -17,6 +28,7 @@ export const useCart = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
+      appliedCoupon: null,
       add: (incoming) =>
         set((state) => {
           const idx = state.items.findIndex(
@@ -48,7 +60,9 @@ export const useCart = create<CartState>()(
             (i) => !(i.productId === productId && i.ml === ml),
           ),
         })),
-      clear: () => set({ items: [] }),
+      clear: () => set({ items: [], appliedCoupon: null }),
+      setCoupon: (coupon) => set({ appliedCoupon: coupon }),
+      clearCoupon: () => set({ appliedCoupon: null }),
       subtotal: () =>
         get().items.reduce((acc, i) => acc + i.unitPrice * i.quantity, 0),
     }),

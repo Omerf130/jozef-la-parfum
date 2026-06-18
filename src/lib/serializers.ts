@@ -1,10 +1,12 @@
 import type { ProductDoc } from "@/models/Product";
 import type { CategoryDoc } from "@/models/Category";
 import type { OrderDoc } from "@/models/Order";
+import type { CouponDoc } from "@/models/Coupon";
 import type {
   ProductDTO,
   CategoryDTO,
   OrderDTO,
+  CouponDTO,
 } from "@/types";
 
 type Lean<T> = Omit<T, "_id"> & { _id: { toString(): string } | string };
@@ -99,12 +101,41 @@ export function serializeOrder(doc: Lean<OrderDoc>): OrderDTO {
     })),
     subtotal: doc.subtotal,
     shippingPrice: doc.shippingPrice,
+    discountAmount: doc.discountAmount ?? 0,
+    couponId: doc.couponId ? idToString(doc.couponId) : undefined,
+    couponCode: doc.couponCode,
+    couponAppliesTo: doc.couponAppliesTo,
     total: doc.total,
     paymentStatus: doc.paymentStatus,
     paymentProvider: doc.paymentProvider,
     paymentTransactionId: doc.paymentTransactionId,
     payplusPageUid: doc.payplusPageUid,
     orderStatus: doc.orderStatus,
+    createdAt: doc.createdAt instanceof Date ? doc.createdAt.toISOString() : String(doc.createdAt),
+    updatedAt: doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : String(doc.updatedAt),
+  };
+}
+
+export function serializeCoupon(doc: Lean<CouponDoc>): CouponDTO {
+  return {
+    _id: idToString(doc._id),
+    code: doc.code,
+    appliesTo: doc.appliesTo,
+    discountType: doc.discountType,
+    discountValue: doc.discountValue,
+    minOrderAmount: doc.minOrderAmount,
+    maxUses: doc.maxUses,
+    maxUsesPerCustomer: doc.maxUsesPerCustomer,
+    usedCount: doc.usedCount ?? 0,
+    expiresAt:
+      doc.expiresAt instanceof Date
+        ? doc.expiresAt.toISOString()
+        : doc.expiresAt
+          ? String(doc.expiresAt)
+          : undefined,
+    isActive: !!doc.isActive,
+    isPublic: !!doc.isPublic,
+    description: doc.description,
     createdAt: doc.createdAt instanceof Date ? doc.createdAt.toISOString() : String(doc.createdAt),
     updatedAt: doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : String(doc.updatedAt),
   };
