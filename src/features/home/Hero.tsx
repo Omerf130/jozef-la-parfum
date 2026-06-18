@@ -20,14 +20,25 @@ export async function Hero() {
             המותגים הגדולים, המחירים הקטנים. רק בשמים מקוריים באחריות
           </p>
           <div className={styles.actions}>
-            <Link href="/category/women">
-              <Button variant="secondary" size="md">
-                גלו את הקולקציה
-              </Button>
-            </Link>
-            <Link href="/about" className={styles.ghostLink}>
-              קראו את הסיפור
-            </Link>
+            <div className={styles.actionRow}>
+              <Link href="/category/women">
+                <Button variant="secondary" size="md">
+                  גלו את הקולקציה
+                </Button>
+              </Link>
+              <Link href="/about" className={styles.ghostLink}>
+                קראו את הסיפור
+              </Link>
+            </div>
+            <div className={styles.contactPrompt}>
+              <p className={styles.contactHeading}>לא מצאתם את הבושם שאתם מחפשים?</p>
+              <p className={styles.contactText}>
+                פנו אלינו עם שם הבושם, ונעשה את מירב המאמצים להשיג אותו עבורכם.
+              </p>
+              <Link href="/contact" className={styles.contactLink}>
+                צרו קשר
+              </Link>
+            </div>
           </div>
         </div>
       </div>

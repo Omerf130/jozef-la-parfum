@@ -148,9 +148,68 @@
 
 .actions {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+}
+
+.actionRow {
+  display: flex;
   gap: 28px;
   flex-wrap: wrap;
   align-items: center;
+}
+
+.contactPrompt {
+  max-width: 460px;
+  padding-top: 4px;
+}
+
+.contactHeading {
+  font-family: $font-display;
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: $color-white;
+  margin: 0 0 8px;
+  line-height: 1.4;
+}
+
+.contactText {
+  font-size: 0.92rem;
+  color: rgba($color-white, 0.75);
+  line-height: 1.65;
+  margin: 0 0 14px;
+}
+
+.contactLink {
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: $color-gold;
+  font-weight: 500;
+  position: relative;
+  padding-block: 4px;
+  transition: color $dur-fast $ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background: $color-gold;
+    transform: scaleX(0.5);
+    transform-origin: center;
+    transition: transform $dur $ease;
+  }
+
+  &:hover {
+    color: $color-gold-light;
+
+    &::after {
+      transform: scaleX(1);
+    }
+  }
 }
 
 .ghostLink {

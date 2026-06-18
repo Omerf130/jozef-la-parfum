@@ -7,7 +7,6 @@ import { EditorialSection } from "@/features/home/EditorialSection";
 import { NewsletterStrip } from "@/features/home/NewsletterStrip";
 import { PublicCoupons } from "@/features/home/PublicCoupons";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { WelcomeModal } from "@/features/home/WelcomeModal";
 
 export default function HomePage() {
   return (
@@ -25,7 +24,6 @@ export default function HomePage() {
       <PublicCoupons />
       <NewsletterStrip />
       <WhatsAppButton />
-      <WelcomeModal />
     </>
   );
 }
