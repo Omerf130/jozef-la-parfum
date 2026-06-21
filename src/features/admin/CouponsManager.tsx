@@ -102,6 +102,7 @@ interface CouponFormProps {
 }
 
 function CouponForm({ initial, products, onSaved, onError, onDeleted }: CouponFormProps) {
+  const [productSearch, setProductSearch] = useState("");
   const {
     register,
     handleSubmit,
@@ -141,6 +142,10 @@ function CouponForm({ initial, products, onSaved, onError, onDeleted }: CouponFo
   const discountType = watch("discountType");
   const appliesTo = watch("appliesTo");
   const selectedProductIds = watch("productIds") ?? [];
+
+  const filteredProducts = products.filter((p) =>
+    p.name.toLowerCase().includes(productSearch.trim().toLowerCase()),
+  );
 
   function toggleProduct(productId: string) {
     const current = selectedProductIds;
@@ -231,20 +236,34 @@ function CouponForm({ initial, products, onSaved, onError, onDeleted }: CouponFo
           {products.length === 0 ? (
             <p className={styles.help}>אין מוצרים פעילים</p>
           ) : (
-            <ul>
-              {products.map((p) => (
-                <li key={p._id}>
-                  <label className={styles.checkbox}>
-                    <input
-                      type="checkbox"
-                      checked={selectedProductIds.includes(p._id)}
-                      onChange={() => toggleProduct(p._id)}
-                    />
-                    <span>{p.name}</span>
-                  </label>
-                </li>
-              ))}
-            </ul>
+            <>
+              <div className={styles.productSearch}>
+                <Input
+                  label="חיפוש מוצר"
+                  placeholder="הקלידו שם מוצר..."
+                  value={productSearch}
+                  onChange={(e) => setProductSearch(e.target.value)}
+                />
+              </div>
+              {filteredProducts.length === 0 ? (
+                <p className={styles.help}>לא נמצאו מוצרים</p>
+              ) : (
+                <ul>
+                  {filteredProducts.map((p) => (
+                    <li key={p._id}>
+                      <label className={styles.checkbox}>
+                        <input
+                          type="checkbox"
+                          checked={selectedProductIds.includes(p._id)}
+                          onChange={() => toggleProduct(p._id)}
+                        />
+                        <span>{p.name}</span>
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
           )}
         </fieldset>
       ) : null}
