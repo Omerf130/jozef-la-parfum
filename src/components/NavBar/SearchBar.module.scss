@@ -63,7 +63,7 @@
   animation: spin 0.6s linear infinite;
 }
 
-.dropdown {
+.panel {
   position: absolute;
   top: calc(100% + 4px);
   right: 0;
@@ -72,6 +72,9 @@
   border: 1px solid $color-border;
   box-shadow: $shadow;
   z-index: 100;
+}
+
+.dropdown {
   max-height: 360px;
   overflow-y: auto;
 }
@@ -155,6 +158,22 @@
   color: $color-text-muted;
   text-decoration: line-through;
   font-weight: 400;
+}
+
+.viewAll {
+  display: block;
+  padding: 12px 14px;
+  border-top: 1px solid $color-border;
+  font-family: $font-body;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: $color-ink;
+  text-align: center;
+  transition: background $dur-fast $ease;
+
+  &:hover {
+    background: $color-bg-soft;
+  }
 }
 
 @keyframes spin {

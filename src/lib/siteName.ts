@@ -1,1 +1,1 @@
-export const SITE_NAME = "JOZEF LA PERFUME";
+export const SITE_NAME = "Jozef La Perfume";

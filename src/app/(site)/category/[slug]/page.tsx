@@ -7,6 +7,7 @@ import { ProductCard } from "@/components/ProductCard";
 import { EmptyState } from "@/components/EmptyState";
 import { CategoryFilters } from "@/features/category/CategoryFilters";
 import { serializeProduct } from "@/lib/serializers";
+import { buildProductTextSearchFilter } from "@/lib/productSearch";
 import styles from "./page.module.scss";
 
 const PAGE_SIZE = 12;
@@ -22,6 +23,7 @@ const VIRTUAL_CATEGORIES = new Map<
 interface PageProps {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{
+    q?: string;
     brand?: string;
     gender?: string;
     conc?: string;
@@ -31,8 +33,17 @@ interface PageProps {
   }>;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  const sp = await searchParams;
+  const searchQuery = sp.q?.trim();
+
+  if (slug === "all" && searchQuery && searchQuery.length >= 2) {
+    return {
+      title: `תוצאות חיפוש: ${searchQuery}`,
+      description: `תוצאות חיפוש עבור ${searchQuery}`,
+    };
+  }
 
   const virtual = VIRTUAL_CATEGORIES.get(slug);
   if (virtual) {
@@ -95,6 +106,15 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
     filter.price = priceFilter;
   }
 
+  const searchQuery = sp.q?.trim();
+  const isSearchResults = slug === "all" && !!searchQuery && searchQuery.length >= 2;
+  if (isSearchResults) {
+    const textFilter = buildProductTextSearchFilter(searchQuery);
+    if (textFilter) {
+      Object.assign(filter, textFilter);
+    }
+  }
+
   const page = Math.max(1, parseInt(sp.page || "1", 10));
   const skip = (page - 1) * PAGE_SIZE;
 
@@ -126,9 +146,9 @@ export default async function CategoryPage({ params, searchParams }: PageProps) 
   return (
     <div className={styles.page}>
       <header className={styles.header}>
-        <span className={styles.kicker}>קטגוריה</span>
-        <h1>{categoryName}</h1>
-        {categoryDescription ? <p>{categoryDescription}</p> : null}
+        <span className={styles.kicker}>{isSearchResults ? "חיפוש" : "קטגוריה"}</span>
+        <h1>{isSearchResults ? `כל התוצאות עבור «${searchQuery}»` : categoryName}</h1>
+        {!isSearchResults && categoryDescription ? <p>{categoryDescription}</p> : null}
       </header>
 
       <div className={styles.layout}>

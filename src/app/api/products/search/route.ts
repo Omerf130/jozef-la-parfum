@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import { ProductModel } from "@/models/Product";
+import { buildProductTextSearchFilter } from "@/lib/productSearch";
 
 export async function GET(request: Request) {
   const url = new URL(request.url);
@@ -12,14 +13,14 @@ export async function GET(request: Request) {
 
   await connectDB();
 
-  const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const textFilter = buildProductTextSearchFilter(q);
+  if (!textFilter) {
+    return NextResponse.json({ results: [] });
+  }
 
   const docs = await ProductModel.find({
     isActive: true,
-    $or: [
-      { name: { $regex: escaped, $options: "i" } },
-      { brand: { $regex: escaped, $options: "i" } },
-    ],
+    ...textFilter,
   })
     .select("name brand slug images price salePrice")
     .limit(6)

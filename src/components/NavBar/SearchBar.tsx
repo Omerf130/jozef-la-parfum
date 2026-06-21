@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -57,15 +58,19 @@ export function SearchBar({ onNavigate }: { onNavigate?: () => void } = {}) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const closeSearch = useCallback(() => {
+    setOpen(false);
+    setQuery("");
+    setResults([]);
+    onNavigate?.();
+  }, [onNavigate]);
+
   const navigate = useCallback(
     (slug: string) => {
-      setOpen(false);
-      setQuery("");
-      setResults([]);
-      onNavigate?.();
+      closeSearch();
       router.push(`/product/${slug}`);
     },
-    [router, onNavigate],
+    [router, closeSearch],
   );
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -128,46 +133,55 @@ export function SearchBar({ onNavigate }: { onNavigate?: () => void } = {}) {
       </div>
 
       {open && (
-        <div className={styles.dropdown} role="listbox">
-          {results.length === 0 ? (
-            <div className={styles.empty}>לא נמצאו תוצאות</div>
-          ) : (
-            results.map((r, i) => (
-              <button
-                key={r._id}
-                type="button"
-                className={`${styles.result} ${i === activeIdx ? styles.active : ""}`}
-                role="option"
-                aria-selected={i === activeIdx}
-                onClick={() => navigate(r.slug)}
-                onMouseEnter={() => setActiveIdx(i)}
-              >
-                {r.image && (
-                  <Image
-                    src={r.image}
-                    alt={r.name}
-                    width={44}
-                    height={44}
-                    className={styles.thumb}
-                  />
-                )}
-                <div className={styles.info}>
-                  <span className={styles.name}>{r.name}</span>
-                  <span className={styles.brand}>{r.brand}</span>
-                </div>
-                <div className={styles.price}>
-                  {r.salePrice ? (
-                    <>
-                      <span className={styles.sale}>{formatPrice(r.salePrice)}</span>
-                      <span className={styles.original}>{formatPrice(r.price)}</span>
-                    </>
-                  ) : (
-                    <span>{formatPrice(r.price)}</span>
+        <div className={styles.panel}>
+          <div className={styles.dropdown} role="listbox">
+            {results.length === 0 ? (
+              <div className={styles.empty}>לא נמצאו תוצאות</div>
+            ) : (
+              results.map((r, i) => (
+                <button
+                  key={r._id}
+                  type="button"
+                  className={`${styles.result} ${i === activeIdx ? styles.active : ""}`}
+                  role="option"
+                  aria-selected={i === activeIdx}
+                  onClick={() => navigate(r.slug)}
+                  onMouseEnter={() => setActiveIdx(i)}
+                >
+                  {r.image && (
+                    <Image
+                      src={r.image}
+                      alt={r.name}
+                      width={44}
+                      height={44}
+                      className={styles.thumb}
+                    />
                   )}
-                </div>
-              </button>
-            ))
-          )}
+                  <div className={styles.info}>
+                    <span className={styles.name}>{r.name}</span>
+                    <span className={styles.brand}>{r.brand}</span>
+                  </div>
+                  <div className={styles.price}>
+                    {r.salePrice ? (
+                      <>
+                        <span className={styles.sale}>{formatPrice(r.salePrice)}</span>
+                        <span className={styles.original}>{formatPrice(r.price)}</span>
+                      </>
+                    ) : (
+                      <span>{formatPrice(r.price)}</span>
+                    )}
+                  </div>
+                </button>
+              ))
+            )}
+          </div>
+          <Link
+            href={`/category/all?q=${encodeURIComponent(query.trim())}`}
+            className={styles.viewAll}
+            onClick={closeSearch}
+          >
+            כל התוצאות עבור «{query.trim()}»
+          </Link>
         </div>
       )}
     </div>
