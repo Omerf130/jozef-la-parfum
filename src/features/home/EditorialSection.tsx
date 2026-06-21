@@ -18,7 +18,7 @@ export async function EditorialSection() {
           <ul className={styles.list}>
             <li>
               <strong>בשמים מקוריים</strong>
-              <span>אך ורק מהיבואנים הרשמיים</span>
+              <span>יבואנים רשמיים ומקבילים</span>
             </li>
             <li>
               <strong>משלוח עד הבית</strong>
