@@ -5,14 +5,20 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/Button";
-import { Input } from "@/components/Input";
+import { Input, Textarea } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { couponSchema, type CouponInput } from "@/lib/validation/coupon";
 import type { CouponDTO } from "@/types";
 import styles from "./CouponsManager.module.scss";
 
+export interface AdminProductOption {
+  _id: string;
+  name: string;
+}
+
 interface CouponsManagerProps {
   initial: CouponDTO[];
+  products: AdminProductOption[];
 }
 
 function formatDiscount(c: CouponDTO): string {
@@ -20,10 +26,12 @@ function formatDiscount(c: CouponDTO): string {
 }
 
 function formatTarget(c: CouponDTO): string {
-  return c.appliesTo === "products" ? "מוצרים" : "משלוח";
+  if (c.appliesTo === "shipping") return "משלוח";
+  if (c.productIds.length > 0) return `${c.productIds.length} מוצרים`;
+  return "כל המוצרים";
 }
 
-export function CouponsManager({ initial }: CouponsManagerProps) {
+export function CouponsManager({ initial, products }: CouponsManagerProps) {
   const router = useRouter();
   const [editing, setEditing] = useState<CouponDTO | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -67,6 +75,7 @@ export function CouponsManager({ initial }: CouponsManagerProps) {
         <CouponForm
           key={editing?._id ?? "new"}
           initial={editing}
+          products={products}
           onSaved={() => {
             setEditing(null);
             setError(null);
@@ -86,16 +95,18 @@ export function CouponsManager({ initial }: CouponsManagerProps) {
 
 interface CouponFormProps {
   initial: CouponDTO | null;
+  products: AdminProductOption[];
   onSaved: () => void;
   onError: (msg: string) => void;
   onDeleted: () => void;
 }
 
-function CouponForm({ initial, onSaved, onError, onDeleted }: CouponFormProps) {
+function CouponForm({ initial, products, onSaved, onError, onDeleted }: CouponFormProps) {
   const {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<CouponInput>({
     resolver: zodResolver(couponSchema),
@@ -114,6 +125,7 @@ function CouponForm({ initial, onSaved, onError, onDeleted }: CouponFormProps) {
           isActive: initial.isActive,
           isPublic: initial.isPublic,
           description: initial.description ?? undefined,
+          productIds: initial.productIds,
         }
       : {
           appliesTo: "products",
@@ -122,20 +134,35 @@ function CouponForm({ initial, onSaved, onError, onDeleted }: CouponFormProps) {
           maxUsesPerCustomer: 1,
           isActive: true,
           isPublic: false,
+          productIds: [],
         },
   });
 
   const discountType = watch("discountType");
+  const appliesTo = watch("appliesTo");
+  const selectedProductIds = watch("productIds") ?? [];
+
+  function toggleProduct(productId: string) {
+    const current = selectedProductIds;
+    const next = current.includes(productId)
+      ? current.filter((id) => id !== productId)
+      : [...current, productId];
+    setValue("productIds", next, { shouldDirty: true });
+  }
 
   async function onSubmit(values: CouponInput) {
     onError("");
     try {
+      const payload = {
+        ...values,
+        productIds: values.appliesTo === "shipping" ? [] : values.productIds ?? [],
+      };
       const url = initial ? `/api/coupons/${initial._id}` : "/api/coupons";
       const method = initial ? "PATCH" : "POST";
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
+        body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "שמירה נכשלה");
@@ -198,6 +225,30 @@ function CouponForm({ initial, onSaved, onError, onDeleted }: CouponFormProps) {
         error={errors.appliesTo?.message}
       />
 
+      {appliesTo === "products" ? (
+        <fieldset className={styles.productPicker}>
+          <legend>מוצרים (ריק = כל המוצרים)</legend>
+          {products.length === 0 ? (
+            <p className={styles.help}>אין מוצרים פעילים</p>
+          ) : (
+            <ul>
+              {products.map((p) => (
+                <li key={p._id}>
+                  <label className={styles.checkbox}>
+                    <input
+                      type="checkbox"
+                      checked={selectedProductIds.includes(p._id)}
+                      onChange={() => toggleProduct(p._id)}
+                    />
+                    <span>{p.name}</span>
+                  </label>
+                </li>
+              ))}
+            </ul>
+          )}
+        </fieldset>
+      ) : null}
+
       <Select
         label="סוג הנחה"
         options={[
@@ -217,17 +268,24 @@ function CouponForm({ initial, onSaved, onError, onDeleted }: CouponFormProps) {
       />
 
       <Input
-        label="מינימום הזמנה (₪) — אופציונלי"
+        label="מינימום הזמנה (₪)"
         type="number"
-        {...register("minOrderAmount", { valueAsNumber: true })}
+        {...register("minOrderAmount", {
+          setValueAs: (v) => (v === "" || v == null ? undefined : Number(v)),
+        })}
         error={errors.minOrderAmount?.message}
         dir="ltr"
       />
+      {appliesTo === "products" && selectedProductIds.length > 0 ? (
+        <p className={styles.help}>המינימום נבדק לפי סכום המוצרים הזכאים בלבד.</p>
+      ) : null}
 
       <Input
-        label="מקסימום שימושים כולל — אופציונלי"
+        label="מקסימום שימושים כולל"
         type="number"
-        {...register("maxUses", { valueAsNumber: true })}
+        {...register("maxUses", {
+          setValueAs: (v) => (v === "" || v == null ? undefined : Number(v)),
+        })}
         error={errors.maxUses?.message}
         dir="ltr"
       />
@@ -235,21 +293,24 @@ function CouponForm({ initial, onSaved, onError, onDeleted }: CouponFormProps) {
       <Input
         label="מקסימום שימושים ללקוח (לפי אימייל)"
         type="number"
-        {...register("maxUsesPerCustomer", { valueAsNumber: true })}
+        {...register("maxUsesPerCustomer", {
+          setValueAs: (v) => (v === "" || v == null ? undefined : Number(v)),
+        })}
         error={errors.maxUsesPerCustomer?.message}
         dir="ltr"
       />
 
       <Input
-        label="תאריך תפוגה — אופציונלי"
+        label="תאריך תפוגה"
         type="datetime-local"
         {...register("expiresAt")}
         error={errors.expiresAt?.message}
         dir="ltr"
       />
 
-      <Input
-        label="הערה פנימית — אופציונלי"
+      <Textarea
+        label="תיאור"
+        hint="מוצג ללקוחות בדף הבית עבור קופונים ציבוריים. מתאים לקופונים כלליים ולקופונים על מוצרים ספציפיים."
         {...register("description")}
         error={errors.description?.message}
       />

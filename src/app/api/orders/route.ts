@@ -144,8 +144,7 @@ export async function POST(request: Request) {
     if (parsed.data.couponCode?.trim()) {
       const reservation = await reserveCouponUsage({
         code: parsed.data.couponCode,
-        subtotal,
-        shippingPrice: baseShippingPrice,
+        items: parsed.data.items,
         customerEmail: parsed.data.customerEmail,
       });
 

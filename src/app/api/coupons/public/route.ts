@@ -8,6 +8,7 @@ export interface PublicCouponDTO {
   discountType: CouponDoc["discountType"];
   discountValue: number;
   minOrderAmount?: number;
+  description?: string;
   label: string;
 }
 
@@ -49,6 +50,7 @@ export async function GET() {
     discountType: c.discountType,
     discountValue: c.discountValue,
     minOrderAmount: c.minOrderAmount,
+    description: c.description || undefined,
     label: buildCouponLabel(c),
   }));
 

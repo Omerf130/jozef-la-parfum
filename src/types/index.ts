@@ -87,6 +87,7 @@ export interface CouponDTO {
   isActive: boolean;
   isPublic: boolean;
   description?: string;
+  productIds: string[];
   createdAt: string;
   updatedAt: string;
 }

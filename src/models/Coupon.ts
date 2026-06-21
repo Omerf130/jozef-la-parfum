@@ -17,6 +17,8 @@ export interface CouponDoc {
   isActive: boolean;
   isPublic: boolean;
   description?: string;
+  /** Empty = all products; non-empty = discount only on these products */
+  productIds: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -44,6 +46,7 @@ const CouponSchema = new Schema<CouponDoc>(
     isActive: { type: Boolean, default: true, index: true },
     isPublic: { type: Boolean, default: false, index: true },
     description: { type: String },
+    productIds: [{ type: Schema.Types.ObjectId, ref: "Product" }],
   },
   { timestamps: true },
 );

@@ -8,6 +8,7 @@ interface PublicCoupon {
   code: string;
   label: string;
   minOrderAmount?: number;
+  description?: string;
 }
 
 export function PublicCoupons() {
@@ -49,6 +50,9 @@ export function PublicCoupons() {
                   {c.code}
                 </span>
                 <span className={styles.label}>{c.label}</span>
+                {c.description ? (
+                  <span className={styles.description}>{c.description}</span>
+                ) : null}
                 {c.minOrderAmount != null ? (
                   <span className={styles.min}>
                     מינימום הזמנה: ₪{c.minOrderAmount}

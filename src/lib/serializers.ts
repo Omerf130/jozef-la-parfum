@@ -136,6 +136,7 @@ export function serializeCoupon(doc: Lean<CouponDoc>): CouponDTO {
     isActive: !!doc.isActive,
     isPublic: !!doc.isPublic,
     description: doc.description,
+    productIds: (doc.productIds ?? []).map((id) => idToString(id)),
     createdAt: doc.createdAt instanceof Date ? doc.createdAt.toISOString() : String(doc.createdAt),
     updatedAt: doc.updatedAt instanceof Date ? doc.updatedAt.toISOString() : String(doc.updatedAt),
   };

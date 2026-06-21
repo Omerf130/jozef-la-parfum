@@ -79,6 +79,12 @@
   color: $color-text;
 }
 
+.description {
+  font-size: 0.82rem;
+  color: $color-text-muted;
+  line-height: 1.5;
+}
+
 .min {
   font-size: 0.75rem;
   color: $color-text-muted;

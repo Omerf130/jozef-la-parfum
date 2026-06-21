@@ -5,7 +5,7 @@ import { CouponModel } from "@/models/Coupon";
 import { auth } from "@/lib/auth";
 import { couponSchema } from "@/lib/validation/coupon";
 import { serializeCoupon } from "@/lib/serializers";
-import { normalizeCouponCode } from "@/lib/coupons";
+import { normalizeCouponCode, parseCouponProductIds, validateCouponProductIds } from "@/lib/coupons";
 
 function toCouponData(data: ReturnType<typeof couponSchema.parse>) {
   return {
@@ -20,6 +20,8 @@ function toCouponData(data: ReturnType<typeof couponSchema.parse>) {
     isActive: data.isActive,
     isPublic: data.isPublic,
     description: data.description ?? undefined,
+    productIds:
+      data.appliesTo === "shipping" ? [] : parseCouponProductIds(data.productIds),
   };
 }
 
@@ -46,6 +48,10 @@ export async function POST(request: Request) {
         { error: "ולידציה נכשלה", details: parsed.error.flatten() },
         { status: 400 },
       );
+    }
+    const productError = await validateCouponProductIds(parsed.data.productIds ?? []);
+    if (productError) {
+      return NextResponse.json({ error: productError }, { status: 400 });
     }
     await connectDB();
     const created = await CouponModel.create(toCouponData(parsed.data));

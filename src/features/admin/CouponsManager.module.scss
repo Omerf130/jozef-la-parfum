@@ -140,3 +140,27 @@
   color: $color-text-muted;
   line-height: 1.5;
 }
+
+.productPicker {
+  border: 1px solid $color-border;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 0;
+
+  legend {
+    font-size: 0.85rem;
+    color: $color-text;
+    padding: 0 4px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0 0;
+    max-height: 220px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+}

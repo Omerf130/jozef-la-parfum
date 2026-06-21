@@ -7,7 +7,7 @@ import { CouponModel } from "@/models/Coupon";
 import { auth } from "@/lib/auth";
 import { couponUpdateSchema } from "@/lib/validation/coupon";
 import { serializeCoupon } from "@/lib/serializers";
-import { normalizeCouponCode } from "@/lib/coupons";
+import { normalizeCouponCode, parseCouponProductIds, validateCouponProductIds } from "@/lib/coupons";
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -23,6 +23,11 @@ function toCouponUpdate(data: Partial<z.infer<typeof couponUpdateSchema>>) {
   if (data.maxUses === null) out.maxUses = undefined;
   if (data.maxUsesPerCustomer === null) out.maxUsesPerCustomer = undefined;
   if (data.description === null) out.description = undefined;
+  if (data.appliesTo === "shipping") {
+    out.productIds = [];
+  } else if (data.productIds !== undefined) {
+    out.productIds = parseCouponProductIds(data.productIds);
+  }
   return out;
 }
 
@@ -62,6 +67,18 @@ export async function PATCH(request: Request, { params }: Params) {
     await connectDB();
     const existing = await CouponModel.findById(id).lean();
     if (!existing) return NextResponse.json({ error: "לא נמצא" }, { status: 404 });
+
+    const effectiveAppliesTo = parsed.data.appliesTo ?? existing.appliesTo;
+    const productIdsToValidate =
+      effectiveAppliesTo === "shipping"
+        ? []
+        : parsed.data.productIds ?? undefined;
+    if (productIdsToValidate !== undefined) {
+      const productError = await validateCouponProductIds(productIdsToValidate);
+      if (productError) {
+        return NextResponse.json({ error: productError }, { status: 400 });
+      }
+    }
 
     if (parsed.data.maxUses != null && parsed.data.maxUses < existing.usedCount) {
       return NextResponse.json(

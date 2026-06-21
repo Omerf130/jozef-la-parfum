@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isValidObjectId } from "@/lib/objectId";
 
 const couponBaseSchema = z.object({
   code: z
@@ -17,12 +18,31 @@ const couponBaseSchema = z.object({
   isActive: z.boolean().default(true),
   isPublic: z.boolean().default(false),
   description: z.string().trim().max(500).optional().nullable(),
+  productIds: z.array(z.string()).optional().nullable(),
 });
 
 function refineCoupon(
   data: z.infer<typeof couponBaseSchema>,
   ctx: z.RefinementCtx,
 ) {
+  if (data.appliesTo === "shipping" && data.productIds?.length) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "לא ניתן לשייך מוצרים לקופון על משלוח",
+      path: ["productIds"],
+    });
+  }
+  if (data.productIds?.length) {
+    for (let i = 0; i < data.productIds.length; i++) {
+      if (!isValidObjectId(data.productIds[i])) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "מזהה מוצר לא תקין",
+          path: ["productIds", i],
+        });
+      }
+    }
+  }
   if (data.discountType === "percent" && data.discountValue > 100) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
@@ -45,6 +65,24 @@ function refineCoupon(
 export const couponSchema = couponBaseSchema.superRefine(refineCoupon);
 
 export const couponUpdateSchema = couponBaseSchema.partial().superRefine((data, ctx) => {
+  if (data.appliesTo === "shipping" && data.productIds?.length) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "לא ניתן לשייך מוצרים לקופון על משלוח",
+      path: ["productIds"],
+    });
+  }
+  if (data.productIds?.length) {
+    for (let i = 0; i < data.productIds.length; i++) {
+      if (!isValidObjectId(data.productIds[i])) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "מזהה מוצר לא תקין",
+          path: ["productIds", i],
+        });
+      }
+    }
+  }
   if (data.discountType === "percent" && data.discountValue != null && data.discountValue > 100) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
