@@ -15,7 +15,7 @@ interface SearchResult {
   salePrice: number | null;
 }
 
-export function SearchBar() {
+export function SearchBar({ onNavigate }: { onNavigate?: () => void } = {}) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const [open, setOpen] = useState(false);
@@ -62,9 +62,10 @@ export function SearchBar() {
       setOpen(false);
       setQuery("");
       setResults([]);
+      onNavigate?.();
       router.push(`/product/${slug}`);
     },
-    [router],
+    [router, onNavigate],
   );
 
   function handleKeyDown(e: React.KeyboardEvent) {

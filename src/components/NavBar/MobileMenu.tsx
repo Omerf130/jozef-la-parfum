@@ -56,7 +56,7 @@ export function MobileMenu({ links }: MobileMenuProps) {
               </button>
             </div>
             <div className={styles.search}>
-              <SearchBar />
+              <SearchBar onNavigate={() => setOpen(false)} />
             </div>
             <nav className={styles.links}>
               {links.map((link) => (
