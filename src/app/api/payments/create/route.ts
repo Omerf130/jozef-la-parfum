@@ -80,7 +80,12 @@ export async function POST(request: Request) {
     return NextResponse.json({ url });
   } catch (e) {
     console.error("[api/payments/create]", e);
-    const message = e instanceof Error ? e.message : "שגיאת שרת";
+    const raw = e instanceof Error ? e.message : "שגיאת שרת";
+    const message = raw.includes("global-price-is-not-equal-to-total-items-sum")
+      ? "שגיאה בהכנת התשלום — נסו שוב או פנו אלינו"
+      : raw.startsWith("PayPlus error")
+        ? "שגיאה בהכנת התשלום — נסו שוב או פנו אלינו"
+        : raw;
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

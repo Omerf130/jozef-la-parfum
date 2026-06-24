@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import type { OrderDoc } from "@/models/Order";
+import { assertPayPlusItemsMatchTotal, buildPayPlusItems } from "@/lib/payplusItems";
 
 /**
  * PayPlus integration — service layer.
@@ -43,6 +44,9 @@ export async function createPaymentPage({
     throw new Error("PayPlus credentials are not configured");
   }
 
+  const items = buildPayPlusItems(order);
+  assertPayPlusItemsMatchTotal(order, items);
+
   const body = {
     payment_page_uid: TERMINAL_UID,
     amount: Number(order.total.toFixed(2)),
@@ -64,11 +68,7 @@ export async function createPaymentPage({
     },
     more_info: order._id.toString(),
     more_info_1: order.customerEmail,
-    items: order.items.map((it) => ({
-      name: `${it.name} (${it.ml} ml)`,
-      quantity: it.quantity,
-      price: Number(it.unitPrice.toFixed(2)),
-    })),
+    items,
   };
 
   // TODO(PayPlus): the exact endpoint can vary
