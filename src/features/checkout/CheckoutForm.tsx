@@ -169,6 +169,22 @@ export function CheckoutForm() {
           />
           <div className={styles.row}>
             <Input
+              label="קומה"
+              {...register("shippingAddress.floor")}
+              error={errors.shippingAddress?.floor?.message}
+              placeholder="3"
+              dir="ltr"
+            />
+            <Input
+              label="דירה"
+              {...register("shippingAddress.apartment")}
+              error={errors.shippingAddress?.apartment?.message}
+              placeholder="12"
+              dir="ltr"
+            />
+          </div>
+          <div className={styles.row}>
+            <Input
               label="עיר"
               {...register("shippingAddress.city")}
               error={errors.shippingAddress?.city?.message}

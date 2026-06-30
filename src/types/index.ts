@@ -60,6 +60,8 @@ export interface CartItem {
 
 export interface ShippingAddress {
   street: string;
+  floor?: string;
+  apartment?: string;
   city: string;
   zip: string;
   country: string;

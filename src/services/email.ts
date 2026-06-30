@@ -60,6 +60,13 @@ export async function sendOrderConfirmation(order: OrderDTO) {
     )
     .join("");
 
+  const floorApartmentLine = [
+    order.shippingAddress.floor ? `קומה ${escape(order.shippingAddress.floor)}` : "",
+    order.shippingAddress.apartment ? `דירה ${escape(order.shippingAddress.apartment)}` : "",
+  ]
+    .filter(Boolean)
+    .join(", ");
+
   const html = `
     <div dir="rtl" style="font-family: 'Segoe UI', Arial, sans-serif; line-height:1.7; color:#222; max-width:640px; margin:auto;">
       <div style="background:#0d0d0d; color:#c9a96e; padding:20px; text-align:center;">
@@ -107,6 +114,7 @@ export async function sendOrderConfirmation(order: OrderDTO) {
         <h3 style="color:#0d0d0d; margin:24px 0 8px;">פרטי משלוח</h3>
         <p style="margin:0;">
           ${escape(order.shippingAddress.street)}<br/>
+          ${floorApartmentLine ? `${floorApartmentLine}<br/>` : ""}
           ${escape(order.shippingAddress.city)}, ${escape(order.shippingAddress.zip)}<br/>
           ${escape(order.shippingAddress.country)}
         </p>

@@ -19,6 +19,10 @@ export default async function AdminOrderDetailPage({ params }: PageProps) {
   const doc = await OrderModel.findById(id).lean();
   if (!doc) notFound();
   const order = serializeOrder(doc);
+  const floorApartmentParts = [
+    order.shippingAddress.floor ? `קומה ${order.shippingAddress.floor}` : "",
+    order.shippingAddress.apartment ? `דירה ${order.shippingAddress.apartment}` : "",
+  ].filter(Boolean);
 
   return (
     <div className={styles.page}>
@@ -47,6 +51,12 @@ export default async function AdminOrderDetailPage({ params }: PageProps) {
             <dt>כתובת למשלוח</dt>
             <dd>
               {order.shippingAddress.street}
+              {floorApartmentParts.length > 0 ? (
+                <>
+                  <br />
+                  {floorApartmentParts.join(", ")}
+                </>
+              ) : null}
               <br />
               {order.shippingAddress.city}, {order.shippingAddress.zip}
               <br />

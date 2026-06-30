@@ -88,6 +88,8 @@ export function serializeOrder(doc: Lean<OrderDoc>): OrderDTO {
     customerPhone: doc.customerPhone,
     shippingAddress: {
       street: doc.shippingAddress.street,
+      floor: doc.shippingAddress.floor,
+      apartment: doc.shippingAddress.apartment,
       city: doc.shippingAddress.city,
       zip: doc.shippingAddress.zip,
       country: doc.shippingAddress.country,

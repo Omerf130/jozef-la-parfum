@@ -19,6 +19,8 @@ export interface OrderDoc {
   customerPhone: string;
   shippingAddress: {
     street: string;
+    floor?: string;
+    apartment?: string;
     city: string;
     zip: string;
     country: string;
@@ -54,6 +56,8 @@ const OrderItemSchema = new Schema<OrderItemDoc>(
 const ShippingAddressSchema = new Schema(
   {
     street: { type: String, required: true },
+    floor: { type: String },
+    apartment: { type: String },
     city: { type: String, required: true },
     zip: { type: String, required: true },
     country: { type: String, default: "IL" },

@@ -3,6 +3,12 @@ import { z } from "zod";
 const ilPhoneRegex = /^0(5\d|7\d|2|3|4|8|9)-?\d{7}$/;
 const ilZipRegex = /^\d{5,7}$/;
 
+function emptyToUndefined(val: unknown) {
+  if (val === undefined || val === null) return undefined;
+  if (typeof val === "string" && val.trim() === "") return undefined;
+  return val;
+}
+
 export const checkoutFormSchema = z.object({
   customerName: z
     .string()
@@ -15,6 +21,8 @@ export const checkoutFormSchema = z.object({
     .regex(ilPhoneRegex, "מספר טלפון ישראלי לא תקין"),
   shippingAddress: z.object({
     street: z.string().trim().min(2, "יש להזין כתובת"),
+    floor: z.preprocess(emptyToUndefined, z.string().trim().max(10).optional()),
+    apartment: z.preprocess(emptyToUndefined, z.string().trim().max(10).optional()),
     city: z.string().trim().min(2, "יש להזין עיר"),
     zip: z.string().trim().regex(ilZipRegex, "מיקוד ישראלי לא תקין"),
     country: z.string().default("IL"),
