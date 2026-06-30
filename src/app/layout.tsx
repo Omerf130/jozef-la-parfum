@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Heebo, Frank_Ruhl_Libre } from "next/font/google";
 import { CookieConsent } from "@/components/CookieConsent/CookieConsent";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics/GoogleAnalytics";
 import { UserWayWidget } from "@/components/UserWayWidget";
 import { SITE_NAME } from "@/lib/siteName";
 import "@/styles/globals.scss";
@@ -55,6 +56,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         {children}
         <CookieConsent />
+        <GoogleAnalytics />
         <UserWayWidget />
       </body>
     </html>

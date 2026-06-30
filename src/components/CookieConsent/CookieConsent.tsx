@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import styles from "./CookieConsent.module.scss";
 
-const STORAGE_KEY = "cookie_consent";
+export const COOKIE_CONSENT_STORAGE_KEY = "cookie_consent";
+export const COOKIE_CONSENT_ACCEPTED_EVENT = "cookie-consent-accepted";
+
+const STORAGE_KEY = COOKIE_CONSENT_STORAGE_KEY;
 
 export function CookieConsent() {
   const [visible, setVisible] = useState(false);
@@ -17,6 +20,7 @@ export function CookieConsent() {
 
   function accept() {
     localStorage.setItem(STORAGE_KEY, "accepted");
+    window.dispatchEvent(new Event(COOKIE_CONSENT_ACCEPTED_EVENT));
     setVisible(false);
   }
 

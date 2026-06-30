@@ -73,6 +73,10 @@ export default function PrivacyPage() {
           <li>ספק תשלומים (למשל PayPlus) לצורך סליקה.</li>
           <li>ספק דוא&quot;ל (למשל Resend) לשליחת אישורי הזמנה.</li>
           <li>ספק אחסון תמונות או תשתית אחסון (למשל Vercel Blob) במידת הצורך.</li>
+          <li>
+            Google Analytics (Google) לצורך מדידת שימוש באתר, בכפוף לאישור
+            עוגיות.
+          </li>
           <li>רשויות מוסמכות כאשר הדין מחייב.</li>
         </ul>
       </section>
