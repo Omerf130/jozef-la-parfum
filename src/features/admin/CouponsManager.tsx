@@ -8,6 +8,7 @@ import { Button } from "@/components/Button";
 import { Input, Textarea } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { couponSchema, type CouponInput } from "@/lib/validation/coupon";
+import { formatIsraelDateTimeLocal } from "@/lib/israelDateTime";
 import type { CouponDTO } from "@/types";
 import styles from "./CouponsManager.module.scss";
 
@@ -121,7 +122,7 @@ function CouponForm({ initial, products, onSaved, onError, onDeleted }: CouponFo
           maxUses: initial.maxUses ?? undefined,
           maxUsesPerCustomer: initial.maxUsesPerCustomer ?? 1,
           expiresAt: initial.expiresAt
-            ? initial.expiresAt.slice(0, 16)
+            ? formatIsraelDateTimeLocal(new Date(initial.expiresAt))
             : undefined,
           isActive: initial.isActive,
           isPublic: initial.isPublic,

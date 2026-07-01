@@ -35,6 +35,27 @@ export function CouponField({ items, customerEmail, className }: CouponFieldProp
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items.length, customerEmail]);
 
+  useEffect(() => {
+    if (!appliedCoupon) return;
+
+    const interval = window.setInterval(() => {
+      void validateApplied(appliedCoupon.code);
+    }, 60_000);
+
+    const onVisible = () => {
+      if (document.visibilityState === "visible") {
+        void validateApplied(appliedCoupon.code);
+      }
+    };
+    document.addEventListener("visibilitychange", onVisible);
+
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [appliedCoupon?.code]);
+
   async function validateApplied(couponCode: string) {
     if (!couponCode.trim() || items.length === 0) {
       clearCoupon();

@@ -8,6 +8,7 @@ import { auth } from "@/lib/auth";
 import { couponUpdateSchema } from "@/lib/validation/coupon";
 import { serializeCoupon } from "@/lib/serializers";
 import { normalizeCouponCode, parseCouponProductIds, validateCouponProductIds } from "@/lib/coupons";
+import { parseCouponExpiresAt } from "@/lib/israelDateTime";
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -17,7 +18,7 @@ function toCouponUpdate(data: Partial<z.infer<typeof couponUpdateSchema>>) {
   const out: Record<string, unknown> = { ...data };
   if (data.code) out.code = normalizeCouponCode(data.code);
   if (data.expiresAt !== undefined) {
-    out.expiresAt = data.expiresAt ? new Date(data.expiresAt) : null;
+    out.expiresAt = parseCouponExpiresAt(data.expiresAt);
   }
   if (data.minOrderAmount === null) out.minOrderAmount = undefined;
   if (data.maxUses === null) out.maxUses = undefined;

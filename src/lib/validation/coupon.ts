@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { isValidObjectId } from "@/lib/objectId";
+import { parseIsraelDateTimeLocal } from "@/lib/israelDateTime";
 
 const couponBaseSchema = z.object({
   code: z
@@ -51,7 +52,7 @@ function refineCoupon(
     });
   }
   if (data.expiresAt) {
-    const d = new Date(data.expiresAt);
+    const d = parseIsraelDateTimeLocal(data.expiresAt);
     if (Number.isNaN(d.getTime())) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
@@ -91,7 +92,7 @@ export const couponUpdateSchema = couponBaseSchema.partial().superRefine((data, 
     });
   }
   if (data.expiresAt) {
-    const d = new Date(data.expiresAt);
+    const d = parseIsraelDateTimeLocal(data.expiresAt);
     if (Number.isNaN(d.getTime())) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

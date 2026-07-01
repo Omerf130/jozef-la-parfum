@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth";
 import { couponSchema } from "@/lib/validation/coupon";
 import { serializeCoupon } from "@/lib/serializers";
 import { normalizeCouponCode, parseCouponProductIds, validateCouponProductIds } from "@/lib/coupons";
+import { parseCouponExpiresAt } from "@/lib/israelDateTime";
 
 function toCouponData(data: ReturnType<typeof couponSchema.parse>) {
   return {
@@ -16,7 +17,7 @@ function toCouponData(data: ReturnType<typeof couponSchema.parse>) {
     minOrderAmount: data.minOrderAmount ?? undefined,
     maxUses: data.maxUses ?? undefined,
     maxUsesPerCustomer: data.maxUsesPerCustomer ?? 1,
-    expiresAt: data.expiresAt ? new Date(data.expiresAt) : undefined,
+    expiresAt: parseCouponExpiresAt(data.expiresAt),
     isActive: data.isActive,
     isPublic: data.isPublic,
     description: data.description ?? undefined,
