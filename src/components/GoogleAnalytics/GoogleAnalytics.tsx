@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Script from "next/script";
 import {
   COOKIE_CONSENT_ACCEPTED_EVENT,
@@ -8,6 +9,13 @@ import {
 } from "@/components/CookieConsent/CookieConsent";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
+const isDev = process.env.NODE_ENV !== "production";
+
+declare global {
+  interface Window {
+    gtag?: (...args: unknown[]) => void;
+  }
+}
 
 function hasConsent(): boolean {
   if (typeof window === "undefined") return false;
@@ -16,6 +24,7 @@ function hasConsent(): boolean {
 
 export function GoogleAnalytics() {
   const [enabled, setEnabled] = useState(false);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (hasConsent()) {
@@ -31,6 +40,22 @@ export function GoogleAnalytics() {
       window.removeEventListener(COOKIE_CONSENT_ACCEPTED_EVENT, onConsentAccepted);
     };
   }, []);
+
+  useEffect(() => {
+    if (isDev && enabled && GA_ID) {
+      console.log("[GA] initialized", GA_ID);
+    }
+  }, [enabled]);
+
+  // Track client-side navigations (App Router doesn't re-send page_view on soft nav).
+  useEffect(() => {
+    if (!enabled || !GA_ID || typeof window.gtag !== "function") return;
+    const page_path = pathname + window.location.search;
+    window.gtag("event", "page_view", { page_path });
+    if (isDev) {
+      console.log("[GA] page_view", page_path);
+    }
+  }, [pathname, enabled]);
 
   if (!GA_ID || !enabled) return null;
 
