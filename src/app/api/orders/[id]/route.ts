@@ -6,12 +6,14 @@ import { connectDB } from "@/lib/db";
 import { OrderModel } from "@/models/Order";
 import { auth } from "@/lib/auth";
 import { serializeOrder } from "@/lib/serializers";
+import { sendOrderConfirmation } from "@/services/email";
 
 const updateSchema = z.object({
   orderStatus: z
     .enum(["new", "processing", "shipped", "delivered", "cancelled"])
     .optional(),
   paymentStatus: z.enum(["pending", "paid", "failed", "refunded"]).optional(),
+  sendConfirmationEmail: z.boolean().optional(),
 });
 
 interface Params {
@@ -52,12 +54,33 @@ export async function PATCH(request: Request, { params }: Params) {
       );
     }
     await connectDB();
-    const updated = await OrderModel.findByIdAndUpdate(id, parsed.data, {
-      new: true,
-    }).lean();
-    if (!updated) return NextResponse.json({ error: "לא נמצא" }, { status: 404 });
+    const order = await OrderModel.findById(id);
+    if (!order) return NextResponse.json({ error: "לא נמצא" }, { status: 404 });
+
+    const { orderStatus, paymentStatus, sendConfirmationEmail } = parsed.data;
+    const wasPaid = order.paymentStatus === "paid";
+    if (orderStatus !== undefined) order.orderStatus = orderStatus;
+    if (paymentStatus !== undefined) order.paymentStatus = paymentStatus;
+    await order.save();
+
+    const becamePaid = !wasPaid && order.paymentStatus === "paid";
+    let emailSent = false;
+    if (becamePaid || sendConfirmationEmail) {
+      try {
+        console.log("[orders] sending order confirmation email", {
+          orderId: String(order._id),
+          customerEmail: order.customerEmail,
+          reason: becamePaid ? "became_paid" : "manual",
+        });
+        await sendOrderConfirmation(serializeOrder(order.toObject()));
+        emailSent = true;
+      } catch (e) {
+        console.error("[orders] order confirmation email failed", e);
+      }
+    }
+
     revalidatePath("/", "layout");
-    return NextResponse.json({ order: serializeOrder(updated) });
+    return NextResponse.json({ order: serializeOrder(order.toObject()), emailSent });
   } catch (e) {
     console.error("[api/orders PATCH]", e);
     const message = e instanceof Error ? e.message : "שגיאת שרת";

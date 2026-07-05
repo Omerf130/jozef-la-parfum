@@ -160,12 +160,15 @@ export interface PayPlusWebhookEvent {
 
 export function parseWebhookPayload(payload: unknown): PayPlusWebhookEvent {
   const p = (payload ?? {}) as Record<string, unknown>;
-  const data = (p.data ?? p) as Record<string, unknown>;
+  // PayPlus nests transaction fields under `transaction`. A separate `data`
+  // object holds customer/items info (no status/more_info), so prefer
+  // `transaction` first and fall back to `data`/top-level.
+  const t = (p.transaction ?? p.data ?? p) as Record<string, unknown>;
 
   const statusRaw = String(
-    data.status_code ??
-      data.transaction_status ??
-      data.status ??
+    t.status_code ??
+      t.transaction_status ??
+      t.status ??
       "",
   ).toLowerCase();
 
@@ -178,7 +181,7 @@ export function parseWebhookPayload(payload: unknown): PayPlusWebhookEvent {
     status = "failed";
   }
 
-  const rawAmount = data.amount ?? data.total ?? data.approved_amount;
+  const rawAmount = t.amount ?? t.total ?? t.approved_amount;
   const amount = typeof rawAmount === "number"
     ? rawAmount
     : typeof rawAmount === "string"
@@ -187,14 +190,18 @@ export function parseWebhookPayload(payload: unknown): PayPlusWebhookEvent {
 
   return {
     status,
-    pageRequestUid: (data.page_request_uid as string) ?? (data.payment_request_uid as string),
+    pageRequestUid:
+      (t.payment_page_request_uid as string) ??
+      (t.page_request_uid as string) ??
+      (t.payment_request_uid as string),
     transactionUid:
-      (data.transaction_uid as string) ??
-      (data.transaction_uuid as string) ??
-      (data.transaction_id as string),
-    more_info: (data.more_info as string) ?? undefined,
+      (t.uid as string) ??
+      (t.transaction_uid as string) ??
+      (t.transaction_uuid as string) ??
+      (t.transaction_id as string),
+    more_info: (t.more_info as string) ?? undefined,
     amount: amount && !isNaN(amount) ? amount : undefined,
-    currency: (data.currency_code as string) ?? (data.currency as string) ?? undefined,
+    currency: (t.currency as string) ?? (t.currency_code as string) ?? undefined,
     raw: payload,
   };
 }
