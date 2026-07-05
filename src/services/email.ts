@@ -3,9 +3,80 @@ import type { OrderDTO } from "@/types";
 import { formatILS } from "@/lib/format";
 
 const resendApiKey = process.env.RESEND_API_KEY;
-const fromAddress = process.env.EMAIL_FROM || "JOZEF LA PERFUME <noreply@example.com>";
-
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
+
+function resolveEmailFrom(): string {
+  const raw = process.env.EMAIL_FROM?.trim();
+  if (raw) {
+    if (
+      (raw.startsWith('"') && raw.endsWith('"')) ||
+      (raw.startsWith("'") && raw.endsWith("'"))
+    ) {
+      return raw.slice(1, -1).trim();
+    }
+    return raw;
+  }
+  if (process.env.NODE_ENV !== "production") {
+    return "JOZEF LA PERFUME <noreply@example.com>";
+  }
+  return "";
+}
+
+function fromDomain(from: string): string {
+  const match = from.match(/<([^>]+)>/) ?? from.match(/([\w.-]+@[\w.-]+)/);
+  const email = match?.[1] ?? match?.[0] ?? from;
+  return email.split("@")[1] ?? "unknown";
+}
+
+interface SendViaResendInput {
+  type: "contact" | "order_confirmation";
+  from: string;
+  to: string;
+  subject: string;
+  html: string;
+  replyTo?: string;
+}
+
+async function sendViaResend(input: SendViaResendInput) {
+  const hasApiKey = Boolean(resendApiKey);
+  console.log("[email] send attempt", {
+    type: input.type,
+    to: input.to,
+    fromDomain: fromDomain(input.from),
+    hasApiKey,
+  });
+
+  if (!resend) {
+    const message = "RESEND_API_KEY not set";
+    console.error("[email] Resend error", { type: input.type, name: "missing_api_key", message });
+    throw new Error(message);
+  }
+
+  const result = await resend.emails.send({
+    from: input.from,
+    to: input.to,
+    subject: input.subject,
+    html: input.html,
+    replyTo: input.replyTo,
+  });
+
+  if (result.error) {
+    console.error("[email] Resend error", {
+      type: input.type,
+      name: result.error.name,
+      message: result.error.message,
+    });
+    throw new Error(`Resend: ${result.error.message}`);
+  }
+
+  console.log("[email] Resend sent", {
+    type: input.type,
+    id: result.data?.id,
+    to: input.to,
+  });
+
+  return result;
+}
 
 interface ContactEmailInput {
   name: string;
@@ -17,11 +88,12 @@ interface ContactEmailInput {
 }
 
 export async function sendContactEmail(input: ContactEmailInput) {
-  if (!resend) {
-    console.warn("[email] RESEND_API_KEY not set, skipping contact email");
-    return { skipped: true };
+  const from = resolveEmailFrom();
+  if (!from) {
+    throw new Error("EMAIL_FROM not set");
   }
-  const to = input.to || process.env.SUPPORT_EMAIL || process.env.EMAIL_FROM || "";
+
+  const to = input.to || process.env.SUPPORT_EMAIL || from;
   const html = `
     <div dir="rtl" style="font-family: 'Segoe UI', Arial, sans-serif; line-height:1.7; color:#222;">
       <h2 style="color:#0d0d0d; margin:0 0 16px;">פנייה חדשה מאתר הבוטיק</h2>
@@ -33,8 +105,10 @@ export async function sendContactEmail(input: ContactEmailInput) {
       <p style="white-space:pre-wrap;">${escape(input.message)}</p>
     </div>
   `;
-  return resend.emails.send({
-    from: fromAddress,
+
+  return sendViaResend({
+    type: "contact",
+    from,
     to,
     replyTo: input.email,
     subject: `פנייה חדשה: ${input.subject}`,
@@ -43,9 +117,9 @@ export async function sendContactEmail(input: ContactEmailInput) {
 }
 
 export async function sendOrderConfirmation(order: OrderDTO) {
-  if (!resend) {
-    console.warn("[email] RESEND_API_KEY not set, skipping order confirmation");
-    return { skipped: true };
+  const from = resolveEmailFrom();
+  if (!from) {
+    throw new Error("EMAIL_FROM not set");
   }
 
   const itemsHtml = order.items
@@ -129,8 +203,9 @@ export async function sendOrderConfirmation(order: OrderDTO) {
     </div>
   `;
 
-  return resend.emails.send({
-    from: fromAddress,
+  return sendViaResend({
+    type: "order_confirmation",
+    from,
     to: order.customerEmail,
     subject: `אישור הזמנה #${order._id.slice(-8).toUpperCase()}`,
     html,

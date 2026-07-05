@@ -77,6 +77,10 @@ export async function processPayPlusPaymentNotification(rawBody: string): Promis
     });
 
     try {
+      console.log("[payplus] sending order confirmation email", {
+        orderId: String(order._id),
+        customerEmail: order.customerEmail,
+      });
       await sendOrderConfirmation(serializeOrder(order.toObject()));
     } catch (e) {
       console.error("[payplus] email failed after paid", e);
