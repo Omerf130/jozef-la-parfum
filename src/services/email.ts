@@ -29,7 +29,7 @@ function fromDomain(from: string): string {
 }
 
 interface SendViaResendInput {
-  type: "contact" | "order_confirmation";
+  type: "contact" | "order_confirmation" | "admin_order_notification";
   from: string;
   to: string;
   subject: string;
@@ -208,6 +208,112 @@ export async function sendOrderConfirmation(order: OrderDTO) {
     from,
     to: order.customerEmail,
     subject: `אישור הזמנה #${order._id.slice(-8).toUpperCase()}`,
+    html,
+  });
+}
+
+export async function sendAdminOrderNotification(order: OrderDTO) {
+  const from = resolveEmailFrom();
+  if (!from) {
+    throw new Error("EMAIL_FROM not set");
+  }
+
+  const to = process.env.SUPPORT_EMAIL || from;
+
+  const itemsHtml = order.items
+    .map(
+      (it) => `
+        <tr>
+          <td style="padding:8px 12px; border-bottom:1px solid #eee;">${escape(it.name)} (${it.ml} מ״ל)</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #eee; text-align:center;">${it.quantity}</td>
+          <td style="padding:8px 12px; border-bottom:1px solid #eee; text-align:left;">${formatILS(it.unitPrice * it.quantity)}</td>
+        </tr>
+      `,
+    )
+    .join("");
+
+  const floorApartmentLine = [
+    order.shippingAddress.floor ? `קומה ${escape(order.shippingAddress.floor)}` : "",
+    order.shippingAddress.apartment ? `דירה ${escape(order.shippingAddress.apartment)}` : "",
+  ]
+    .filter(Boolean)
+    .join(", ");
+
+  const orderDate = new Date(order.createdAt).toLocaleString("he-IL", {
+    timeZone: "Asia/Jerusalem",
+  });
+
+  const html = `
+    <div dir="rtl" style="font-family: 'Segoe UI', Arial, sans-serif; line-height:1.7; color:#222; max-width:640px; margin:auto;">
+      <div style="background:#0d0d0d; color:#c9a96e; padding:20px; text-align:center;">
+        <h1 style="margin:0; font-size:22px; letter-spacing:0.05em;">הזמנה חדשה שולמה</h1>
+      </div>
+      <div style="padding:24px; background:#f5efe6;">
+        <p style="margin:0 0 16px;">
+          התקבלה הזמנה חדשה ששולמה. מספר הזמנה: <strong>#${order._id.slice(-8).toUpperCase()}</strong><br/>
+          מזהה מלא: ${escape(order._id)}<br/>
+          תאריך: ${escape(orderDate)}
+        </p>
+
+        <h3 style="color:#0d0d0d; margin:16px 0 8px;">פרטי לקוח למשלוח</h3>
+        <div style="background:#fff; border:1px solid #eee; padding:14px 18px;">
+          <p style="margin:0 0 6px;"><strong>שם:</strong> ${escape(order.customerName)}</p>
+          <p style="margin:0 0 6px;"><strong>טלפון:</strong> <a href="tel:${escape(order.customerPhone)}">${escape(order.customerPhone)}</a></p>
+          <p style="margin:0 0 6px;"><strong>דוא&quot;ל:</strong> <a href="mailto:${escape(order.customerEmail)}">${escape(order.customerEmail)}</a></p>
+          <p style="margin:0;"><strong>כתובת:</strong><br/>
+            ${escape(order.shippingAddress.street)}<br/>
+            ${floorApartmentLine ? `${floorApartmentLine}<br/>` : ""}
+            ${escape(order.shippingAddress.city)}, ${escape(order.shippingAddress.zip)}<br/>
+            ${escape(order.shippingAddress.country)}
+          </p>
+        </div>
+
+        <h3 style="color:#0d0d0d; margin:24px 0 8px;">פריטים</h3>
+        <table style="width:100%; border-collapse:collapse; background:#fff; border:1px solid #eee;">
+          <thead>
+            <tr style="background:#ece3d3;">
+              <th style="text-align:right; padding:10px 12px;">פריט</th>
+              <th style="text-align:center; padding:10px 12px;">כמות</th>
+              <th style="text-align:left; padding:10px 12px;">סה״כ</th>
+            </tr>
+          </thead>
+          <tbody>${itemsHtml}</tbody>
+        </table>
+
+        <div style="margin-top:18px; background:#fff; border:1px solid #eee; padding:14px 18px;">
+          <div style="display:flex; justify-content:space-between; padding:4px 0;">
+            <span>סכום ביניים</span><span>${formatILS(order.subtotal)}</span>
+          </div>
+          ${
+            order.discountAmount > 0
+              ? `<div style="display:flex; justify-content:space-between; padding:4px 0; color:#2d6a4f;">
+            <span>הנחה${order.couponCode ? ` (${escape(order.couponCode)})` : ""}</span><span>-${formatILS(order.discountAmount)}</span>
+          </div>`
+              : ""
+          }
+          <div style="display:flex; justify-content:space-between; padding:4px 0;">
+            <span>משלוח</span><span>${formatILS(order.shippingPrice)}</span>
+          </div>
+          <div style="display:flex; justify-content:space-between; padding:8px 0 0; border-top:1px solid #eee; font-weight:600; color:#0d0d0d;">
+            <span>סה״כ ששולם</span><span>${formatILS(order.total)}</span>
+          </div>
+        </div>
+
+        ${
+          order.paymentTransactionId
+            ? `<p style="margin:16px 0 0; color:#6b6357; font-size:13px;">מזהה עסקה PayPlus: ${escape(order.paymentTransactionId)}</p>`
+            : ""
+        }
+      </div>
+    </div>
+  `;
+
+  return sendViaResend({
+    type: "admin_order_notification",
+    from,
+    to,
+    replyTo: order.customerEmail,
+    subject: `הזמנה חדשה שולמה #${order._id.slice(-8).toUpperCase()} — ${order.customerName}`,
     html,
   });
 }

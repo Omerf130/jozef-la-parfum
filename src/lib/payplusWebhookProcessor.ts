@@ -3,7 +3,7 @@ import { connectDB } from "@/lib/db";
 import { OrderModel, type OrderDoc } from "@/models/Order";
 import { ProductModel } from "@/models/Product";
 import { parseWebhookPayload } from "@/services/payplus";
-import { sendOrderConfirmation } from "@/services/email";
+import { sendOrderConfirmation, sendAdminOrderNotification } from "@/services/email";
 import { serializeOrder } from "@/lib/serializers";
 import { releaseCouponUsage } from "@/lib/coupons";
 
@@ -84,6 +84,15 @@ export async function processPayPlusPaymentNotification(rawBody: string): Promis
       await sendOrderConfirmation(serializeOrder(order.toObject()));
     } catch (e) {
       console.error("[payplus] email failed after paid", e);
+    }
+
+    try {
+      console.log("[payplus] sending admin order notification", {
+        orderId: String(order._id),
+      });
+      await sendAdminOrderNotification(serializeOrder(order.toObject()));
+    } catch (e) {
+      console.error("[payplus] admin notification email failed", e);
     }
     return;
   }
