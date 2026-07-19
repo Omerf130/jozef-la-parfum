@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getShippingConfig } from "@/lib/siteSettings";
 import { SITE_NAME } from "@/lib/siteName";
+import { formatPhoneHe } from "@/lib/format";
+import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_TEL } from "@/lib/contactDetails";
 import styles from "./Footer.module.scss";
 
 function getValueProps(freeShippingThreshold: number) {
@@ -123,8 +125,13 @@ export async function Footer() {
           <div className={styles.col}>
             <h4>צרו קשר</h4>
             <ul>
-              <li>טלפון: 03-123-4567</li>
-              <li>דוא&quot;ל: info@example.com</li>
+              <li>
+                טלפון:{" "}
+                <a href={`tel:${CONTACT_PHONE_TEL}`}>{formatPhoneHe(CONTACT_PHONE)}</a>
+              </li>
+              <li>
+                דוא&quot;ל: <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+              </li>
               <li>שעות: א&apos;-ה&apos; 09:00–18:00</li>
             </ul>
           </div>

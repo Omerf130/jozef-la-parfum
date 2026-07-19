@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/features/contact/ContactForm";
 import { formatPhoneHe } from "@/lib/format";
+import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_TEL } from "@/lib/contactDetails";
 import styles from "./page.module.scss";
-
-const CONTACT_PHONE = "0544448907";
-const CONTACT_EMAIL = "Jozeflaperfume@gmail.com";
 
 export const metadata: Metadata = {
   title: "צור קשר",
@@ -26,7 +24,7 @@ export default function ContactPage() {
           <ul className={styles.contactList}>
             <li>
               <span className={styles.label}>טלפון</span>
-              <a href={`tel:+972${CONTACT_PHONE.slice(1)}`}>{formatPhoneHe(CONTACT_PHONE)}</a>
+              <a href={`tel:${CONTACT_PHONE_TEL}`}>{formatPhoneHe(CONTACT_PHONE)}</a>
             </li>
             <li>
               <span className={styles.label}>דוא&quot;ל</span>

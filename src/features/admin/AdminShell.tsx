@@ -14,6 +14,7 @@ const NAV = [
   { href: "/admin/products", label: "מוצרים" },
   { href: "/admin/categories", label: "קטגוריות" },
   { href: "/admin/coupons", label: "קופונים" },
+  { href: "/admin/newsletter", label: "מועדון" },
   { href: "/admin/settings", label: "הגדרות" },
 ];
 

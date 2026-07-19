@@ -8,12 +8,33 @@ import styles from "./NewsletterStrip.module.scss";
 export function NewsletterStrip() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!email) return;
-    setDone(true);
-    setEmail("");
+    if (!email.trim()) return;
+
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "ההרשמה נכשלה");
+        return;
+      }
+      setDone(true);
+      setEmail("");
+    } catch {
+      setError("שגיאה בשליחה — נסו שוב");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -32,12 +53,14 @@ export function NewsletterStrip() {
             placeholder="כתובת הדוא&quot;ל שלך"
             aria-label="דוא״ל"
             required
+            disabled={loading || done}
           />
-          <Button type="submit" variant="secondary">
+          <Button type="submit" variant="secondary" loading={loading} disabled={done}>
             הרשמו
           </Button>
         </form>
         {done ? <p className={styles.done}>תודה! נצור קשר בקרוב.</p> : null}
+        {error ? <p className={styles.error}>{error}</p> : null}
       </div>
     </section>
   );

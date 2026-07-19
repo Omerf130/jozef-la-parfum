@@ -32,7 +32,7 @@ export async function CategoryTiles() {
   if (categories.length === 0) categories = FALLBACK;
 
   const allTiles: { name: string; slug: string; image?: string }[] = [
-    ...categories,
+    ...categories.filter((c) => c.slug !== "limited"),
     ...VIRTUAL_TILES,
   ];
 
