@@ -1,8 +1,9 @@
 "use client";
 
+import { CONTACT_PHONE } from "@/lib/contactDetails";
 import styles from "./WhatsAppButton.module.scss";
 
-const PHONE = "972509499204";
+const PHONE = `972${CONTACT_PHONE.slice(1)}`;
 
 interface WhatsAppButtonProps {
   message?: string;
