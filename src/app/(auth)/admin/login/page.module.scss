@@ -2,11 +2,13 @@
 @use "../../../../styles/mixins" as *;
 
 .page {
-  min-height: calc(100vh - 76px);
+  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px 16px;
+  padding: max(48px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+    max(48px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
   background: $color-cream-dark;
 }
 
@@ -15,7 +17,7 @@
   background: $color-white;
   width: 100%;
   max-width: 420px;
-  padding: 36px 32px;
+  padding: clamp(24px, 5vw, 36px) clamp(20px, 4vw, 32px);
 }
 
 .head {
@@ -24,7 +26,7 @@
 
   h1 {
     font-family: $font-display;
-    font-size: 1.6rem;
+    font-size: clamp(1.35rem, 4vw, 1.6rem);
     margin: 12px 0 8px;
     color: $color-ink;
   }
@@ -33,6 +35,7 @@
     color: $color-text-muted;
     font-size: 0.9rem;
     margin: 0;
+    line-height: 1.5;
   }
 }
 

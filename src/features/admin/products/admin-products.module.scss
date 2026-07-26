@@ -1,0 +1,221 @@
+@use "../../../styles/variables" as *;
+@use "../../../styles/mixins" as *;
+
+.tableWrap {
+  @include card-surface;
+  background: $color-white;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  min-width: 36rem;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th,
+  td {
+    padding: 10px 12px;
+    text-align: start;
+    border-bottom: 1px solid $color-border;
+    vertical-align: middle;
+  }
+
+  th {
+    font-weight: 600;
+    color: $color-text-muted;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: $color-cream;
+    white-space: nowrap;
+  }
+
+  tbody tr:hover {
+    background: rgba($color-gold, 0.04);
+  }
+}
+
+.colBrand {
+  @media (max-width: $bp-lg) {
+    display: none;
+  }
+}
+
+.thumb {
+  position: relative;
+  width: 48px;
+  height: 60px;
+  flex-shrink: 0;
+  background: $color-cream-dark;
+  border-radius: $radius-sm;
+  overflow: hidden;
+
+  img {
+    object-fit: cover;
+  }
+}
+
+.thumbPlaceholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-gold-light;
+  font-size: 0.9rem;
+}
+
+.name {
+  color: $color-ink;
+  font-family: $font-display;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+
+  &:hover {
+    color: $color-gold-dark;
+  }
+}
+
+.priceCell {
+  white-space: nowrap;
+}
+
+.salePrice {
+  display: block;
+  color: $color-success;
+  font-weight: 600;
+}
+
+.regularPriceStruck {
+  display: block;
+  color: $color-text-muted;
+  font-size: 0.82rem;
+  text-decoration: line-through;
+}
+
+.inlineBadge {
+  margin-inline-start: 6px;
+  vertical-align: middle;
+}
+
+.inactiveRow {
+  opacity: 0.65;
+}
+
+.editBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 6px 14px;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: $color-white;
+  color: $color-gold-dark;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  transition: border-color 0.18s ease, color 0.18s ease;
+
+  &:hover {
+    border-color: $color-gold;
+    color: $color-ink;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-gold;
+    outline-offset: 2px;
+  }
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card {
+  @include card-surface;
+  background: $color-white;
+  padding: 12px;
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+}
+
+.cardBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cardHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 6px 8px;
+}
+
+.cardTitle {
+  margin: 0;
+  font-family: $font-display;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: $color-ink;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-size: 0.82rem;
+  color: $color-text-muted;
+
+  span {
+    overflow-wrap: anywhere;
+  }
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: auto;
+}
+
+.cardPrice {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: $color-ink;
+}
+
+.cardActions {
+  flex-shrink: 0;
+}
+
+.noResults {
+  text-align: center;
+  padding: 32px 16px;
+  color: $color-text-muted;
+  font-size: 0.95rem;
+
+  a {
+    color: $color-gold-dark;
+    margin-inline-start: 6px;
+
+    &:hover {
+      color: $color-ink;
+    }
+  }
+}

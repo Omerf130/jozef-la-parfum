@@ -1,0 +1,116 @@
+@use "../../../styles/variables" as *;
+@use "../../../styles/mixins" as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+}
+
+.head {
+  h1 {
+    font-family: $font-display;
+    font-size: clamp(1.5rem, 4vw, 1.8rem);
+    margin: 0 0 4px;
+    color: $color-ink;
+  }
+
+  p {
+    color: $color-text-muted;
+    margin: 0;
+  }
+}
+
+.tableWrap {
+  @include card-surface;
+  background: $color-white;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+
+  th,
+  td {
+    padding: 12px 14px;
+    text-align: start;
+    border-bottom: 1px solid $color-border;
+    vertical-align: middle;
+  }
+
+  th {
+    font-weight: 600;
+    color: $color-text-muted;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    background: $color-cream;
+  }
+
+  a {
+    color: $color-gold-dark;
+    overflow-wrap: anywhere;
+
+    &:hover {
+      color: $color-ink;
+    }
+  }
+}
+
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.subscriberCard {
+  @include card-surface;
+  background: $color-white;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.subscriberEmail {
+  margin: 0;
+  font-size: 0.92rem;
+  color: $color-ink;
+  overflow-wrap: anywhere;
+
+  a {
+    color: $color-ink;
+
+    &:hover {
+      color: $color-gold-dark;
+    }
+  }
+}
+
+.subscriberDate {
+  margin: 0;
+  font-size: 0.82rem;
+  color: $color-text-muted;
+}
+
+.desktopOnly {
+  display: block;
+
+  @media (max-width: $bp-md) {
+    display: none !important;
+  }
+}
+
+.mobileOnly {
+  display: none;
+
+  @media (max-width: $bp-md) {
+    display: flex;
+    flex-direction: column;
+  }
+}

@@ -1,0 +1,41 @@
+@use "../../../styles/variables" as *;
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: min(90dvh, 520px);
+  overflow-y: auto;
+  padding-top: 8px;
+}
+
+.title {
+  font-family: $font-display;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0;
+  color: $color-ink;
+  padding-inline-end: 32px;
+}
+
+.description {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: $color-text;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 4px;
+
+  @media (max-width: $bp-sm) {
+    flex-direction: column;
+
+    > * {
+      width: 100%;
+    }
+  }
+}

@@ -1,9 +1,5 @@
-import { Spinner } from "@/components/Spinner";
+import { AdminDashboardSkeleton } from "@/features/admin/ui/AdminSkeleton";
 
 export default function AdminLoading() {
-  return (
-    <div style={{ padding: 60 }}>
-      <Spinner size={40} />
-    </div>
-  );
+  return <AdminDashboardSkeleton />;
 }

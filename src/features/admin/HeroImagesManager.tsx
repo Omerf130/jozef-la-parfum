@@ -4,6 +4,8 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/Button";
+import { EmptyState } from "@/components/EmptyState";
+import { AdminFeedback } from "@/features/admin/ui/AdminFeedback";
 import { MAX_HERO_IMAGES } from "@/lib/validation/siteSettings";
 import styles from "./HeroImagesManager.module.scss";
 
@@ -12,11 +14,112 @@ interface HeroImagesManagerProps {
   initialMobile: string[];
 }
 
+function HeroSection({
+  title,
+  target,
+  urls,
+  uploading,
+  pendingRemove,
+  onUpload,
+  onRemove,
+  emptyTitle,
+  emptyDescription,
+  aspectClass,
+}: {
+  title: string;
+  target: "desktop" | "mobile";
+  urls: string[];
+  uploading: null | "desktop" | "mobile";
+  pendingRemove: string | null;
+  onUpload: (target: "desktop" | "mobile", file: File) => void | Promise<void>;
+  onRemove: (target: "desktop" | "mobile", url: string) => void | Promise<void>;
+  emptyTitle: string;
+  emptyDescription: string;
+  aspectClass: string;
+}) {
+  const isUploading = uploading === target;
+  const atLimit = urls.length >= MAX_HERO_IMAGES;
+
+  return (
+    <section className={styles.section}>
+      <h2 className={styles.sectionTitle}>{title}</h2>
+      <div className={styles.toolbar}>
+        <label className={styles.fileLabel}>
+          <input
+            type="file"
+            accept="image/*"
+            className={styles.fileInput}
+            disabled={uploading !== null || atLimit}
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              e.target.value = "";
+              if (f) void onUpload(target, f);
+            }}
+          />
+          <span>{isUploading ? "מעלה..." : "+ העלאת תמונה"}</span>
+        </label>
+        <span className={styles.count}>
+          {urls.length} / {MAX_HERO_IMAGES}
+        </span>
+      </div>
+
+      {urls.length === 0 ? (
+        <EmptyState title={emptyTitle} description={emptyDescription} />
+      ) : (
+        <ul className={styles.grid}>
+          {urls.map((url) => (
+            <li key={url} className={styles.tile}>
+              <div className={`${styles.thumb} ${aspectClass}`}>
+                <Image src={url} alt="" fill sizes="(max-width: 768px) 45vw, 200px" className={styles.thumbImg} />
+              </div>
+              <code className={styles.url} title={url}>
+                {url}
+              </code>
+              <div className={styles.tileActions}>
+                <label className={styles.replaceLabel}>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className={styles.fileInput}
+                    disabled={uploading !== null}
+                    onChange={(e) => {
+                      const f = e.target.files?.[0];
+                      e.target.value = "";
+                      if (f) {
+                        void (async () => {
+                          await onRemove(target, url);
+                          await onUpload(target, f);
+                        })();
+                      }
+                    }}
+                  />
+                  <span>החלף</span>
+                </label>
+                <Button
+                  type="button"
+                  variant="danger"
+                  size="sm"
+                  loading={pendingRemove === url}
+                  disabled={pendingRemove !== null && pendingRemove !== url}
+                  onClick={() => void onRemove(target, url)}
+                >
+                  הסר
+                </Button>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
 export function HeroImagesManager({ initialDesktop, initialMobile }: HeroImagesManagerProps) {
   const router = useRouter();
   const [desktop, setDesktop] = useState<string[]>(initialDesktop);
   const [mobile, setMobile] = useState<string[]>(initialMobile);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [uploading, setUploading] = useState<null | "desktop" | "mobile">(null);
   const [pendingRemove, setPendingRemove] = useState<string | null>(null);
 
@@ -39,6 +142,7 @@ export function HeroImagesManager({ initialDesktop, initialMobile }: HeroImagesM
 
   async function handleUpload(target: "desktop" | "mobile", file: File) {
     setError(null);
+    setSuccess(null);
     const list = target === "desktop" ? desktop : mobile;
     if (list.length >= MAX_HERO_IMAGES) {
       setError(`ניתן להעלות עד ${MAX_HERO_IMAGES} תמונות לכל קטגוריה`);
@@ -58,6 +162,7 @@ export function HeroImagesManager({ initialDesktop, initialMobile }: HeroImagesM
       const nextDesktop = target === "desktop" ? [...desktop, url] : desktop;
       const nextMobile = target === "mobile" ? [...mobile, url] : mobile;
       await persist(nextDesktop, nextMobile);
+      setSuccess(target === "desktop" ? "תמונת דסקטופ נשמרה" : "תמונת מובייל נשמרה");
       router.refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : "שגיאה");
@@ -68,11 +173,13 @@ export function HeroImagesManager({ initialDesktop, initialMobile }: HeroImagesM
 
   async function handleRemove(target: "desktop" | "mobile", url: string) {
     setError(null);
+    setSuccess(null);
     setPendingRemove(url);
     try {
       const nextDesktop = target === "desktop" ? desktop.filter((u) => u !== url) : desktop;
       const nextMobile = target === "mobile" ? mobile.filter((u) => u !== url) : mobile;
       await persist(nextDesktop, nextMobile);
+      setSuccess("התמונה הוסרה");
       router.refresh();
     } catch (e) {
       setError(e instanceof Error ? e.message : "שגיאה");
@@ -84,108 +191,39 @@ export function HeroImagesManager({ initialDesktop, initialMobile }: HeroImagesM
   return (
     <div className={styles.wrap}>
       <p className={styles.hint}>
-        דסקטופ: תמונות אופקיות למסכים רחבים (מעל 768px). מובייל: תמונות אנכיות
-        (עד 768px). אם לא הוגדרו תמונות מובייל, יוצגו תמונות הדסקטופ גם במובייל.
-        יותר מתמונה אחת ברשימה — מעבר אוטומטי כל 6 שניות.
+        דסקטופ: תמונות אופקיות למסכים רחבים (מעל 768px). מובייל: תמונות אנכיות (עד 768px).
+        אם לא הוגדרו תמונות מובייל, יוצגו תמונות הדסקטופ גם במובייל. יותר מתמונה אחת — מעבר
+        אוטומטי כל 6 שניות.
       </p>
 
-      {error ? <p className={styles.error}>{error}</p> : null}
+      {error ? <AdminFeedback variant="error" message={error} /> : null}
+      {success ? <AdminFeedback variant="success" message={success} /> : null}
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>דסקטופ (מעל 768px) — תמונות אופקיות</h2>
-        <div className={styles.toolbar}>
-          <label className={styles.fileLabel}>
-            <input
-              type="file"
-              accept="image/*"
-              className={styles.fileInput}
-              disabled={uploading !== null || desktop.length >= MAX_HERO_IMAGES}
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                e.target.value = "";
-                if (f) void handleUpload("desktop", f);
-              }}
-            />
-            <span>{uploading === "desktop" ? "מעלה..." : "+ העלאת תמונה"}</span>
-          </label>
-          <span className={styles.count}>
-            {desktop.length} / {MAX_HERO_IMAGES}
-          </span>
-        </div>
-        {desktop.length === 0 ? (
-          <p className={styles.empty}>אין תמונות דסקטופ.</p>
-        ) : (
-          <ul className={styles.list}>
-            {desktop.map((url) => (
-              <li key={url} className={styles.row}>
-                <div className={styles.thumb}>
-                  <Image src={url} alt="" fill sizes="120px" className={styles.thumbImg} />
-                </div>
-                <code className={styles.url}>{url}</code>
-                <Button
-                  type="button"
-                  variant="danger"
-                  size="sm"
-                  loading={pendingRemove === url}
-                  disabled={pendingRemove !== null && pendingRemove !== url}
-                  onClick={() => void handleRemove("desktop", url)}
-                >
-                  הסר
-                </Button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      <HeroSection
+        title="דסקטופ (מעל 768px) — תמונות אופקיות"
+        target="desktop"
+        urls={desktop}
+        uploading={uploading}
+        pendingRemove={pendingRemove}
+        onUpload={handleUpload}
+        onRemove={handleRemove}
+        emptyTitle="אין תמונות דסקטופ"
+        emptyDescription="העלו תמונות אופקיות לתצוגה במסכים רחבים."
+        aspectClass={styles.thumbLandscape}
+      />
 
-      <section className={styles.section}>
-        <h2 className={styles.sectionTitle}>מובייל (עד 768px) — תמונות אנכיות</h2>
-        <div className={styles.toolbar}>
-          <label className={styles.fileLabel}>
-            <input
-              type="file"
-              accept="image/*"
-              className={styles.fileInput}
-              disabled={uploading !== null || mobile.length >= MAX_HERO_IMAGES}
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                e.target.value = "";
-                if (f) void handleUpload("mobile", f);
-              }}
-            />
-            <span>{uploading === "mobile" ? "מעלה..." : "+ העלאת תמונה"}</span>
-          </label>
-          <span className={styles.count}>
-            {mobile.length} / {MAX_HERO_IMAGES}
-          </span>
-        </div>
-        {mobile.length === 0 ? (
-          <p className={styles.empty}>
-            אין תמונות מובייל — יוצגו תמונות הדסקטופ (אם קיימות).
-          </p>
-        ) : (
-          <ul className={styles.list}>
-            {mobile.map((url) => (
-              <li key={url} className={styles.row}>
-                <div className={styles.thumb}>
-                  <Image src={url} alt="" fill sizes="120px" className={styles.thumbImg} />
-                </div>
-                <code className={styles.url}>{url}</code>
-                <Button
-                  type="button"
-                  variant="danger"
-                  size="sm"
-                  loading={pendingRemove === url}
-                  disabled={pendingRemove !== null && pendingRemove !== url}
-                  onClick={() => void handleRemove("mobile", url)}
-                >
-                  הסר
-                </Button>
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      <HeroSection
+        title="מובייל (עד 768px) — תמונות אנכיות"
+        target="mobile"
+        urls={mobile}
+        uploading={uploading}
+        pendingRemove={pendingRemove}
+        onUpload={handleUpload}
+        onRemove={handleRemove}
+        emptyTitle="אין תמונות מובייל"
+        emptyDescription="יוצגו תמונות הדסקטופ (אם קיימות) — או העלו תמונות אנכיות."
+        aspectClass={styles.thumbPortrait}
+      />
     </div>
   );
 }

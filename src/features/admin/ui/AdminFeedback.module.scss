@@ -1,0 +1,27 @@
+@use "../../../styles/variables" as *;
+
+.feedback {
+  padding: 12px 16px;
+  border-radius: $radius-sm;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.success {
+  background: rgba($color-success, 0.08);
+  color: $color-success;
+  border: 1px solid rgba($color-success, 0.25);
+}
+
+.error {
+  background: rgba($color-error, 0.08);
+  color: $color-error;
+  border: 1px solid rgba($color-error, 0.3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feedback {
+    transition: none;
+  }
+}

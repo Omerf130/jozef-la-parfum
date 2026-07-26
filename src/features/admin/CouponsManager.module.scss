@@ -51,16 +51,25 @@
       align-items: flex-start;
       gap: 2px;
       width: 100%;
+      min-height: 44px;
       background: transparent;
       border: none;
       padding: 12px 8px;
       cursor: pointer;
       text-align: start;
+      min-width: 0;
 
       strong {
         color: $color-ink;
         font-family: $font-display;
         font-size: 0.95rem;
+      }
+
+      .listBadges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 4px;
       }
 
       small {
@@ -91,20 +100,50 @@
   @include card-surface;
   background: $color-white;
   padding: 24px;
+  min-width: 0;
 
-  h2 {
-    font-family: $font-display;
-    font-size: 1.1rem;
-    margin: 0 0 18px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid $color-border;
-    color: $color-ink;
+  @media (max-width: $bp-md) {
+    padding: 18px 16px;
   }
 
   form {
     display: flex;
     flex-direction: column;
     gap: 16px;
+  }
+
+  h2 {
+    font-family: $font-display;
+    font-size: 1.1rem;
+    margin: 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $color-border;
+    color: $color-ink;
+  }
+}
+
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 16px 0;
+  border-bottom: 1px solid $color-border;
+
+  h3 {
+    font-family: $font-display;
+    font-size: 0.95rem;
+    margin: 0;
+    color: $color-ink;
+  }
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+
+  @media (min-width: $bp-md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -115,21 +154,18 @@
   margin-top: 8px;
 }
 
-.error {
-  color: $color-error;
-  font-size: 0.85rem;
-  margin: 12px 0 0;
-}
-
 .checkbox {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  min-height: 44px;
   font-size: 0.9rem;
   color: $color-text;
   cursor: pointer;
 
   input {
+    width: 18px;
+    height: 18px;
     accent-color: $color-ink;
   }
 }

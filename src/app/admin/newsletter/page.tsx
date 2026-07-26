@@ -2,7 +2,7 @@ import { connectDB } from "@/lib/db";
 import { NewsletterSubscriberModel } from "@/models/NewsletterSubscriber";
 import { formatDateHe } from "@/lib/format";
 import { EmptyState } from "@/components/EmptyState";
-import styles from "../orders/page.module.scss";
+import styles from "./page.module.scss";
 
 export default async function AdminNewsletterPage() {
   await connectDB();
@@ -24,26 +24,41 @@ export default async function AdminNewsletterPage() {
           description="כתובות דוא״ל מהטופס בדף הבית יופיעו כאן."
         />
       ) : (
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>דוא&quot;ל</th>
-                <th>תאריך הרשמה</th>
-              </tr>
-            </thead>
-            <tbody>
-              {subscribers.map((s) => (
-                <tr key={String(s._id)}>
-                  <td>
-                    <a href={`mailto:${s.email}`}>{s.email}</a>
-                  </td>
-                  <td>{formatDateHe(s.createdAt)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <>
+          <div className={styles.desktopOnly}>
+            <div className={styles.tableWrap}>
+              <table className={styles.table}>
+                <thead>
+                  <tr>
+                    <th scope="col">דוא&quot;ל</th>
+                    <th scope="col">תאריך הרשמה</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {subscribers.map((s) => (
+                    <tr key={String(s._id)}>
+                      <td>
+                        <a href={`mailto:${s.email}`}>{s.email}</a>
+                      </td>
+                      <td>{formatDateHe(s.createdAt)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <ul className={styles.mobileOnly}>
+            {subscribers.map((s) => (
+              <li key={String(s._id)} className={styles.subscriberCard}>
+                <p className={styles.subscriberEmail}>
+                  <a href={`mailto:${s.email}`}>{s.email}</a>
+                </p>
+                <p className={styles.subscriberDate}>{formatDateHe(s.createdAt)}</p>
+              </li>
+            ))}
+          </ul>
+        </>
       )}
     </div>
   );

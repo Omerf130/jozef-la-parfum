@@ -3,34 +3,116 @@
 
 .shell {
   display: grid;
-  grid-template-columns: 240px 1fr;
+  grid-template-columns: auto minmax(0, 1fr);
   min-height: 100vh;
+  min-height: 100dvh;
   background: $color-cream-dark;
+  padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
 
   @include md {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
   }
 }
+
+// ── Mobile sticky header ──────────────────────────────────────────────────
+
+.mobileHeader {
+  display: none;
+
+  @include md {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    grid-column: 1 / -1;
+    min-height: 3.25rem;
+    padding-block: max(10px, env(safe-area-inset-top)) 10px;
+    padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right));
+    background: $color-white;
+    border-bottom: 1px solid $color-border;
+    box-shadow: $shadow-sm;
+  }
+}
+
+.headerBrand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  color: $color-ink;
+  font-family: $font-display;
+  font-size: 1rem;
+
+  &:hover {
+    color: $color-gold-dark;
+  }
+}
+
+.headerTitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.menuButton {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-white;
+  cursor: pointer;
+  color: $color-ink;
+  transition: border-color $dur-fast $ease, background-color $dur-fast $ease;
+
+  &:hover {
+    border-color: $color-gold;
+    background: rgba($color-gold, 0.06);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-gold;
+    outline-offset: 2px;
+  }
+}
+
+.menuIcon {
+  display: block;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  box-shadow: 0 -6px 0 currentColor, 0 6px 0 currentColor;
+}
+
+// ── Desktop sidebar ─────────────────────────────────────────────────────────
 
 .sidebar {
   background: $color-ink;
   color: $color-cream;
-  padding: 28px 20px;
+  padding: max(28px, env(safe-area-inset-top)) 20px max(28px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
   gap: 28px;
   position: sticky;
   top: 0;
-  height: 100vh;
+  align-self: start;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: max-content;
+  min-width: min(100%, 12.5rem);
+  max-width: 16rem;
 
   @include md {
-    position: static;
-    height: auto;
-    flex-direction: row;
-    align-items: center;
-    overflow-x: auto;
-    gap: 16px;
-    padding: 16px;
+    display: none;
   }
 }
 
@@ -42,6 +124,7 @@
   font-family: $font-display;
   font-size: 1.1rem;
   letter-spacing: 0.06em;
+  flex-shrink: 0;
 
   &:hover {
     color: $color-gold-light;
@@ -49,8 +132,9 @@
 }
 
 .brandMark {
-  width: 38px;
-  height: 38px;
+  width: 2.375rem;
+  height: 2.375rem;
+  flex-shrink: 0;
   background: $color-gold;
   color: $color-ink;
   border-radius: 50%;
@@ -66,44 +150,58 @@
   flex-direction: column;
   gap: 4px;
   flex: 1;
-
-  @include md {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
+  min-width: 0;
 }
 
 .navLink {
   display: block;
+  min-height: 44px;
   padding: 10px 14px;
   border-radius: $radius-sm;
   color: rgba($color-cream, 0.85);
   font-size: 0.95rem;
-  transition: background-color $dur-fast $ease, color $dur-fast $ease;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  border-inline-start: 3px solid transparent;
+  transition: background-color $dur-fast $ease, color $dur-fast $ease,
+    border-color $dur-fast $ease;
 
   &:hover {
     background: rgba($color-gold, 0.12);
     color: $color-gold;
   }
+
+  &:focus-visible {
+    outline: 2px solid $color-gold;
+    outline-offset: 2px;
+  }
+}
+
+.navLinkActive {
+  background: rgba($color-gold, 0.15);
+  color: $color-gold;
+  border-inline-start-color: $color-gold;
+  font-weight: 600;
 }
 
 .bottom {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  padding-top: 16px;
+  margin-top: auto;
+  border-top: 1px solid rgba($color-cream, 0.12);
   font-size: 0.85rem;
   color: rgba($color-cream, 0.6);
-
-  @include md {
-    flex-direction: row;
-    align-items: center;
-    margin-inline-start: auto;
-  }
+  min-width: 0;
 }
 
 .viewSite {
   color: $color-gold;
   font-size: 0.85rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
 
   &:hover {
     color: $color-gold-light;
@@ -111,32 +209,169 @@
 }
 
 .email {
-  word-break: break-all;
+  overflow-wrap: anywhere;
+  word-break: break-word;
   color: rgba($color-cream, 0.55);
+  font-size: 0.8rem;
 }
 
 .logout {
   background: transparent;
   border: 1px solid rgba($color-cream, 0.2);
   color: rgba($color-cream, 0.85);
-  padding: 8px 14px;
+  min-height: 44px;
+  padding: 10px 14px;
   border-radius: $radius-sm;
   cursor: pointer;
   font-size: 0.85rem;
   font-family: inherit;
+  width: 100%;
+  transition: border-color $dur-fast $ease, color $dur-fast $ease;
 
   &:hover {
     border-color: $color-error;
     color: $color-error;
   }
+
+  &:focus-visible {
+    outline: 2px solid $color-gold;
+    outline-offset: 2px;
+  }
 }
+
+// ── Mobile drawer ───────────────────────────────────────────────────────────
+
+.overlay {
+  display: none;
+
+  @include md {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    background: rgba($color-ink, 0.45);
+    cursor: pointer;
+    animation: adminOverlayIn $dur-fast $ease;
+  }
+}
+
+.drawer {
+  display: none;
+
+  @include md {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    inset-inline-start: 0;
+    top: 0;
+    bottom: 0;
+    z-index: 210;
+    width: min(85vw, 18rem);
+    max-width: 100%;
+    background: $color-ink;
+    color: $color-cream;
+    padding: max(16px, env(safe-area-inset-top)) 16px max(16px, env(safe-area-inset-bottom));
+    transform: translateX(100%);
+    visibility: hidden;
+    pointer-events: none;
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: transform $dur $ease, visibility $dur $ease;
+    }
+  }
+}
+
+.drawerOpen {
+  @include md {
+    transform: translateX(0);
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
+.drawerHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba($color-cream, 0.12);
+}
+
+.drawerTitle {
+  font-family: $font-display;
+  font-size: 1.1rem;
+  color: $color-gold;
+}
+
+.closeButton {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 1px solid rgba($color-cream, 0.2);
+  border-radius: $radius-sm;
+  background: transparent;
+  color: rgba($color-cream, 0.85);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+
+  &:hover {
+    border-color: $color-gold;
+    color: $color-gold;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-gold;
+    outline-offset: 2px;
+  }
+}
+
+.drawerNav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+  overflow-y: auto;
+}
+
+// ── Main content ────────────────────────────────────────────────────────────
 
 .main {
   padding: 32px;
-  max-width: 1200px;
+  padding-bottom: max(32px, env(safe-area-inset-bottom));
+  max-width: 75rem;
   width: 100%;
+  min-width: 0;
 
   @include md {
-    padding: 20px 16px;
+    padding: 20px max(16px, env(safe-area-inset-left));
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+}
+
+@keyframes adminOverlayIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: none;
   }
 }

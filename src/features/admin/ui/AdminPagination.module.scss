@@ -1,0 +1,47 @@
+@use "../../../styles/variables" as *;
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+}
+
+.pageBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 10px 16px;
+  border: 1px solid $color-border;
+  border-radius: $radius;
+  background: $color-white;
+  color: $color-ink;
+  font-size: 0.9rem;
+  transition: border-color 0.18s ease, color 0.18s ease;
+
+  &:hover:not(.disabled) {
+    border-color: $color-gold;
+    color: $color-gold-dark;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-gold;
+    outline-offset: 2px;
+  }
+}
+
+.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.current {
+  font-size: 0.88rem;
+  color: $color-text-muted;
+  padding-inline: 4px;
+}

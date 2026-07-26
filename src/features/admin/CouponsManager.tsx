@@ -1,15 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/Button";
+import { EmptyState } from "@/components/EmptyState";
 import { Input, Textarea } from "@/components/Input";
 import { Select } from "@/components/Select";
 import { couponSchema, type CouponInput } from "@/lib/validation/coupon";
 import { formatIsraelDateTimeLocal } from "@/lib/israelDateTime";
 import type { CouponDTO } from "@/types";
+import { AdminConfirmModalBody } from "@/features/admin/ui/AdminConfirmModalBody";
+import { AdminFeedback } from "@/features/admin/ui/AdminFeedback";
+import { AdminFormActions, adminFormStickyClassName } from "@/features/admin/ui/AdminFormActions";
+import { AdminStatusBadge } from "@/features/admin/ui/AdminStatusBadge";
+import { scrollToFirstError } from "@/features/admin/ui/scrollToFirstError";
+import { useUnsavedChangesGuard } from "@/features/admin/ui/useUnsavedChangesGuard";
 import styles from "./CouponsManager.module.scss";
 
 export interface AdminProductOption {
@@ -35,19 +42,38 @@ function formatTarget(c: CouponDTO): string {
 export function CouponsManager({ initial, products }: CouponsManagerProps) {
   const router = useRouter();
   const [editing, setEditing] = useState<CouponDTO | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(
+    null,
+  );
+  const [formDirty, setFormDirty] = useState(false);
+  const { leaveOpen, guardNavigation, confirmLeave, cancelLeave } = useUnsavedChangesGuard(formDirty);
+
+  function selectCoupon(c: CouponDTO | null) {
+    guardNavigation(() => {
+      setEditing(c);
+      setFeedback(null);
+    });
+  }
 
   return (
     <div className={styles.layout}>
       <div className={styles.list}>
         <header>
           <h2>קופונים</h2>
-          <Button variant="ghost" onClick={() => setEditing(null)}>
+          <Button variant="ghost" onClick={() => selectCoupon(null)}>
             + חדש
           </Button>
         </header>
         {initial.length === 0 ? (
-          <p className={styles.empty}>אין קופונים</p>
+          <EmptyState
+            title="אין קופונים"
+            description="צרו קופון ראשון להנחות ומבצעים."
+            action={
+              <Button variant="ghost" onClick={() => selectCoupon(null)}>
+                + קופון חדש
+              </Button>
+            }
+          />
         ) : (
           <ul>
             {initial.map((c) => (
@@ -55,11 +81,14 @@ export function CouponsManager({ initial, products }: CouponsManagerProps) {
                 key={c._id}
                 className={editing?._id === c._id ? styles.activeItem : ""}
               >
-                <button type="button" onClick={() => setEditing(c)}>
+                <button type="button" onClick={() => selectCoupon(c)}>
                   <strong>{c.code}</strong>
+                  <span className={styles.listBadges}>
+                    <AdminStatusBadge variant={c.isPublic ? "public" : "private"} />
+                    {!c.isActive ? <AdminStatusBadge variant="couponInactive" /> : null}
+                  </span>
                   <small>
-                    {c.isPublic ? "באתר" : "חיצוני"} · {formatTarget(c)} · {formatDiscount(c)}
-                    {!c.isActive ? " · לא פעיל" : ""}
+                    {formatTarget(c)} · {formatDiscount(c)}
                   </small>
                   <small>
                     {c.usedCount}
@@ -77,19 +106,37 @@ export function CouponsManager({ initial, products }: CouponsManagerProps) {
           key={editing?._id ?? "new"}
           initial={editing}
           products={products}
+          onDirtyChange={setFormDirty}
+          onCancel={() => selectCoupon(null)}
           onSaved={() => {
+            setFeedback({ type: "success", text: "נשמר בהצלחה" });
             setEditing(null);
-            setError(null);
+            setFormDirty(false);
             router.refresh();
           }}
-          onError={setError}
+          onError={(msg) => setFeedback(msg ? { type: "error", text: msg } : null)}
           onDeleted={() => {
+            setFeedback({ type: "success", text: "הקופון נמחק" });
             setEditing(null);
+            setFormDirty(false);
             router.refresh();
           }}
         />
-        {error ? <p className={styles.error}>{error}</p> : null}
+        {feedback ? (
+          <AdminFeedback variant={feedback.type} message={feedback.text} />
+        ) : null}
       </div>
+
+      <AdminConfirmModalBody
+        open={leaveOpen}
+        title="שינויים שלא נשמרו"
+        description="יש שינויים שלא נשמרו. לעזוב את העריכה בכל זאת?"
+        confirmLabel="עזוב"
+        cancelLabel="המשך עריכה"
+        danger
+        onConfirm={confirmLeave}
+        onClose={cancelLeave}
+      />
     </div>
   );
 }
@@ -97,19 +144,24 @@ export function CouponsManager({ initial, products }: CouponsManagerProps) {
 interface CouponFormProps {
   initial: CouponDTO | null;
   products: AdminProductOption[];
+  onDirtyChange: (dirty: boolean) => void;
+  onCancel: () => void;
   onSaved: () => void;
   onError: (msg: string) => void;
   onDeleted: () => void;
 }
 
-function CouponForm({ initial, products, onSaved, onError, onDeleted }: CouponFormProps) {
+function CouponForm({ initial, products, onDirtyChange, onCancel, onSaved, onError, onDeleted }: CouponFormProps) {
   const [productSearch, setProductSearch] = useState("");
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<CouponInput>({
     resolver: zodResolver(couponSchema),
     defaultValues: initial
@@ -139,6 +191,10 @@ function CouponForm({ initial, products, onSaved, onError, onDeleted }: CouponFo
           productIds: [],
         },
   });
+
+  useEffect(() => {
+    onDirtyChange(isDirty);
+  }, [isDirty, onDirtyChange]);
 
   const discountType = watch("discountType");
   const appliesTo = watch("appliesTo");
@@ -178,20 +234,6 @@ function CouponForm({ initial, products, onSaved, onError, onDeleted }: CouponFo
     }
   }
 
-  async function handleDelete() {
-    if (!initial) return;
-    if (!confirm(`למחוק את הקופון ${initial.code}?`)) return;
-    onError("");
-    try {
-      const res = await fetch(`/api/coupons/${initial._id}`, { method: "DELETE" });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "מחיקה נכשלה");
-      onDeleted();
-    } catch (e) {
-      onError(e instanceof Error ? e.message : "שגיאה");
-    }
-  }
-
   async function toggleActive() {
     if (!initial) return;
     onError("");
@@ -209,160 +251,209 @@ function CouponForm({ initial, products, onSaved, onError, onDeleted }: CouponFo
     }
   }
 
+  async function onDelete() {
+    if (!initial) return;
+    setDeleting(true);
+    onError("");
+    try {
+      const res = await fetch(`/api/coupons/${initial._id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "מחיקה נכשלה");
+      setDeleteOpen(false);
+      onDeleted();
+    } catch (e) {
+      onError(e instanceof Error ? e.message : "שגיאה");
+      setDeleteOpen(false);
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate>
-      <h2>{initial ? `עריכת ${initial.code}` : "קופון חדש"}</h2>
+    <>
+      <form
+        onSubmit={handleSubmit(onSubmit, scrollToFirstError)}
+        className={adminFormStickyClassName()}
+        noValidate
+      >
+        <h2>{initial ? `עריכת ${initial.code}` : "קופון חדש"}</h2>
 
-      <Input
-        label="קוד קופון"
-        {...register("code")}
-        error={errors.code?.message}
-        dir="ltr"
-        disabled={!!initial}
-      />
-
-      <Select
-        label="הנחה על"
-        options={[
-          { value: "products", label: "מוצרים" },
-          { value: "shipping", label: "משלוח" },
-        ]}
-        {...register("appliesTo")}
-        error={errors.appliesTo?.message}
-      />
-
-      {appliesTo === "products" ? (
-        <fieldset className={styles.productPicker}>
-          <legend>מוצרים (ריק = כל המוצרים)</legend>
-          {products.length === 0 ? (
-            <p className={styles.help}>אין מוצרים פעילים</p>
-          ) : (
-            <>
-              <div className={styles.productSearch}>
-                <Input
-                  label="חיפוש מוצר"
-                  placeholder="הקלידו שם מוצר..."
-                  value={productSearch}
-                  onChange={(e) => setProductSearch(e.target.value)}
-                />
-              </div>
-              {filteredProducts.length === 0 ? (
-                <p className={styles.help}>לא נמצאו מוצרים</p>
+        <section className={styles.formSection}>
+          <h3>קוד והיקף</h3>
+          <Input
+            label="קוד קופון *"
+            {...register("code")}
+            error={errors.code?.message}
+            dir="ltr"
+            disabled={!!initial}
+          />
+          <Select
+            label="הנחה על"
+            options={[
+              { value: "products", label: "מוצרים" },
+              { value: "shipping", label: "משלוח" },
+            ]}
+            {...register("appliesTo")}
+            error={errors.appliesTo?.message}
+          />
+          {appliesTo === "products" ? (
+            <fieldset className={styles.productPicker}>
+              <legend>מוצרים (ריק = כל המוצרים)</legend>
+              {products.length === 0 ? (
+                <p className={styles.help}>אין מוצרים פעילים</p>
               ) : (
-                <ul>
-                  {filteredProducts.map((p) => (
-                    <li key={p._id}>
-                      <label className={styles.checkbox}>
-                        <input
-                          type="checkbox"
-                          checked={selectedProductIds.includes(p._id)}
-                          onChange={() => toggleProduct(p._id)}
-                        />
-                        <span>{p.name}</span>
-                      </label>
-                    </li>
-                  ))}
-                </ul>
+                <>
+                  <div className={styles.productSearch}>
+                    <Input
+                      label="חיפוש מוצר"
+                      placeholder="הקלידו שם מוצר..."
+                      value={productSearch}
+                      onChange={(e) => setProductSearch(e.target.value)}
+                    />
+                  </div>
+                  {filteredProducts.length === 0 ? (
+                    <p className={styles.help}>לא נמצאו מוצרים</p>
+                  ) : (
+                    <ul>
+                      {filteredProducts.map((p) => (
+                        <li key={p._id}>
+                          <label className={styles.checkbox}>
+                            <input
+                              type="checkbox"
+                              checked={selectedProductIds.includes(p._id)}
+                              onChange={() => toggleProduct(p._id)}
+                            />
+                            <span>{p.name}</span>
+                          </label>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </>
               )}
-            </>
-          )}
-        </fieldset>
-      ) : null}
+            </fieldset>
+          ) : null}
+        </section>
 
-      <Select
-        label="סוג הנחה"
-        options={[
-          { value: "percent", label: "אחוזים" },
-          { value: "fixed", label: "סכום קבוע (₪)" },
-        ]}
-        {...register("discountType")}
-        error={errors.discountType?.message}
+        <section className={styles.formSection}>
+          <h3>הנחה</h3>
+          <Select
+            label="סוג הנחה"
+            options={[
+              { value: "percent", label: "אחוזים" },
+              { value: "fixed", label: "סכום קבוע (₪)" },
+            ]}
+            {...register("discountType")}
+            error={errors.discountType?.message}
+          />
+          <div className={styles.row2}>
+            <Input
+              label={discountType === "percent" ? "אחוז הנחה" : "סכום הנחה (₪)"}
+              type="number"
+              {...register("discountValue", { valueAsNumber: true })}
+              error={errors.discountValue?.message}
+              dir="ltr"
+            />
+            <Input
+              label="מינימום הזמנה (₪)"
+              type="number"
+              {...register("minOrderAmount", {
+                setValueAs: (v) => (v === "" || v == null ? undefined : Number(v)),
+              })}
+              error={errors.minOrderAmount?.message}
+              dir="ltr"
+            />
+          </div>
+          {appliesTo === "products" && selectedProductIds.length > 0 ? (
+            <p className={styles.help}>המינימום נבדק לפי סכום המוצרים הזכאים בלבד.</p>
+          ) : null}
+        </section>
+
+        <section className={styles.formSection}>
+          <h3>מגבלות</h3>
+          <div className={styles.row2}>
+            <Input
+              label="מקסימום שימושים כולל"
+              type="number"
+              {...register("maxUses", {
+                setValueAs: (v) => (v === "" || v == null ? undefined : Number(v)),
+              })}
+              error={errors.maxUses?.message}
+              dir="ltr"
+            />
+            <Input
+              label="מקסימום שימושים ללקוח"
+              type="number"
+              {...register("maxUsesPerCustomer", {
+                setValueAs: (v) => (v === "" || v == null ? undefined : Number(v)),
+              })}
+              error={errors.maxUsesPerCustomer?.message}
+              dir="ltr"
+            />
+          </div>
+          <Input
+            label="תאריך תפוגה"
+            type="datetime-local"
+            {...register("expiresAt")}
+            error={errors.expiresAt?.message}
+            dir="ltr"
+          />
+        </section>
+
+        <section className={styles.formSection}>
+          <h3>תצוגה</h3>
+          <Textarea
+            label="תיאור"
+            hint="מוצג ללקוחות בדף הבית עבור קופונים ציבוריים."
+            {...register("description")}
+            error={errors.description?.message}
+          />
+          <label className={styles.checkbox}>
+            <input type="checkbox" {...register("isActive")} />
+            <span>קופון פעיל</span>
+          </label>
+          <label className={styles.checkbox}>
+            <input type="checkbox" {...register("isPublic")} />
+            <span>הצג באתר (דף הבית)</span>
+          </label>
+          <p className={styles.help}>
+            אם לא מסומן — שתפו את הקוד ידנית ברשתות חברתיות, וואטסאפ או אימייל.
+          </p>
+        </section>
+
+        <AdminFormActions
+          saveLabel={initial ? "שמור שינויים" : "צור קופון"}
+          loading={isSubmitting}
+          backHref="/admin/coupons"
+          backLabel="ביטול"
+          onBackClick={onCancel}
+          renderExtra={
+            initial
+              ? () => (
+                  <>
+                    <Button type="button" variant="ghost" onClick={toggleActive}>
+                      {initial.isActive ? "השבת" : "הפעל"}
+                    </Button>
+                    <Button type="button" variant="danger" onClick={() => setDeleteOpen(true)}>
+                      מחק
+                    </Button>
+                  </>
+                )
+              : undefined
+          }
+        />
+      </form>
+
+      <AdminConfirmModalBody
+        open={deleteOpen}
+        title="מחיקת קופון"
+        description={`למחוק את הקופון ${initial?.code ?? ""}? פעולה זו אינה ניתנת לביטול.`}
+        confirmLabel="מחק"
+        danger
+        loading={deleting}
+        onConfirm={() => void onDelete()}
+        onClose={() => setDeleteOpen(false)}
       />
-
-      <Input
-        label={discountType === "percent" ? "אחוז הנחה" : "סכום הנחה (₪)"}
-        type="number"
-        {...register("discountValue", { valueAsNumber: true })}
-        error={errors.discountValue?.message}
-        dir="ltr"
-      />
-
-      <Input
-        label="מינימום הזמנה (₪)"
-        type="number"
-        {...register("minOrderAmount", {
-          setValueAs: (v) => (v === "" || v == null ? undefined : Number(v)),
-        })}
-        error={errors.minOrderAmount?.message}
-        dir="ltr"
-      />
-      {appliesTo === "products" && selectedProductIds.length > 0 ? (
-        <p className={styles.help}>המינימום נבדק לפי סכום המוצרים הזכאים בלבד.</p>
-      ) : null}
-
-      <Input
-        label="מקסימום שימושים כולל"
-        type="number"
-        {...register("maxUses", {
-          setValueAs: (v) => (v === "" || v == null ? undefined : Number(v)),
-        })}
-        error={errors.maxUses?.message}
-        dir="ltr"
-      />
-
-      <Input
-        label="מקסימום שימושים ללקוח (לפי אימייל)"
-        type="number"
-        {...register("maxUsesPerCustomer", {
-          setValueAs: (v) => (v === "" || v == null ? undefined : Number(v)),
-        })}
-        error={errors.maxUsesPerCustomer?.message}
-        dir="ltr"
-      />
-
-      <Input
-        label="תאריך תפוגה"
-        type="datetime-local"
-        {...register("expiresAt")}
-        error={errors.expiresAt?.message}
-        dir="ltr"
-      />
-
-      <Textarea
-        label="תיאור"
-        hint="מוצג ללקוחות בדף הבית עבור קופונים ציבוריים. מתאים לקופונים כלליים ולקופונים על מוצרים ספציפיים."
-        {...register("description")}
-        error={errors.description?.message}
-      />
-
-      <label className={styles.checkbox}>
-        <input type="checkbox" {...register("isActive")} />
-        <span>קופון פעיל</span>
-      </label>
-
-      <label className={styles.checkbox}>
-        <input type="checkbox" {...register("isPublic")} />
-        <span>הצג באתר (דף הבית)</span>
-      </label>
-      <p className={styles.help}>
-        אם לא מסומן — שתפו את הקוד ידנית ברשתות חברתיות, וואטסאפ או אימייל.
-      </p>
-
-      <div className={styles.actions}>
-        <Button type="submit" loading={isSubmitting}>
-          {initial ? "שמור שינויים" : "צור קופון"}
-        </Button>
-        {initial ? (
-          <>
-            <Button type="button" variant="ghost" onClick={toggleActive}>
-              {initial.isActive ? "השבת" : "הפעל"}
-            </Button>
-            <Button type="button" variant="ghost" onClick={handleDelete}>
-              מחק
-            </Button>
-          </>
-        ) : null}
-      </div>
-    </form>
+    </>
   );
 }

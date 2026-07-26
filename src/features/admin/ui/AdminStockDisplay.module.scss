@@ -1,0 +1,14 @@
+@use "../../../styles/variables" as *;
+
+.lowWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.count {
+  font-size: 0.85rem;
+  color: $color-text-muted;
+  font-weight: 600;
+}

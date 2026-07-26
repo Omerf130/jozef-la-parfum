@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Select } from "@/components/Select";
 import { Button } from "@/components/Button";
+import { AdminFeedback } from "@/features/admin/ui/AdminFeedback";
 import type { PaymentStatus, OrderStatus } from "@/types";
 import styles from "./OrderStatusEditor.module.scss";
 
@@ -38,13 +39,17 @@ export function OrderStatusEditor({
   const [ord, setOrd] = useState<OrderStatus>(orderStatus);
   const [saving, setSaving] = useState(false);
   const [sendingEmail, setSendingEmail] = useState(false);
-  const [message, setMessage] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [feedback, setFeedback] = useState<{ type: "success" | "error"; text: string } | null>(
+    null,
+  );
+
+  function clearFeedback() {
+    setFeedback(null);
+  }
 
   async function save() {
     setSaving(true);
-    setMessage(null);
-    setError(null);
+    setFeedback(null);
     try {
       const res = await fetch(`/api/orders/${orderId}`, {
         method: "PATCH",
@@ -53,10 +58,16 @@ export function OrderStatusEditor({
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "שמירה נכשלה");
-      setMessage(data.emailSent ? "נשמר ומייל אישור נשלח ללקוח" : "נשמר בהצלחה");
+      setFeedback({
+        type: "success",
+        text: data.emailSent ? "נשמר ומייל אישור נשלח ללקוח" : "נשמר בהצלחה",
+      });
       router.refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "שגיאה");
+      setFeedback({
+        type: "error",
+        text: e instanceof Error ? e.message : "שגיאה",
+      });
     } finally {
       setSaving(false);
     }
@@ -64,8 +75,7 @@ export function OrderStatusEditor({
 
   async function sendConfirmationEmail() {
     setSendingEmail(true);
-    setMessage(null);
-    setError(null);
+    setFeedback(null);
     try {
       const res = await fetch(`/api/orders/${orderId}`, {
         method: "PATCH",
@@ -75,13 +85,16 @@ export function OrderStatusEditor({
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "שליחה נכשלה");
       if (data.emailSent) {
-        setMessage("מייל אישור נשלח ללקוח");
+        setFeedback({ type: "success", text: "מייל אישור נשלח ללקוח" });
       } else {
-        setError("שליחת המייל נכשלה — בדוק את הלוגים");
+        setFeedback({ type: "error", text: "שליחת המייל נכשלה — בדוק את הלוגים" });
       }
       router.refresh();
     } catch (e) {
-      setError(e instanceof Error ? e.message : "שגיאה");
+      setFeedback({
+        type: "error",
+        text: e instanceof Error ? e.message : "שגיאה",
+      });
     } finally {
       setSendingEmail(false);
     }
@@ -92,28 +105,38 @@ export function OrderStatusEditor({
       <Select
         label="סטטוס תשלום"
         value={pay}
-        onChange={(e) => setPay(e.target.value as PaymentStatus)}
+        onChange={(e) => {
+          clearFeedback();
+          setPay(e.target.value as PaymentStatus);
+        }}
         options={PAYMENT_OPTIONS}
       />
       <Select
         label="סטטוס הזמנה"
         value={ord}
-        onChange={(e) => setOrd(e.target.value as OrderStatus)}
+        onChange={(e) => {
+          clearFeedback();
+          setOrd(e.target.value as OrderStatus);
+        }}
         options={ORDER_OPTIONS}
       />
-      <Button onClick={save} loading={saving} fullWidth>
-        עדכן
-      </Button>
-      <Button
-        onClick={sendConfirmationEmail}
-        loading={sendingEmail}
-        variant="ghost"
-        fullWidth
-      >
-        שלח מייל אישור ללקוח
-      </Button>
-      {message ? <p className={styles.success}>{message}</p> : null}
-      {error ? <p className={styles.error}>{error}</p> : null}
+      <div className={styles.actionsCol}>
+        <Button onClick={save} loading={saving} fullWidth disabled={sendingEmail}>
+          עדכן סטטוס
+        </Button>
+        <Button
+          onClick={sendConfirmationEmail}
+          loading={sendingEmail}
+          variant="ghost"
+          fullWidth
+          disabled={saving}
+        >
+          שלח מייל אישור ללקוח
+        </Button>
+      </div>
+      {feedback ? (
+        <AdminFeedback variant={feedback.type} message={feedback.text} className={styles.feedback} />
+      ) : null}
     </div>
   );
 }

@@ -1,23 +1,35 @@
 @use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
 
 .wrap {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 24px;
+  min-width: 0;
 }
 
 .section {
+  @include card-surface;
+  background: $color-white;
+  padding: 24px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  min-width: 0;
+
+  @media (max-width: $bp-md) {
+    padding: 18px 16px;
+  }
 }
 
 .sectionTitle {
   font-family: $font-display;
-  font-size: 1.2rem;
+  font-size: 1.05rem;
   font-weight: 500;
   margin: 0;
   color: $color-ink;
+  padding-bottom: 12px;
+  border-bottom: 1px solid $color-border;
 }
 
 .hint {
@@ -25,7 +37,6 @@
   color: $color-text-muted;
   font-size: 0.95rem;
   line-height: 1.6;
-  max-width: 560px;
 }
 
 .toolbar {
@@ -35,28 +46,45 @@
   flex-wrap: wrap;
 }
 
-.fileLabel {
+.fileLabel,
+.replaceLabel {
   display: inline-flex;
   cursor: pointer;
 
   span {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
     padding: 10px 20px;
     border: 1px solid $color-ink;
     font-size: 0.85rem;
     font-weight: 500;
     transition: background-color $dur-fast $ease, color $dur-fast $ease;
+  }
 
-    &:hover {
-      background: $color-ink;
-      color: $color-white;
-    }
+  &:hover span {
+    background: $color-ink;
+    color: $color-white;
+  }
+
+  &:focus-within span {
+    outline: 2px solid $color-gold;
+    outline-offset: 2px;
   }
 
   &:has(input:disabled) {
     opacity: 0.45;
     pointer-events: none;
   }
+}
+
+.replaceLabel span {
+  min-height: 36px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  border-color: $color-border;
+  color: $color-ink;
 }
 
 .fileInput {
@@ -78,44 +106,51 @@
   font-size: 0.9rem;
 }
 
-.empty {
-  margin: 0;
-  color: $color-text-muted;
+@media (prefers-reduced-motion: reduce) {
+  .fileLabel span,
+  .replaceLabel span {
+    transition: none;
+  }
 }
 
-.list {
+.grid {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
+
+  @media (min-width: $bp-md) {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
 }
 
-.row {
-  display: grid;
-  grid-template-columns: 100px 1fr auto;
-  gap: 16px;
-  align-items: center;
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   padding: 12px;
   border: 1px solid $color-border;
+  border-radius: $radius;
   background: $color-bg-tint;
-
-  @media (max-width: 720px) {
-    grid-template-columns: 80px 1fr;
-    grid-template-rows: auto auto;
-
-    button {
-      grid-column: 1 / -1;
-    }
-  }
+  min-width: 0;
 }
 
 .thumb {
   position: relative;
-  width: 100px;
-  height: 70px;
+  width: 100%;
   background: $color-bg-soft;
+  border-radius: $radius-sm;
+  overflow: hidden;
+}
+
+.thumbLandscape {
+  aspect-ratio: 16 / 9;
+}
+
+.thumbPortrait {
+  aspect-ratio: 3 / 4;
 }
 
 .thumbImg {
@@ -127,4 +162,19 @@
   word-break: break-all;
   color: $color-text-muted;
   margin: 0;
+  display: none;
+
+  @media (min-width: $bp-md) {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.tileActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
 }

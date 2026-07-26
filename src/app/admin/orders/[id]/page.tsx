@@ -6,6 +6,12 @@ import { OrderModel } from "@/models/Order";
 import { serializeOrder } from "@/lib/serializers";
 import { formatILS, formatDateHe, formatPhoneHe } from "@/lib/format";
 import { OrderStatusEditor } from "@/features/admin/OrderStatusEditor";
+import { AdminBreadcrumbs } from "@/features/admin/ui/AdminBreadcrumbs";
+import { AdminStatusBadge } from "@/features/admin/ui/AdminStatusBadge";
+import {
+  orderStatusVariant,
+  paymentStatusVariant,
+} from "@/features/admin/ui/statusBadgeMaps";
 import styles from "./page.module.scss";
 
 interface PageProps {
@@ -19,6 +25,7 @@ export default async function AdminOrderDetailPage({ params }: PageProps) {
   const doc = await OrderModel.findById(id).lean();
   if (!doc) notFound();
   const order = serializeOrder(doc);
+  const orderLabel = `#${order._id.slice(-8).toUpperCase()}`;
   const floorApartmentParts = [
     order.shippingAddress.floor ? `קומה ${order.shippingAddress.floor}` : "",
     order.shippingAddress.apartment ? `דירה ${order.shippingAddress.apartment}` : "",
@@ -26,15 +33,26 @@ export default async function AdminOrderDetailPage({ params }: PageProps) {
 
   return (
     <div className={styles.page}>
+      <AdminBreadcrumbs
+        items={[
+          { label: "ניהול", href: "/admin" },
+          { label: "הזמנות", href: "/admin/orders" },
+          { label: `הזמנה ${orderLabel}` },
+        ]}
+      />
       <header className={styles.head}>
         <Link href="/admin/orders" className={styles.back}>
           → חזרה לרשימה
         </Link>
-        <h1>הזמנה #{order._id.slice(-8).toUpperCase()}</h1>
+        <h1>הזמנה {orderLabel}</h1>
         <p>{formatDateHe(order.createdAt)}</p>
+        <div className={styles.statusBadges}>
+          <AdminStatusBadge variant={paymentStatusVariant(order.paymentStatus)} />
+          <AdminStatusBadge variant={orderStatusVariant(order.orderStatus)} />
+        </div>
       </header>
 
-      <div className={styles.layout}>
+      <div className={styles.topGrid}>
         <section className={styles.card}>
           <h2>פרטי לקוח</h2>
           <dl className={styles.dl}>
@@ -48,7 +66,13 @@ export default async function AdminOrderDetailPage({ params }: PageProps) {
             <dd>
               <a href={`tel:${order.customerPhone}`}>{formatPhoneHe(order.customerPhone)}</a>
             </dd>
-            <dt>כתובת למשלוח</dt>
+          </dl>
+        </section>
+
+        <section className={styles.card}>
+          <h2>משלוח</h2>
+          <dl className={styles.dl}>
+            <dt>כתובת</dt>
             <dd>
               {order.shippingAddress.street}
               {floorApartmentParts.length > 0 ? (
@@ -64,48 +88,74 @@ export default async function AdminOrderDetailPage({ params }: PageProps) {
             </dd>
           </dl>
         </section>
-
-        <section className={styles.card}>
-          <h2>סטטוסים</h2>
-          <OrderStatusEditor
-            orderId={order._id}
-            paymentStatus={order.paymentStatus}
-            orderStatus={order.orderStatus}
-          />
-          {order.paymentTransactionId ? (
-            <p className={styles.txn}>מזהה עסקה: {order.paymentTransactionId}</p>
-          ) : null}
-          {order.payplusPageUid ? (
-            <p className={styles.txn}>PayPlus UID: {order.payplusPageUid}</p>
-          ) : null}
-        </section>
       </div>
 
       <section className={styles.card}>
-        <h2>פריטים בהזמנה</h2>
-        <table className={styles.itemsTable}>
-          <thead>
-            <tr>
-              <th>פריט</th>
-              <th>גודל</th>
-              <th>כמות</th>
-              <th>מחיר</th>
-              <th>סה&quot;כ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {order.items.map((it, i) => (
-              <tr key={`${it.productId}-${i}`}>
-                <td>{it.name}</td>
-                <td>{it.ml} מ&quot;ל</td>
-                <td>{it.quantity}</td>
-                <td>{formatILS(it.unitPrice)}</td>
-                <td>{formatILS(it.unitPrice * it.quantity)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <h2>תשלום וסטטוס</h2>
+        <OrderStatusEditor
+          orderId={order._id}
+          paymentStatus={order.paymentStatus}
+          orderStatus={order.orderStatus}
+        />
+        {order.paymentTransactionId ? (
+          <p className={styles.txn} title={order.paymentTransactionId}>
+            מזהה עסקה: {order.paymentTransactionId}
+          </p>
+        ) : null}
+        {order.payplusPageUid ? (
+          <p className={styles.txn} title={order.payplusPageUid}>
+            PayPlus UID: {order.payplusPageUid}
+          </p>
+        ) : null}
+      </section>
 
+      <section className={styles.card}>
+        <h2>פריטים בהזמנה</h2>
+
+        <div className={styles.itemsDesktop}>
+          <table className={styles.itemsTable}>
+            <thead>
+              <tr>
+                <th scope="col">פריט</th>
+                <th scope="col">גודל</th>
+                <th scope="col">כמות</th>
+                <th scope="col">מחיר</th>
+                <th scope="col">סה&quot;כ</th>
+              </tr>
+            </thead>
+            <tbody>
+              {order.items.map((it, i) => (
+                <tr key={`${it.productId}-${i}`}>
+                  <td>{it.name}</td>
+                  <td>{it.ml} מ&quot;ל</td>
+                  <td>{it.quantity}</td>
+                  <td>{formatILS(it.unitPrice)}</td>
+                  <td>{formatILS(it.unitPrice * it.quantity)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <ul className={styles.itemsMobile}>
+          {order.items.map((it, i) => (
+            <li key={`${it.productId}-${i}-m`} className={styles.itemCard}>
+              <p className={styles.itemName}>{it.name}</p>
+              <div className={styles.itemMeta}>
+                <span>{it.ml} מ&quot;ל</span>
+                <span>× {it.quantity}</span>
+                <span>{formatILS(it.unitPrice)}</span>
+              </div>
+              <p className={styles.itemLineTotal}>
+                סה&quot;כ: {formatILS(it.unitPrice * it.quantity)}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className={`${styles.card} ${styles.totalsCard}`}>
+        <h2>סיכום</h2>
         <div className={styles.totals}>
           <div>
             <span>סכום ביניים</span>

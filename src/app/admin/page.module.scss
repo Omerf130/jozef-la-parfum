@@ -4,31 +4,31 @@
 .page {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 32px;
+  min-width: 0;
 }
 
 .header {
   h1 {
     font-family: $font-display;
-    font-size: 1.8rem;
-    margin: 0 0 4px;
+    font-size: clamp(1.5rem, 4vw, 1.8rem);
+    margin: 0 0 6px;
     color: $color-ink;
+    line-height: 1.2;
   }
 
   p {
     color: $color-text-muted;
     margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
   }
 }
 
 .stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10.5rem), 1fr));
   gap: 16px;
-
-  @media (max-width: $bp-md) {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 .stat {
@@ -37,43 +37,52 @@
   padding: 20px 22px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  min-width: 0;
+  border-top: 3px solid $color-gold;
 }
 
 .statLabel {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: $color-text-muted;
+  line-height: 1.4;
 }
 
 .statValue {
   font-family: $font-display;
-  font-size: 1.6rem;
+  font-size: clamp(1.35rem, 3.5vw, 1.6rem);
   color: $color-ink;
   font-weight: 600;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .layout {
   display: grid;
-  grid-template-columns: 1.5fr 1fr;
-  gap: 16px;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 20px;
+  min-width: 0;
 
   @media (max-width: $bp-lg) {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 }
 
 .card {
   @include card-surface;
   background: $color-white;
-  padding: 24px;
+  padding: clamp(18px, 3vw, 24px);
+  min-width: 0;
 
   header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+    align-items: flex-start;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
     padding-bottom: 14px;
     border-bottom: 1px solid $color-border;
 
@@ -82,77 +91,22 @@
       font-size: 1.1rem;
       margin: 0;
       color: $color-ink;
+      line-height: 1.3;
     }
 
     a {
       font-size: 0.85rem;
       color: $color-gold-dark;
+      white-space: nowrap;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
 
       &:hover {
         color: $color-ink;
       }
     }
   }
-}
-
-.empty {
-  color: $color-text-muted;
-  font-size: 0.9rem;
-  text-align: center;
-  padding: 24px 0;
-  margin: 0;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-
-  th,
-  td {
-    padding: 10px 8px;
-    text-align: start;
-    border-bottom: 1px solid $color-border;
-  }
-
-  th {
-    font-weight: 600;
-    color: $color-text-muted;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  a {
-    color: $color-gold-dark;
-
-    &:hover {
-      color: $color-ink;
-    }
-  }
-}
-
-.badge {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 999px;
-  font-size: 0.75rem;
-}
-
-.paid {
-  background: rgba($color-success, 0.12);
-  color: $color-success;
-}
-
-.pending {
-  background: rgba($color-warning, 0.15);
-  color: $color-warning;
-}
-
-.failed,
-.refunded {
-  background: rgba($color-error, 0.12);
-  color: $color-error;
 }
 
 .list {
@@ -163,9 +117,12 @@
   li {
     display: flex;
     justify-content: space-between;
-    padding: 10px 0;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
     border-bottom: 1px solid $color-border;
     font-size: 0.9rem;
+    min-width: 0;
 
     &:last-child {
       border-bottom: none;
@@ -173,15 +130,27 @@
 
     a {
       color: $color-ink;
+      overflow-wrap: anywhere;
+      min-width: 0;
 
       &:hover {
         color: $color-gold-dark;
       }
     }
-
-    span {
-      color: $color-error;
-      font-weight: 600;
-    }
   }
+}
+
+.stockMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.stockCount {
+  color: $color-text-muted;
+  font-weight: 600;
+  font-size: 0.85rem;
 }

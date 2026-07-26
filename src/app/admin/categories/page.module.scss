@@ -9,7 +9,7 @@
 .head {
   h1 {
     font-family: $font-display;
-    font-size: 1.8rem;
+    font-size: clamp(1.5rem, 4vw, 1.8rem);
     margin: 0 0 4px;
     color: $color-ink;
   }

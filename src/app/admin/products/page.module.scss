@@ -1,122 +1,43 @@
 @use "../../../styles/variables" as *;
-@use "../../../styles/mixins" as *;
 
 .page {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
+  min-width: 0;
 }
 
 .head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  flex-wrap: wrap;
-
   h1 {
     font-family: $font-display;
-    font-size: 1.8rem;
-    margin: 0 0 4px;
+    font-size: clamp(1.5rem, 4vw, 1.8rem);
+    margin: 0;
+    color: $color-ink;
+  }
+}
+
+.backLink {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: $color-gold-dark;
+  margin-bottom: 8px;
+
+  &:hover {
+    color: $color-ink;
+  }
+}
+
+.editHead {
+  h1 {
+    font-family: $font-display;
+    font-size: 1.6rem;
+    margin: 4px 0;
     color: $color-ink;
   }
 
   p {
     color: $color-text-muted;
     margin: 0;
-  }
-}
-
-.tableWrap {
-  @include card-surface;
-  background: $color-white;
-  overflow-x: auto;
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-
-  th,
-  td {
-    padding: 10px 12px;
-    text-align: start;
-    border-bottom: 1px solid $color-border;
-    vertical-align: middle;
-  }
-
-  th {
-    font-weight: 600;
-    color: $color-text-muted;
-    font-size: 0.78rem;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    background: $color-cream;
-  }
-}
-
-.thumb {
-  position: relative;
-  width: 56px;
-  height: 70px;
-  background: $color-cream-dark;
-  border-radius: $radius-sm;
-  overflow: hidden;
-
-  img {
-    object-fit: cover;
-  }
-}
-
-.thumbPlaceholder {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $color-gold-light;
-}
-
-.name {
-  color: $color-ink;
-  font-family: $font-display;
-  font-weight: 500;
-
-  &:hover {
-    color: $color-gold-dark;
-  }
-}
-
-.featured {
-  display: inline-block;
-  margin-inline-start: 8px;
-  background: $color-gold;
-  color: $color-ink;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 0.7rem;
-}
-
-.active {
-  color: $color-success;
-  font-weight: 600;
-}
-
-.disabled {
-  color: $color-error;
-  font-weight: 600;
-}
-
-.inactive {
-  opacity: 0.6;
-}
-
-.editLink {
-  color: $color-gold-dark;
-  font-size: 0.85rem;
-
-  &:hover {
-    color: $color-ink;
+    font-size: 0.9rem;
   }
 }

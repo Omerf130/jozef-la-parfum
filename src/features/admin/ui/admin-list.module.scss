@@ -1,0 +1,25 @@
+@use "../../../styles/variables" as *;
+
+.desktopOnly {
+  display: block;
+
+  @media (max-width: $bp-md) {
+    display: none !important;
+  }
+}
+
+.mobileOnly {
+  display: none;
+
+  @media (max-width: $bp-md) {
+    display: block;
+  }
+}
+
+.mobileOnlyFlex {
+  display: none;
+
+  @media (max-width: $bp-md) {
+    display: flex;
+  }
+}

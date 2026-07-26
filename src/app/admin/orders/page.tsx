@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { connectDB } from "@/lib/db";
 import { OrderModel } from "@/models/Order";
-import { formatILS, formatDateHe } from "@/lib/format";
 import { EmptyState } from "@/components/EmptyState";
+import { Button } from "@/components/Button";
+import { AdminOrderList } from "@/features/admin/orders/AdminOrderList";
 import styles from "./page.module.scss";
 
 interface PageProps {
@@ -27,6 +28,16 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
 
   const orders = await OrderModel.find(filter).sort({ createdAt: -1 }).limit(200).lean();
 
+  const orderRows = orders.map((o) => ({
+    _id: String(o._id),
+    customerName: o.customerName,
+    customerEmail: o.customerEmail,
+    paymentStatus: o.paymentStatus,
+    orderStatus: o.orderStatus,
+    total: o.total,
+    createdAt: o.createdAt,
+  }));
+
   return (
     <div className={styles.page}>
       <header className={styles.head}>
@@ -34,7 +45,7 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
         <p>{orders.length} הזמנות</p>
       </header>
 
-      <nav className={styles.tabs}>
+      <nav className={styles.tabs} aria-label="סינון לפי סטטוס">
         {STATUS_FILTERS.map((f) => (
           <Link
             key={f.value}
@@ -47,66 +58,24 @@ export default async function AdminOrdersPage({ searchParams }: PageProps) {
       </nav>
 
       {orders.length === 0 ? (
-        <EmptyState title="אין הזמנות" description="עוד לא הגיעו הזמנות במצב זה." />
+        <EmptyState
+          title="אין הזמנות"
+          description={
+            sp.status
+              ? "אין הזמנות במצב זה."
+              : "עוד לא הגיעו הזמנות."
+          }
+          action={
+            sp.status ? (
+              <Link href="/admin/orders">
+                <Button variant="ghost">הצג את כל ההזמנות</Button>
+              </Link>
+            ) : undefined
+          }
+        />
       ) : (
-        <div className={styles.tableWrap}>
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>מס׳ הזמנה</th>
-                <th>לקוח</th>
-                <th>סטטוס תשלום</th>
-                <th>סטטוס הזמנה</th>
-                <th>סכום</th>
-                <th>תאריך</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orders.map((o) => (
-                <tr key={String(o._id)}>
-                  <td>
-                    <Link href={`/admin/orders/${String(o._id)}`}>
-                      #{String(o._id).slice(-8).toUpperCase()}
-                    </Link>
-                  </td>
-                  <td>
-                    <div>{o.customerName}</div>
-                    <small>{o.customerEmail}</small>
-                  </td>
-                  <td>
-                    <span className={`${styles.badge} ${styles[o.paymentStatus]}`}>
-                      {paymentLabel(o.paymentStatus)}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={`${styles.statusBadge} ${styles[`os_${o.orderStatus}`]}`}>
-                      {orderStatusLabel(o.orderStatus)}
-                    </span>
-                  </td>
-                  <td>{formatILS(o.total)}</td>
-                  <td>{formatDateHe(o.createdAt)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <AdminOrderList orders={orderRows} />
       )}
     </div>
-  );
-}
-
-function paymentLabel(s: string): string {
-  return { paid: "שולם", pending: "ממתין", failed: "נכשל", refunded: "זוכה" }[s] || s;
-}
-
-function orderStatusLabel(s: string): string {
-  return (
-    {
-      new: "חדש",
-      processing: "בטיפול",
-      shipped: "נשלח",
-      delivered: "נמסר",
-      cancelled: "בוטל",
-    }[s] || s
   );
 }

@@ -1,17 +1,50 @@
 @use "../../styles/variables" as *;
 @use "../../styles/mixins" as *;
 
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 560px;
+  width: 100%;
+
+  @media (max-width: $bp-md) {
+    max-width: none;
+  }
+}
+
 .card {
   @include card-surface;
   background: $color-white;
   padding: 28px;
-  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 
-  h2 {
+  @media (max-width: $bp-md) {
+    padding: 20px 16px;
+  }
+
+  > h2 {
     font-family: $font-display;
     font-size: 1.2rem;
     color: $color-ink;
-    margin: 0 0 20px;
+    margin: 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid $color-border;
+  }
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h3 {
+    font-family: $font-display;
+    font-size: 0.95rem;
+    margin: 0;
+    color: $color-ink;
   }
 }
 
@@ -19,7 +52,6 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
-  margin-bottom: 18px;
 
   span {
     font-size: 0.9rem;
@@ -29,7 +61,8 @@
 }
 
 .input {
-  padding: 10px 14px;
+  padding: 12px 14px;
+  min-height: 44px;
   border: 1px solid $color-border;
   border-radius: 8px;
   font-size: 1rem;
@@ -41,27 +74,12 @@
   &:focus {
     outline: none;
     border-color: $color-gold-dark;
+    box-shadow: 0 0 0 2px rgba($color-gold, 0.15);
   }
 }
 
 .hint {
   font-size: 0.8rem;
   color: $color-text-muted;
-}
-
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  margin-top: 6px;
-}
-
-.ok {
-  font-size: 0.85rem;
-  color: $color-success;
-}
-
-.err {
-  font-size: 0.85rem;
-  color: $color-error;
+  line-height: 1.5;
 }

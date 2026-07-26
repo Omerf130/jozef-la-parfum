@@ -1,0 +1,96 @@
+@use "../../../styles/variables" as *;
+
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  line-height: 1.3;
+  border: 1px solid transparent;
+}
+
+.active,
+.paid,
+.delivered,
+.couponActive {
+  background: rgba($color-success, 0.12);
+  color: $color-success;
+  border-color: rgba($color-success, 0.2);
+}
+
+.inactive,
+.cancelled,
+.couponInactive {
+  background: rgba($color-error, 0.1);
+  color: $color-error;
+  border-color: rgba($color-error, 0.2);
+}
+
+.featured {
+  background: rgba($color-gold, 0.2);
+  color: $color-ink;
+  border-color: rgba($color-gold-dark, 0.35);
+}
+
+.lowStock {
+  background: rgba($color-warning, 0.15);
+  color: #9a6b12;
+  border-color: rgba($color-warning, 0.35);
+}
+
+.outOfStock {
+  background: rgba($color-error, 0.12);
+  color: $color-error;
+  border-color: rgba($color-error, 0.25);
+}
+
+.pending {
+  background: rgba($color-warning, 0.15);
+  color: #9a6b12;
+  border-color: rgba($color-warning, 0.35);
+}
+
+.failed,
+.refunded {
+  background: rgba($color-error, 0.1);
+  color: $color-error;
+  border-color: rgba($color-error, 0.2);
+}
+
+.new {
+  background: rgba($color-gold, 0.18);
+  color: $color-gold-dark;
+  border-color: rgba($color-gold-dark, 0.25);
+}
+
+.processing {
+  background: rgba(#3b82f6, 0.12);
+  color: #2563eb;
+  border-color: rgba(#3b82f6, 0.25);
+}
+
+.shipped {
+  background: rgba(#a855f7, 0.12);
+  color: #7c3aed;
+  border-color: rgba(#a855f7, 0.25);
+}
+
+.public {
+  background: rgba($color-success, 0.1);
+  color: $color-success;
+  border-color: rgba($color-success, 0.2);
+}
+
+.private {
+  background: $color-cream-dark;
+  color: $color-text-muted;
+  border-color: $color-border;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .badge {
+    transition: none;
+  }
+}
