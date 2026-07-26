@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ContactForm } from "@/features/contact/ContactForm";
+import { SocialLinks } from "@/components/SocialLinks";
 import { formatPhoneHe } from "@/lib/format";
 import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_TEL } from "@/lib/contactDetails";
 import styles from "./page.module.scss";
@@ -39,6 +40,11 @@ export default function ContactPage() {
               <span>רחוב הבוטיק 1, תל אביב</span>
             </li>
           </ul>
+
+          <div className={styles.socialBlock}>
+            <span className={styles.label}>עקבו אחרינו</span>
+            <SocialLinks variant="light" />
+          </div>
         </aside>
 
         <section className={styles.formCol}>

@@ -30,8 +30,8 @@ export function CookieConsent() {
     <div className={styles.banner} role="alert">
       <p className={styles.text}>
         אתר זה משתמש בעוגיות כדי לשפר את חוויית הגלישה.{" "}
-        <Link href="/privacy" className={styles.link}>
-          מדיניות פרטיות
+        <Link href="/cookie-policy" className={styles.link}>
+          מדיניות קובצי Cookie
         </Link>
       </p>
       <button type="button" className={styles.accept} onClick={accept}>

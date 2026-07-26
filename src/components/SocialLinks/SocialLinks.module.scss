@@ -1,0 +1,50 @@
+@use "../../styles/variables" as *;
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  transition: color $dur-fast $ease, background-color $dur-fast $ease;
+
+  &:focus-visible {
+    outline: 2px solid $color-gold;
+    outline-offset: 2px;
+  }
+}
+
+.light {
+  .link {
+    color: $color-ink;
+    background: $color-bg-soft;
+    border: 1px solid $color-border;
+
+    &:hover {
+      color: $color-gold-dark;
+      background: rgba($color-gold, 0.12);
+      border-color: rgba($color-gold-dark, 0.35);
+    }
+  }
+}
+
+.dark {
+  .link {
+    color: rgba($color-white, 0.75);
+    background: rgba($color-white, 0.06);
+    border: 1px solid rgba($color-white, 0.12);
+
+    &:hover {
+      color: $color-gold;
+      background: rgba($color-white, 0.1);
+      border-color: rgba($color-gold, 0.35);
+    }
+  }
+}

@@ -5,7 +5,7 @@ import { TermsContent } from "@/content/legal/TermsContent";
 
 export const metadata: Metadata = {
   title: "תנאי שימוש",
-  description: `תנאי השימוש, מדיניות ביטול עסקה והמכירה באתר ${SITE_NAME}`,
+  description: `תנאי השימוש והמכירה באתר ${SITE_NAME}`,
   robots: { index: true, follow: true },
 };
 

@@ -3,6 +3,7 @@ import { getShippingConfig } from "@/lib/siteSettings";
 import { SITE_NAME } from "@/lib/siteName";
 import { formatPhoneHe } from "@/lib/format";
 import { CONTACT_EMAIL, CONTACT_PHONE, CONTACT_PHONE_TEL } from "@/lib/contactDetails";
+import { SocialLinks } from "@/components/SocialLinks";
 import styles from "./Footer.module.scss";
 
 function getValueProps(freeShippingThreshold: number) {
@@ -81,6 +82,7 @@ export async function Footer() {
               בוטיק בשמים יוקרתי. אנו בוחרים בקפידה את הניחוחות המעודנים ביותר
               עבור לקוחותינו.
             </p>
+            <SocialLinks variant="dark" className={styles.social} />
           </div>
 
           <div className={styles.col}>
@@ -119,6 +121,15 @@ export async function Footer() {
               <li>
                 <Link href="/privacy">מדיניות פרטיות</Link>
               </li>
+              <li>
+                <Link href="/cancellation-policy">מדיניות ביטול עסקה</Link>
+              </li>
+              <li>
+                <Link href="/cookie-policy">מדיניות קובצי Cookie</Link>
+              </li>
+              <li>
+                <Link href="/accessibility">הצהרת נגישות</Link>
+              </li>
             </ul>
           </div>
 
@@ -145,6 +156,12 @@ export async function Footer() {
             <Link href="/terms">תנאי שימוש</Link>
             <span aria-hidden="true"> · </span>
             <Link href="/privacy">מדיניות פרטיות</Link>
+            <span aria-hidden="true"> · </span>
+            <Link href="/cancellation-policy">מדיניות ביטול עסקה</Link>
+            <span aria-hidden="true"> · </span>
+            <Link href="/cookie-policy">מדיניות קובצי Cookie</Link>
+            <span aria-hidden="true"> · </span>
+            <Link href="/accessibility">הצהרת נגישות</Link>
           </span>
           <span className={styles.payments}>
             תשלום מאובטח בכרטיס אשראי דרך PayPlus

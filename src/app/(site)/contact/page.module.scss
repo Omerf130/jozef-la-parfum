@@ -102,6 +102,15 @@
   font-weight: 500;
 }
 
+.socialBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 24px;
+  margin-top: 8px;
+  border-top: 1px solid $color-border;
+}
+
 .formCol {
   background: transparent;
   border: 0;
