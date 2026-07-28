@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from "react";
 import { Modal } from "@/components/Modal";
 import { Button } from "@/components/Button";
+import { AdminFeedback } from "@/features/admin/ui/AdminFeedback";
 import styles from "./admin-confirm.module.scss";
 
 interface AdminConfirmModalBodyProps {
@@ -13,6 +14,7 @@ interface AdminConfirmModalBodyProps {
   cancelLabel?: string;
   danger?: boolean;
   loading?: boolean;
+  error?: string | null;
   onConfirm: () => void;
   onClose: () => void;
 }
@@ -25,6 +27,7 @@ export function AdminConfirmModalBody({
   cancelLabel = "ביטול",
   danger,
   loading,
+  error,
   onConfirm,
   onClose,
 }: AdminConfirmModalBodyProps) {
@@ -55,10 +58,11 @@ export function AdminConfirmModalBody({
   );
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal open={open} onClose={loading ? () => {} : onClose}>
       <div className={styles.content} onKeyDown={handleKeyDown}>
         <h2 className={styles.title}>{title}</h2>
         <p className={styles.description}>{description}</p>
+        {error ? <AdminFeedback variant="error" message={error} /> : null}
         <div className={styles.actions}>
           <Button
             ref={confirmRef}

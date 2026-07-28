@@ -25,6 +25,7 @@ import { productSchema, type ProductInput } from "@/lib/validation/product";
 import type { CategoryDTO, ProductDTO } from "@/types";
 
 import { AdminConfirmModalBody } from "@/features/admin/ui/AdminConfirmModalBody";
+import { AdminPermanentDeleteModal } from "@/features/admin/ui/AdminPermanentDeleteModal";
 
 import { AdminFeedback } from "@/features/admin/ui/AdminFeedback";
 
@@ -61,6 +62,8 @@ export function ProductForm({ categories, initial, returnTo = "/admin/products" 
   const [deactivateOpen, setDeactivateOpen] = useState(false);
 
   const [deactivating, setDeactivating] = useState(false);
+
+  const [permanentDeleteOpen, setPermanentDeleteOpen] = useState(false);
 
 
 
@@ -704,11 +707,29 @@ export function ProductForm({ categories, initial, returnTo = "/admin/products" 
 
               ? () => (
 
-                  <Button type="button" variant="danger" onClick={() => setDeactivateOpen(true)}>
+                  <>
 
-                    השבת מוצר
+                    <Button type="button" variant="danger" onClick={() => setDeactivateOpen(true)}>
 
-                  </Button>
+                      השבת מוצר
+
+                    </Button>
+
+                    <Button
+
+                      type="button"
+
+                      variant="danger"
+
+                      onClick={() => setPermanentDeleteOpen(true)}
+
+                    >
+
+                      מחק מוצר לצמיתות
+
+                    </Button>
+
+                  </>
 
                 )
 
@@ -741,6 +762,30 @@ export function ProductForm({ categories, initial, returnTo = "/admin/products" 
         onClose={() => setDeactivateOpen(false)}
 
       />
+
+
+
+      {initial ? (
+
+        <AdminPermanentDeleteModal
+
+          open={permanentDeleteOpen}
+
+          productId={initial._id}
+
+          onClose={() => setPermanentDeleteOpen(false)}
+
+          onSuccess={() => {
+
+            router.push(returnTo);
+
+            router.refresh();
+
+          }}
+
+        />
+
+      ) : null}
 
 
 

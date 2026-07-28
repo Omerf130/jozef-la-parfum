@@ -200,8 +200,46 @@
   color: $color-ink;
 }
 
+.rowActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
 .cardActions {
   flex-shrink: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.deleteBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 6px 14px;
+  border: 1px solid rgba($color-error, 0.35);
+  border-radius: $radius-sm;
+  background: $color-white;
+  color: $color-error;
+  font-size: 0.85rem;
+  font-family: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+
+  &:hover {
+    border-color: $color-error;
+    background: rgba($color-error, 0.06);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $color-error;
+    outline-offset: 2px;
+  }
 }
 
 .noResults {
