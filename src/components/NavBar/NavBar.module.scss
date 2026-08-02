@@ -39,11 +39,63 @@
 }
 
 .nav {
+  --nav-fg: #{$color-ink};
+  --nav-search-bg: #{$color-bg-soft};
+  --nav-search-border: #{$color-border};
+  --nav-search-fg: #{$color-ink};
+  --nav-search-placeholder: #{$color-text-subtle};
+  --nav-link-underline: #{$color-gold};
+
   position: sticky;
   top: 0;
   z-index: 50;
   background: $color-white;
   border-bottom: 1px solid $color-border;
+  transition:
+    background-color $dur $ease,
+    border-color $dur $ease,
+    backdrop-filter $dur $ease;
+}
+
+.homeFixed {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+}
+
+.homeTransparent {
+  --nav-fg: #{$color-white};
+  --nav-search-bg: rgba(255, 255, 255, 0.1);
+  --nav-search-border: rgba(255, 255, 255, 0.28);
+  --nav-search-fg: #{$color-white};
+  --nav-search-placeholder: rgba(255, 255, 255, 0.62);
+  --nav-link-underline: rgba(255, 255, 255, 0.85);
+
+  background: transparent;
+  border-bottom-color: transparent;
+
+  .brandRow {
+    border-bottom-color: rgba(255, 255, 255, 0.14);
+  }
+
+  .brandName,
+  .link {
+    color: var(--nav-fg);
+  }
+
+  .link::after {
+    background: var(--nav-link-underline);
+  }
+}
+
+.homeSolid {
+  background: rgba($color-white, 0.97);
+  backdrop-filter: blur(12px);
+  border-bottom-color: $color-border;
+
+  .brandRow {
+    border-bottom-color: $color-border;
+  }
 }
 
 .brandRow {
@@ -84,7 +136,7 @@
   font-family: $font-display;
   font-size: 1.6rem;
   letter-spacing: 0.06em;
-  color: $color-ink;
+  color: var(--nav-fg);
   font-weight: 500;
   white-space: nowrap;
 
@@ -111,7 +163,7 @@
   font-size: 0.72rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: $color-ink;
+  color: var(--nav-fg);
   font-weight: 500;
   position: relative;
   padding-block: 8px;
@@ -123,14 +175,14 @@
     inset-inline: 0;
     bottom: 0;
     height: 1px;
-    background: $color-gold;
+    background: var(--nav-link-underline);
     transform: scaleX(0);
     transform-origin: center;
     transition: transform $dur-fast $ease;
   }
 
   &:hover {
-    color: $color-ink;
+    color: var(--nav-fg);
 
     &::after {
       transform: scaleX(1);

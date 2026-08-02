@@ -2,75 +2,93 @@ import Link from "next/link";
 import Image from "next/image";
 import { connectDB } from "@/lib/db";
 import { CategoryModel } from "@/models/Category";
+import {
+  CAMPAIGN_CATEGORIES,
+  getCampaignObjectPosition,
+  SECTION_EYEBROW,
+} from "./categoryTilesConfig";
 import styles from "./CategoryTiles.module.scss";
 
-const FALLBACK = [
-  { name: "לגבר", slug: "men" },
-  { name: "לאישה", slug: "women" },
-  { name: "יוניסקס", slug: "unisex" },
-];
-
-const VIRTUAL_TILES = [
-  { name: "כל הבשמים", slug: "all", image: "/categories/all-perfumes.jpg" },
-  { name: 'בשמים עד 150 ש"ח', slug: "budget", image: "/categories/budget-perfumes.jpg" },
-];
+function CampaignArrow() {
+  return (
+    <svg
+      className={styles.arrow}
+      viewBox="0 0 24 24"
+      width="20"
+      height="20"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      aria-hidden="true"
+    >
+      <path d="M5 12h14" />
+      <path d="M13 6l6 6-6 6" />
+    </svg>
+  );
+}
 
 export async function CategoryTiles() {
-  let categories: { name: string; slug: string; image?: string }[] = [];
+  const dbBySlug = new Map<string, { name: string; image?: string }>();
+
   try {
     await connectDB();
     const docs = await CategoryModel.find().lean();
-    categories = docs.map((c) => ({
-      name: c.name,
-      slug: c.slug,
-      image: c.image,
-    }));
+    for (const c of docs) {
+      dbBySlug.set(c.slug, { name: c.name, image: c.image });
+    }
   } catch {
-    categories = [];
+    // Render config fallbacks when DB is unavailable
   }
 
-  if (categories.length === 0) categories = FALLBACK;
-
-  const allTiles: { name: string; slug: string; image?: string }[] = [
-    ...categories.filter((c) => c.slug !== "limited"),
-    ...VIRTUAL_TILES,
-  ];
+  const cards = CAMPAIGN_CATEGORIES.map((config) => {
+    const fromDb = dbBySlug.get(config.slug);
+    return {
+      slug: config.slug,
+      label: config.label,
+      title: fromDb?.name ?? config.titleFallback,
+      image: fromDb?.image,
+    };
+  });
 
   return (
-    <section className={styles.section} aria-labelledby="categories-heading">
-      <div className={styles.head}>
-        <span className={styles.kicker}>קטגוריות</span>
-        <h2 id="categories-heading" className={styles.title}>
-          גלו לפי טעם
-        </h2>
-      </div>
-      <div className={styles.grid}>
-        {allTiles.map((c) => (
-          <Link key={c.slug} href={`/category/${c.slug}`} className={styles.tile}>
-            <div className={styles.imageWrap}>
-              {c.image ? (
-                <Image
-                  src={c.image}
-                  alt={c.name}
-                  fill
-                  sizes="(max-width:768px) 100vw, 33vw"
-                  className={styles.image}
-                />
-              ) : (
-                <div className={styles.placeholder} aria-hidden="true">
-                  ✦
-                </div>
-              )}
-              <div className={styles.shade} aria-hidden="true" />
-            </div>
-            <div className={styles.label}>
-              <span>{c.name}</span>
-              <span className={styles.arrow} aria-hidden="true">
-                גלו
-              </span>
-            </div>
-          </Link>
-        ))}
+    <section className={styles.section} aria-labelledby="collections-heading">
+      <div className={styles.inner}>
+        <p id="collections-heading" className={styles.eyebrow}>
+          {SECTION_EYEBROW}
+        </p>
+
+        <div className={styles.rail}>
+          {cards.map((card) => (
+            <Link
+              key={card.slug}
+              href={`/category/${card.slug}`}
+              className={styles.card}
+              aria-label={`${card.title} — ${card.label}`}
+            >
+              <div className={styles.media}>
+                {card.image ? (
+                  <Image
+                    src={card.image}
+                    alt=""
+                    fill
+                    sizes="(max-width: 768px) 85vw, 33vw"
+                    className={styles.image}
+                    style={{ objectPosition: getCampaignObjectPosition(card.slug) }}
+                  />
+                ) : (
+                  <div className={styles.placeholder} aria-hidden="true" />
+                )}
+                <div className={styles.scrim} aria-hidden="true" />
+              </div>
+
+              <div className={styles.copy}>
+                <span className={styles.label}>{card.label}</span>
+                <span className={styles.title}>{card.title}</span>
+                <CampaignArrow />
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   );

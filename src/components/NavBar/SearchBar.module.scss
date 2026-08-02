@@ -20,7 +20,7 @@
 .icon {
   position: absolute;
   right: 10px;
-  color: $color-text-muted;
+  color: var(--nav-search-placeholder, #{$color-text-muted});
   pointer-events: none;
 }
 
@@ -30,21 +30,21 @@
   padding: 0 34px 0 12px;
   font-family: $font-body;
   font-size: 0.78rem;
-  color: $color-ink;
-  background: $color-bg-soft;
-  border: 1px solid $color-border;
+  color: var(--nav-search-fg, #{$color-ink});
+  background: var(--nav-search-bg, #{$color-bg-soft});
+  border: 1px solid var(--nav-search-border, #{$color-border});
   border-radius: 0;
   outline: none;
   transition: border-color $dur-fast $ease, background $dur-fast $ease;
 
   &::placeholder {
-    color: $color-text-subtle;
+    color: var(--nav-search-placeholder, #{$color-text-subtle});
     font-size: 0.75rem;
   }
 
   &:focus {
-    border-color: $color-ink;
-    background: $color-white;
+    border-color: var(--nav-search-fg, #{$color-ink});
+    background: var(--nav-search-bg, #{$color-white});
   }
 
   &::-webkit-search-cancel-button {

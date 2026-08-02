@@ -18,7 +18,7 @@
     display: block;
     width: 22px;
     height: 1px;
-    background: $color-ink;
+    background: var(--nav-fg, #{$color-ink});
   }
 
   span:nth-child(2) {

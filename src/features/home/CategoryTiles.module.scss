@@ -1,171 +1,199 @@
+@use "sass:color";
 @use "../../styles/variables" as *;
 @use "../../styles/mixins" as *;
 
+$section-bg: #2a2723;
+$section-bg-deep: #312d28;
+$section-text: #f3eee6;
+$section-text-muted: #b8aa98;
+$section-bronze: #b7834e;
+$section-border: rgba(255, 255, 255, 0.08);
+
 .section {
-  @include container-wide;
-  padding-block: 96px;
+  background: linear-gradient(180deg, $section-bg 0%, $section-bg-deep 100%);
+  border-top: 1px solid $section-border;
+  padding-block: 132px;
+  overflow-x: clip;
 
   @include md {
-    padding-block: 64px;
+    padding-block: 88px;
   }
 }
 
-.head {
-  text-align: center;
-  margin-bottom: 56px;
+.inner {
+  @include container-wide;
+}
+
+.eyebrow {
+  margin: 0 0 56px;
+  font-family: $font-body;
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba($section-bronze, 0.92);
+  font-weight: 500;
 
   @include md {
     margin-bottom: 36px;
   }
 }
 
-.kicker {
-  display: inline-block;
-  font-size: 0.7rem;
-  letter-spacing: 0.3em;
-  color: $color-text-muted;
-  text-transform: uppercase;
-  margin-bottom: 18px;
-  font-weight: 500;
-
-  &::after {
-    content: "";
-    display: block;
-    width: 24px;
-    height: 1px;
-    background: $color-gold;
-    margin: 12px auto 0;
-  }
-}
-
-.title {
-  font-family: $font-display;
-  font-size: clamp(1.8rem, 3.6vw, 2.6rem);
-  margin: 0;
-  color: $color-ink;
-  font-weight: 500;
-}
-
-.grid {
+.rail {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-
-  @include lg {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-  }
+  gap: 28px;
 
   @include md {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 24px;
   }
 }
 
-.tile {
+.card {
   position: relative;
-  overflow: hidden;
-  background: $color-bg-soft;
-  color: $color-white;
   display: block;
+  height: clamp(600px, 62vh, 700px);
+  overflow: hidden;
+  color: $section-text;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+  transition:
+    transform 600ms $ease,
+    box-shadow 600ms $ease;
 
-  &:hover {
-    .image {
-      transform: scale(1.04);
-    }
+  @include md {
+    height: clamp(420px, 55vh, 560px);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.24);
+  }
 
-    .label {
-      transform: translateY(-4px);
-    }
+  @media (hover: hover) {
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 28px 56px rgba(0, 0, 0, 0.32);
 
-    .arrow {
-      opacity: 1;
-      transform: translateX(-4px);
+      .image {
+        transform: scale(1.03);
+      }
 
-      html[dir="rtl"] & {
-        transform: translateX(4px);
+      .arrow {
+        opacity: 1;
+
+        html[dir="rtl"] & {
+          transform: scaleX(-1) translateX(4px);
+        }
+
+        html:not([dir="rtl"]) & {
+          transform: translateX(4px);
+        }
       }
     }
   }
 }
 
-.imageWrap {
-  position: relative;
-  aspect-ratio: 3 / 4;
-  background: $color-bg-soft;
-  overflow: hidden;
-
-  @include md {
-    aspect-ratio: 4 / 3;
-  }
+.media {
+  position: absolute;
+  inset: 0;
+  background: color.mix($section-bg-deep, $section-bg, 35%);
 }
 
 .image {
   object-fit: cover;
+  filter: brightness(0.97) contrast(1.02) saturate(0.96);
   transition: transform 700ms $ease;
 }
 
 .placeholder {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 5rem;
-  color: $color-text-subtle;
-  font-family: $font-display;
+  background:
+    radial-gradient(ellipse at 70% 30%, rgba($section-bronze, 0.12), transparent 55%),
+    radial-gradient(ellipse at 20% 80%, rgba($section-text-muted, 0.08), transparent 50%),
+    linear-gradient(
+      160deg,
+      color.mix($section-bg-deep, $section-bg, 40%) 0%,
+      $section-bg 55%,
+      color.adjust($section-bg, $lightness: -2%) 100%
+    );
 }
 
-.shade {
+.scrim {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     to top,
-    rgba($color-ink, 0.55) 0%,
-    rgba($color-ink, 0.05) 40%,
-    transparent 70%
+    rgba(#121110, 0.62) 0%,
+    rgba(#121110, 0.22) 38%,
+    transparent 58%
   );
+  pointer-events: none;
 }
 
-.label {
+.copy {
   position: absolute;
-  bottom: 32px;
-  inset-inline-start: 32px;
-  inset-inline-end: 32px;
+  inset-inline-start: 36px;
+  inset-inline-end: 36px;
+  bottom: 36px;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 14px;
-  font-family: $font-display;
-  font-size: clamp(1.4rem, 2.2vw, 1.8rem);
-  color: $color-white;
-  letter-spacing: 0.02em;
-  font-weight: 500;
-  transition: transform $dur $ease;
-
-  span:first-child {
-    line-height: 1;
-  }
+  gap: 10px;
 
   @include md {
-    bottom: 24px;
-    inset-inline-start: 24px;
-    inset-inline-end: 24px;
+    inset-inline-start: 28px;
+    inset-inline-end: 28px;
+    bottom: 28px;
   }
 }
 
-.arrow {
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+.label {
   font-family: $font-body;
+  font-size: 0.62rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba($section-bronze, 0.92);
   font-weight: 500;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  opacity: 0.85;
-  transition: opacity $dur-fast $ease, transform $dur-fast $ease;
-  padding-top: 6px;
-  border-top: 1px solid rgba($color-white, 0.5);
-  width: 80px;
+}
+
+.title {
+  font-family: $font-display;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 500;
+  line-height: 1.08;
+  letter-spacing: 0.01em;
+  color: $section-text;
+}
+
+.arrow {
+  margin-top: 6px;
+  color: rgba($section-text, 0.82);
+  opacity: 0.82;
+  transition:
+    transform 500ms $ease,
+    opacity 500ms $ease;
+
+  html[dir="rtl"] & {
+    transform: scaleX(-1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: none;
+
+    &:hover {
+      transform: none;
+    }
+  }
+
+  .image {
+    transition: none;
+  }
+
+  .card:hover .image {
+    transform: none;
+  }
+
+  .arrow {
+    transition: none;
+  }
 }

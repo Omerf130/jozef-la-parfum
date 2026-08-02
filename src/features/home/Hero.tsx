@@ -1,47 +1,9 @@
-import Link from "next/link";
-import { Button } from "@/components/Button";
 import { getHeroBackgroundImages } from "@/lib/siteSettings";
-import { HeroBackground } from "./HeroBackground";
-import styles from "./Hero.module.scss";
+import { HeroExperience } from "./HeroExperience";
 
 export async function Hero() {
   const { desktop, mobile } = await getHeroBackgroundImages();
   const mobileForDeck = mobile.length ? mobile : desktop;
 
-  return (
-    <section className={styles.hero} aria-label="ברוכים הבאים">
-      <HeroBackground desktopImages={desktop} mobileImages={mobileForDeck} />
-      <div className={styles.overlay} aria-hidden="true" />
-      <div className={styles.content}>
-        <div className={styles.contentInner}>
-          <span className={styles.kicker}>קולקציה חדשה</span>
-          <h1 className={styles.title}>הנוכחות שלך מתחילה עוד לפני שאמרת מילה</h1>
-          <p className={styles.subtitle}>
-            המותגים הגדולים, המחירים הקטנים. רק בשמים מקוריים באחריות
-          </p>
-          <div className={styles.actions}>
-            <div className={styles.actionRow}>
-              <Link href="/category/women">
-                <Button variant="secondary" size="md">
-                  גלו את הקולקציה
-                </Button>
-              </Link>
-              <Link href="/about" className={styles.ghostLink}>
-                קראו את הסיפור
-              </Link>
-            </div>
-            <div className={styles.contactPrompt}>
-              <p className={styles.contactHeading}>לא מצאתם את הבושם שאתם מחפשים?</p>
-              <p className={styles.contactText}>
-                פנו אלינו עם שם הבושם, ונעשה את מירב המאמצים להשיג אותו עבורכם.
-              </p>
-              <Link href="/contact" className={styles.contactLink}>
-                צרו קשר
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
+  return <HeroExperience desktopImages={desktop} mobileImages={mobileForDeck} />;
 }

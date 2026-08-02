@@ -1,0 +1,125 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+$bg: #f5f2ec;
+$ink: #2c2926;
+$muted: #7d746c;
+$accent: #b7834e;
+$ease: cubic-bezier(0.22, 1, 0.36, 1);
+$reveal-dur: 780ms;
+
+.section {
+  background: $bg;
+  padding-block: 56px 112px;
+  overflow-x: clip;
+
+  @include md {
+    padding-block: 40px 80px;
+  }
+}
+
+.inner {
+  @include container-wide;
+}
+
+.head {
+  max-width: 52ch;
+  margin-bottom: 112px;
+
+  @include md {
+    margin-bottom: 72px;
+  }
+}
+
+.eyebrow {
+  margin: 0 0 14px;
+  font-family: $font-body;
+  font-size: 0.66rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba($accent, 0.92);
+  font-weight: 500;
+}
+
+.headline {
+  margin: 0 0 16px;
+  font-family: $font-display;
+  font-size: clamp(1.85rem, 3.2vw, 2.65rem);
+  font-weight: 500;
+  line-height: 1.12;
+  letter-spacing: 0.005em;
+  color: $ink;
+}
+
+.support {
+  margin: 0;
+  font-family: $font-body;
+  font-size: 0.94rem;
+  line-height: 1.7;
+  color: rgba($muted, 0.95);
+  font-weight: 400;
+}
+
+.sequence {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  @include md {
+    gap: 0;
+  }
+
+  [data-sequence-beat]:nth-child(1) {
+    margin-bottom: 70px;
+
+    @include md {
+      margin-bottom: 48px;
+    }
+  }
+
+  [data-sequence-beat]:nth-child(2) {
+    margin-bottom: 110px;
+
+    @include md {
+      margin-bottom: 56px;
+    }
+  }
+
+  [data-sequence-beat]:nth-child(3) {
+    margin-bottom: 80px;
+
+    @include md {
+      margin-bottom: 52px;
+    }
+  }
+}
+
+.revealRoot [data-sequence-beat] {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.revealEnhanced:not(.revealVisible) [data-sequence-beat] {
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity $reveal-dur $ease,
+    transform $reveal-dur $ease;
+}
+
+.revealEnhanced.revealVisible [data-sequence-beat] {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity $reveal-dur $ease,
+    transform $reveal-dur $ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .revealEnhanced:not(.revealVisible) [data-sequence-beat],
+  .revealEnhanced.revealVisible [data-sequence-beat] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

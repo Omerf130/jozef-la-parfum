@@ -1,0 +1,264 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+$accent: #b7834e;
+$text-on-photo: #f3eee6;
+$ease: cubic-bezier(0.22, 1, 0.36, 1);
+$dur: 600ms;
+
+.beat {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  width: 100%;
+
+  @media (hover: hover) {
+    &:hover {
+      .photo {
+        transform: scale(1.008);
+      }
+
+      .cta::after {
+        transform: scaleX(1);
+      }
+    }
+  }
+}
+
+.rhythmSpreadOne {
+  width: 88%;
+  margin-inline-start: 0;
+  margin-inline-end: auto;
+
+  .visual {
+    min-height: clamp(380px, 46vh, 500px);
+  }
+
+  @include md {
+    width: 100%;
+    margin-inline: 0;
+
+    .visual {
+      min-height: clamp(240px, 44vh, 420px);
+    }
+  }
+}
+
+.rhythmSpreadTwo {
+  width: 74%;
+  margin-inline-start: auto;
+  margin-inline-end: 0;
+
+  .visual {
+    min-height: clamp(300px, 36vh, 380px);
+  }
+
+  @include md {
+    width: 100%;
+    margin-inline: 0;
+
+    .visual {
+      min-height: clamp(228px, 40vh, 400px);
+    }
+  }
+}
+
+.rhythmSpreadThree {
+  width: 92%;
+  margin-inline-start: 0;
+  margin-inline-end: auto;
+
+  .visual {
+    min-height: clamp(440px, 58vh, 620px);
+  }
+
+  @include md {
+    width: 100%;
+    margin-inline: 0;
+
+    .visual {
+      min-height: clamp(248px, 48vh, 440px);
+    }
+  }
+}
+
+.rhythmSpreadFour {
+  width: 78%;
+  margin-inline-start: auto;
+  margin-inline-end: 0;
+
+  .visual {
+    min-height: clamp(340px, 42vh, 430px);
+  }
+
+  @include md {
+    width: 100%;
+    margin-inline: 0;
+
+    .visual {
+      min-height: clamp(232px, 42vh, 410px);
+    }
+  }
+}
+
+.visual {
+  position: relative;
+  overflow: hidden;
+}
+
+.photo {
+  object-fit: cover;
+  transition: transform $dur $ease;
+}
+
+.scrim {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.copyBottomRight .scrim {
+  background: linear-gradient(
+    225deg,
+    transparent 42%,
+    rgba(#1a1816, 0.08) 62%,
+    rgba(#1a1816, 0.32) 100%
+  );
+}
+
+.copyTopLeft .scrim {
+  background: linear-gradient(
+    135deg,
+    rgba(#1a1816, 0.28) 0%,
+    rgba(#1a1816, 0.06) 38%,
+    transparent 58%
+  );
+}
+
+.copyCenterLeft .scrim {
+  background: linear-gradient(
+    to right,
+    rgba(#1a1816, 0.22) 0%,
+    rgba(#1a1816, 0.06) 22%,
+    transparent 48%
+  );
+}
+
+.copyBottomLeft .scrim {
+  background: linear-gradient(
+    to top,
+    rgba(#1a1816, 0.34) 0%,
+    rgba(#1a1816, 0.08) 28%,
+    transparent 52%
+  );
+}
+
+.copy {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  max-width: min(28ch, 78%);
+
+  @include md {
+    inset: auto 22px 22px 22px !important;
+    transform: none !important;
+    max-width: none;
+  }
+}
+
+.copyBottomRight .copy {
+  right: 36px;
+  bottom: 36px;
+  left: auto;
+  align-items: flex-end;
+  text-align: end;
+
+  @include md {
+    align-items: flex-start;
+    text-align: start;
+  }
+}
+
+.copyTopLeft .copy {
+  left: 36px;
+  top: 36px;
+  right: auto;
+}
+
+.copyCenterLeft .copy {
+  left: 36px;
+  top: 50%;
+  right: auto;
+  transform: translateY(-50%);
+
+  @include md {
+    transform: none;
+  }
+}
+
+.copyBottomLeft .copy {
+  left: 36px;
+  bottom: 36px;
+  right: auto;
+}
+
+.label {
+  font-family: $font-body;
+  font-size: 0.54rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: rgba($accent, 0.78);
+  font-weight: 400;
+}
+
+.title {
+  font-family: $font-display;
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  font-weight: 400;
+  line-height: 1.18;
+  letter-spacing: 0.008em;
+  color: rgba($text-on-photo, 0.92);
+}
+
+.cta {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+  font-family: $font-body;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  color: rgba($text-on-photo, 0.62);
+  font-weight: 400;
+  padding-bottom: 3px;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background: rgba($text-on-photo, 0.28);
+    transform: scaleX(0.2);
+    transform-origin: inline-start;
+    transition: transform $dur $ease;
+  }
+}
+
+.copyBottomRight .cta::after {
+  transform-origin: right;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo,
+  .cta,
+  .cta::after {
+    transition: none;
+  }
+
+  .beat:hover .photo {
+    transform: none;
+  }
+}

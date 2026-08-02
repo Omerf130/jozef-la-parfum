@@ -1,0 +1,128 @@
+@use "../../styles/variables" as *;
+@use "../../styles/mixins" as *;
+
+$section-bg: #f5f2ec;
+$section-bg-deep: #f3efe8;
+$section-text: #2c2926;
+$section-muted: #7d746c;
+$section-accent: #b7834e;
+
+.section {
+  background: linear-gradient(180deg, $section-bg 0%, $section-bg-deep 100%);
+  padding-block: 132px;
+  overflow-x: clip;
+
+  @include md {
+    padding-block: 88px;
+  }
+}
+
+.inner {
+  @include container-wide;
+}
+
+.head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 40px;
+
+  @include md {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-bottom: 28px;
+    gap: 14px;
+  }
+}
+
+.headText {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-family: $font-body;
+  font-size: 0.68rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: $section-accent;
+  font-weight: 500;
+}
+
+.title {
+  margin: 0;
+  font-family: $font-display;
+  font-size: clamp(1.85rem, 3.5vw, 2.65rem);
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  color: $section-text;
+  line-height: 1.1;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  max-width: 36ch;
+  font-family: $font-body;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: $section-muted;
+  font-weight: 400;
+}
+
+.viewAll {
+  flex-shrink: 0;
+  font-family: $font-body;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: $section-muted;
+  font-weight: 500;
+  position: relative;
+  padding-block: 4px;
+  transition: color $dur-fast $ease;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background: rgba($section-accent, 0.45);
+    transform: scaleX(0.35);
+    transform-origin: center;
+    transition: transform $dur $ease, background $dur-fast $ease;
+  }
+
+  &:hover {
+    color: $section-text;
+
+    &::after {
+      transform: scaleX(1);
+      background: $section-accent;
+    }
+  }
+}
+
+.rail {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 38px;
+  align-items: stretch;
+
+  @include md {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  @include sm {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+}
+
+.empty {
+  max-width: 480px;
+  margin-inline: auto;
+}
