@@ -15,7 +15,7 @@ export function TermsContent() {
 
       <section className={styles.section}>
         <p>
-          Jozef La Perfume (עוסק) (להלן: &quot;בית העסק&quot;, &quot;החנות&quot; או
+          ÉVOIR (עוסק) (להלן: &quot;בית העסק&quot;, &quot;החנות&quot; או
           &quot;אנחנו&quot;), מפעיל חנות מקוונת באמצעות אתר האינטרנט שכתובתו{" "}
           <a href={SITE_URL} target="_blank" rel="noopener noreferrer">
             {SITE_URL}

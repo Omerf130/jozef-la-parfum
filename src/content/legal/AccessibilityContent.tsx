@@ -14,7 +14,7 @@ export function AccessibilityContent() {
 
       <section className={styles.section}>
         <p>
-          Jozef La Perfume (עוסק) (להלן: &quot;בית העסק&quot;), רואה חשיבות במתן
+          ÉVOIR (עוסק) (להלן: &quot;בית העסק&quot;), רואה חשיבות במתן
           שירות שוויוני ונגיש לכלל המשתמשים, לרבות אנשים עם מוגבלות.
         </p>
         <p>

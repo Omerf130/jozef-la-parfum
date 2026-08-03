@@ -15,7 +15,7 @@ export function PrivacyContent() {
 
       <section className={styles.section}>
         <p>
-          Jozef La Perfume (עוסק) המפעיל את אתר האינטרנט שכתובתו{" "}
+          ÉVOIR (עוסק) המפעיל את אתר האינטרנט שכתובתו{" "}
           <a href={SITE_URL} target="_blank" rel="noopener noreferrer">
             {SITE_URL}
           </a>{" "}

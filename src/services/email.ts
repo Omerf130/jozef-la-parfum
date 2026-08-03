@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import type { OrderDTO } from "@/types";
 import { formatILS } from "@/lib/format";
+import { SITE_NAME } from "@/lib/siteName";
 
 const resendApiKey = process.env.RESEND_API_KEY;
 const resend = resendApiKey ? new Resend(resendApiKey) : null;
@@ -17,7 +18,7 @@ function resolveEmailFrom(): string {
     return raw;
   }
   if (process.env.NODE_ENV !== "production") {
-    return "JOZEF LA PERFUME <noreply@example.com>";
+    return `${SITE_NAME} <noreply@example.com>`;
   }
   return "";
 }
@@ -144,7 +145,7 @@ export async function sendOrderConfirmation(order: OrderDTO) {
   const html = `
     <div dir="rtl" style="font-family: 'Segoe UI', Arial, sans-serif; line-height:1.7; color:#222; max-width:640px; margin:auto;">
       <div style="background:#0d0d0d; color:#c9a96e; padding:20px; text-align:center;">
-        <h1 style="margin:0; font-size:24px; letter-spacing:0.05em;">JOZEF LA PERFUME</h1>
+        <h1 style="margin:0; font-size:24px; letter-spacing:0.05em;">${SITE_NAME}</h1>
       </div>
       <div style="padding:24px; background:#f5efe6;">
         <h2 style="color:#0d0d0d; margin:0 0 12px;">תודה על הזמנתך, ${escape(order.customerName)}!</h2>
@@ -198,7 +199,7 @@ export async function sendOrderConfirmation(order: OrderDTO) {
         </p>
       </div>
       <div style="background:#0d0d0d; color:rgba(245,239,230,0.6); padding:14px; text-align:center; font-size:12px;">
-        © ${new Date().getFullYear()} JOZEF LA PERFUME
+        © ${new Date().getFullYear()} ${SITE_NAME}
       </div>
     </div>
   `;

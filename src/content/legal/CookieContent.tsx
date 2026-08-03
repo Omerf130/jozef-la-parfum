@@ -15,7 +15,7 @@ export function CookieContent() {
 
       <section className={styles.section}>
         <p>
-          Jozef La Perfume (עוסק) (להלן: &quot;בית העסק&quot;, &quot;אנחנו&quot;,
+          ÉVOIR (עוסק) (להלן: &quot;בית העסק&quot;, &quot;אנחנו&quot;,
           &quot;שלנו&quot; או &quot;אותנו&quot;), מברך את המשתמשים (להלן:
           &quot;המשתמשים&quot; או &quot;אתם&quot;) באתר האינטרנט שכתובתו{" "}
           <a href={SITE_URL} target="_blank" rel="noopener noreferrer">

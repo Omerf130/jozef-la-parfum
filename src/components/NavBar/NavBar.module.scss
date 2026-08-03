@@ -135,14 +135,14 @@
 .brandName {
   font-family: $font-display;
   font-size: 1.6rem;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.14em;
   color: var(--nav-fg);
   font-weight: 500;
   white-space: nowrap;
 
   @include md {
     font-size: 1.15rem;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.12em;
   }
 }
 

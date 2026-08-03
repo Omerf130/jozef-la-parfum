@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { SITE_NAME } from "@/lib/siteName";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import styles from "./NewsletterStrip.module.scss";
@@ -41,7 +42,7 @@ export function NewsletterStrip() {
     <section className={styles.newsletter}>
       <div className={styles.inner}>
         <div className={styles.text}>
-          <h2>הצטרפו למועדון של Jozef</h2>
+          <h2>הצטרפו למועדון {SITE_NAME}</h2>
           <p>קבלו ראשונים מבצעים, השקות חדשות וטיפים מהפרפיומרים שלנו.</p>
         </div>
         <form className={styles.form} onSubmit={onSubmit}>
